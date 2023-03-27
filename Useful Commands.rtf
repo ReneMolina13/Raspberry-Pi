@@ -1,0 +1,340 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat{\fonttbl{\f0\fnil\fcharset0 Courier New;}{\f1\fnil\fcharset2 Symbol;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\ul\b\f0\fs28\lang1033 Git Commands\ulnone\fs22\par
+\par
+\b0 git status\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Shows updated, modified, or deleted files that haven't been committed\par
+{\pntext\f1\'B7\tab}Use this command before commiting anything\par
+
+\pard\par
+git clone <ssh>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Clones the repository to your local machine\par
+{\pntext\f1\'B7\tab}The ssh url will be found on the project page under "code"\par
+
+\pard git add <filename>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Tells git to track the file \par
+{\pntext\f1\'B7\tab}use "." for filename to track all files\par
+{\pntext\f1\'B7\tab}Also called staging\par
+
+\pard\par
+git commit -m "<Message Title>" -m "<Commit Description>"\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Commits the files that git is tracking\par
+{\pntext\f1\'B7\tab}If only 1 file has been modified (not created), you can add and commit together by switching "-m" with "-am"\par
+
+\pard\par
+git push origin <name of branch>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Makes your code changes live on the github server\par
+{\pntext\f1\'B7\tab}Default branch name would be master\par
+{\pntext\f1\'B7\tab}Add a "-u " in front of branch name to "set upstream" (Allows you to only say git push next time (for that branch))\par
+
+\pard\par
+git pull origin <name of branch>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Pulls changes on that branch from gitHub server to your local machine\par
+{\pntext\f1\'B7\tab}Default branch name is master and same "set upstream" rules apply\par
+
+\pard\par
+git init\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Initializes the git repository (turns the current folder into a git repository\par
+
+\pard\par
+git diff <name of branch>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Shows the difference b/w the current branch and the specified branch\par
+
+\pard\b\par
+\b0 git checkout <name of branch>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Moves you to the specified branch\par
+{\pntext\f1\'B7\tab}Adding a " -b <name of new branch>" creates a new branch with that name\par
+
+\pard\par
+git branch\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Shows all the different branches you have made from the origin project\par
+{\pntext\f1\'B7\tab}Adding a " -d <name of branch>" at the end of the command deletes the specified branch\par
+
+\pard\par
+git log\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Shows the most recent commits along with their descriptions and unique hashes\par
+
+\pard\par
+git reset <arg>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Works like an undo for commits, adds, etc.\par
+{\pntext\f1\'B7\tab}With no argument, it simply undoes the most recent staging\par
+{\pntext\f1\'B7\tab}With a filename as the argument, it undoes the most recent staging for that file\par
+{\pntext\f1\'B7\tab}With "HEAD~<number>" as the argument, it takes you back as many commits as specified by the number ("HEAD" points to the most recent commit)\par
+{\pntext\f1\'B7\tab}With <hash> as the argument, it resets all the way back to the commit that has refers to\par
+{\pntext\f1\'B7\tab}With "--hard <hash>" as the argument, it not only uncommits and unstages back to the referenced commit, it deletes all the changes\par
+
+\pard\b\par
+\ul\fs28 Terminal Commands\par
+\par
+\ulnone\b0\fs22 emacs <arg>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 With no argument, it shows documentation on emacs (tutorial, manual, etc.)\par
+{\pntext\f1\'B7\tab}With <filename> as the argument, it edits the specified file\par
+
+\pard\par
+cat <filename>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Displays the contents of the specified file\par
+
+\pard\par
+echo <text>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Prints out whatever you wrote in <text>\par
+
+\pard\par
+clear\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Clears the screen\par
+
+\pard\par
+startx\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Opens up the Linux gui\par
+
+\pard\par
+mkdir <directory name>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Creates a new directory with the specified name at the current location\par
+
+\pard\par
+rmdir <directory name>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Removes the directory with the specified name\par
+{\pntext\f1\'B7\tab}The directory must be emptied out before it can be deleted\par
+{\pntext\f1\'B7\tab}If the directory is a git repository, use "rm -fr .git" (recursively removes the folder and all of its .git files)\par
+
+\pard touch <filename>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Creates a new file with the specified name (don't forget the extension)\par
+
+\pard\par
+ls\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Displays the files at a particular directory\b\par
+{\pntext\f1\'B7\tab}\b0 Adding the -a flag says to also show hidden files and folders\b\par
+
+\pard\par
+\b0 mv <arg>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720\b Called the move/rename command\par
+{\pntext\f1\'B7\tab}\b0 With "<old name> <new name>" as the argument, the name of that file at the current directory gets changed to the new name\b\par
+{\pntext\f1\'B7\tab}\b0 With "<filename> <path to a new location> as the argument, the file at the current directory gets moved to the specified directory (.. means go back a directory)\b\par
+
+\pard\par
+\b0 cd <directory>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Navigates you to the specified directory\b\par
+{\pntext\f1\'B7\tab}\b0 ".." once again means to go back a directory (to the parent)\b\par
+{\pntext\f1\'B7\tab}\b0 If no directory is specified, it takes you back to "home"\b\par
+
+\pard\par
+\b0 rm <filename>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Removes the specified file from the current directory\b\par
+{\pntext\f1\'B7\tab}\b0 '*' is the wildcard which means "everything in this directory" (any characters directly before or after the wildcard must also match)\b\par
+{\pntext\f1\'B7\tab}\b0 Example: rm alo* deletes files in this directory that start with "alo" while rn *ver deletes files in this directory that end with "ver"\b\par
+{\pntext\f1\'B7\tab}\b0 Putting "-rf <repo_folder>/.git" will delete the link your local system has to the git repository (files can then be deleted from that directory normally)\b\par
+
+\pard\par
+\b0 cc <flags> "-o <executable file name>" <C source files to compile>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Compiles the provided C source files into object files and creates the executable file that runs them\b\par
+{\pntext\f1\'B7\tab}\b0 Common flags: -g (debug), -O3 (optimization)\b\par
+{\pntext\f1\'B7\tab}\b0 To run, type "./<executable file name>"\b\par
+{\pntext\f1\'B7\tab}\b0 Unless you use a makefile that takes care of this for you, you have to manually delete the created object files from compilation (once the executable file is made, the object files are no longer needed)\b\par
+
+\pard\par
+\b0 Ctrl+Z\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Stops a process that is running\b\par
+
+\pard\par
+\b0 cp <options> <source> <destination>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Copy command\b\par
+{\pntext\f1\'B7\tab}\b0 Options: -R or -r is for directories, -T is for files & subdirectories but not the source directory, combining options means putting "-<opCode1><opCode2>" \b\par
+{\pntext\f1\'B7\tab}\b0 <source> and <destination> are both directory names\b\par
+
+\pard\par
+\b0 make <makefile command>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Makes a reference to the makefile and based on the makefile command, it will compile the program, clean unused object files, etc.\b\par
+
+\pard\par
+\b0 mspdebug rf2500 <command>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 does commands specifically for the MSP430 launchpad\b\par
+{\pntext\f1\'B7\tab}\b0 using "erase" as the command clears the current program from the MSP430\b\par
+
+\pard\par
+\b0 The backslash character (\\)\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Typing this during a command allows you to continue the command on the next line\b\par
+
+\pard\par
+\ul\fs28 Emacs Commands (C = Ctrl, M = Alt)\par
+\ulnone\b0\fs22\par
+C-V / M-V\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Move forward/backwards 1 screenful\par
+
+\pard\par
+C-L\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Clear screen and re-display all text around the cursor\par
+{\pntext\f1\'B7\tab}Doing it twice moves cursor to top, 3 times moves it to bottom\par
+
+\pard\par
+C-N / C-P\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Move cursor to the next/previous line\par
+
+\pard\par
+C-F / C-B\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Move forward/backwards a character\par
+
+\pard\par
+M-F / M-B\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Move forward/backwards a word\par
+
+\pard\par
+C-A / C-E\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Move to the beginning/end of the line\par
+
+\pard\par
+M-A / M-E\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Move to the beginning/end of the sentence\par
+
+\pard\par
+M-< / M->\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Move to the beginning/end of the file\par
+
+\pard\par
+C-U <number> <command>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Repeats the stated command the number of specified times\par
+{\pntext\f1\'B7\tab}Some commands slightly change functionality with a repeat-count\par
+
+\pard\par
+C-G\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Cancels a command\par
+
+\pard\par
+C-X <arg>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Called the character extend command and contains a handful of commands dealing with windows, buffers, files, etc.\par
+{\pntext\f1\'B7\tab}If the argument is a 1 or 2, it will have open that many windows\par
+{\pntext\f1\'B7\tab}With C-F <filename> as the argument, emacs searches for and opens that file or makes a new one if the name dosen't exist\par
+{\pntext\f1\'B7\tab}With C-S as the argument, the current file gets saved\par
+{\pntext\f1\'B7\tab}With C-B as the argument, the list of opened buffers is shown\par
+{\pntext\f1\'B7\tab}With "B <buffer name>" as the argument, emacs takes you back to the specified buffer\par
+{\pntext\f1\'B7\tab}With 'S' as the argument, Emacs tries to saved all buffers that have been changed\par
+{\pntext\f1\'B7\tab}With C-C as the argument, the Emacs session is ended and you get prompted to save any changes\par
+{\pntext\f1\'B7\tab}With "F <number>" as the argument, the line width is changed (70 is default)\par
+{\pntext\f1\'B7\tab}With 'O' as an argument, Emacs switches your cursor to the other open window\par
+{\pntext\f1\'B7\tab}With "4 C-F <filename>" as the argument, the second window is opened and the specified file is opened in that window\par
+
+\pard\par
+M-X <arg>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Called the command extend and unlike character-extend, its arguments are full-word commands instead of just a character\par
+{\pntext\f1\'B7\tab}With "replace-string <old string><enter/return><new string> all instances of the old string in the buffer will get replaced by the new string\par
+{\pntext\f1\'B7\tab}With "recover-file" as the argument, you get the option to recover an autosaved version of the file (in case of a crash)\par
+{\pntext\f1\'B7\tab}With <major-mode> as the argument, the buffer changes formatting to that major mode (fundamental-mode, text-mode, etc.)\par
+{\pntext\f1\'B7\tab}With "auto-fill-mode" as the argument, the "auto fill" minor mode is toggled (auto-formats lines that are too long)\par
+{\pntext\f1\'B7\tab}With "make-frame"/"delete-frame" as the argument, a new frame is either created or the current frame is deleted\par
+{\pntext\f1\'B7\tab}With "help" as the argument, the help portal is opened\par
+{\pntext\f1\'B7\tab}With "shell" as the argument, it opens up a linux shell (this gives you access to the command line while still staying in emacs)\par
+
+\pard\par
+Backspace / C-D\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Delete the character right before/after the cursor\par
+
+\pard\par
+M-Backspace / M-D\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Cut the word right before/after the cursor\par
+
+\pard\par
+C-K / M-K\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Cut until the end of the line/sentence \par
+
+\pard\par
+C-Space / C-W\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Highlights text (move cursor to the end of the desired highlighted region)\par
+{\pntext\f1\'B7\tab}Use C-W to cut the selected text\par
+
+\pard\par
+C-Y / M-Y\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Paste the text that has been cut most recently\par
+{\pntext\f1\'B7\tab}After pasting, you can repeatedly type M-Y to replace pasted text with older and older cut text\par
+
+\pard\par
+C-_\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Undo or Redo changes to the text\par
+
+\pard\par
+C-Z\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Temporarily ends emacs (but does not delete any data)\par
+
+\pard\par
+C-H <arg>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Opens up the "help" portal with no argument\par
+{\pntext\f1\'B7\tab}With 'm' as the argument, documentation is shown on your current major mode\par
+{\pntext\f1\'B7\tab}With '?' as the argument, Emacs will tell you what kind of help it can give\par
+{\pntext\f1\'B7\tab}With "C <command>" as the argument, the "name" of that command is shown\par
+{\pntext\f1\'B7\tab}With "K <command>" as the argument, a detailed description of the command is given\par
+{\pntext\f1\'B7\tab}With "F <function name>" as the argument, a detailed description of that function is given\par
+{\pntext\f1\'B7\tab}With 'V' as the argument, documentation of variables in emacs is shown\par
+{\pntext\f1\'B7\tab}With "A <keyword>" as the argument, a list of (M-X) commands with that keyword are shown\par
+{\pntext\f1\'B7\tab}With 'I' as the argument, you will be moved to a special buffer that provides included manuals for packages installed on your system\par
+{\pntext\f1\'B7\tab}With 'R' as the argument, you get taken to the Emacs manual\par
+
+\pard\par
+M-Q\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Re-fills a modified paragraph that the cursor is currently in\par
+
+\pard\par
+C-S <string> / C-R <string>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Searches the string in the forward/backwards direction for the specified string (works like "find" function in windows)\par
+{\pntext\f1\'B7\tab}Typing C-S/C-R repeatedly after already inputting the string will find the next/previous occurance of that string in the file\par
+{\pntext\f1\'B7\tab}C-G terminates the search\par
+
+\pard\par
+C-M-V\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Scrolls downward on the window you're not currently on but still looking at\par
+
+\pard\par
+<ESC><ESC><ESC>\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li720 Universal command for "get out" (such as getting out of extra windows, buffers, recursive editing levels, etc.)\par
+}
+ 
