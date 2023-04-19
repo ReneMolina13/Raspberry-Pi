@@ -20,7 +20,7 @@
 #define	BANK_CLIENT_H
 
 
-#include "rmolina_banking.h"
+#include "test.h"
 
 
 // Structure holding connection info (from cmd line & necessary structures)

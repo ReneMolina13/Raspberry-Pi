@@ -1,0 +1,8 @@
+#! /bin/bash
+make clean
+git status
+git add .
+git status
+git commit -m "File Update" -m "Push"
+git push origin
+make all

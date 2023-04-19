@@ -20,7 +20,7 @@
 #define BANK_SERVER_H
 
 
-#include "rmolina_banking.h"
+#include "test.h"
 
 
 // Number of bank accounts
