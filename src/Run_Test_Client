@@ -1,0 +1,3 @@
+#! /bin/bash
+clear
+./testClient 172.19.16.1 26207 B 55 101015
