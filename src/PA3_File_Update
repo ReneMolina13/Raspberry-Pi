@@ -1,0 +1,4 @@
+#! /bin/bash
+make clean
+git pull origin
+make all
