@@ -224,7 +224,7 @@ bool newTransaction(NetInfo *sockData)
 	int argsAssigned = 0;	// Keeps track of arguments successfully assigned
 	int buffSize = 20;
 	// Argument 0: Filename
-	strncpy(args[0], "./bankClient", buffSize-1);
+	strncpy(args[0], "./testClient", buffSize-1);
 	argsAssigned++;
 	// Argument 1: IP Address
 	strncpy(args[1], sockData->cmdIP, buffSize-1);
