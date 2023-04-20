@@ -21,11 +21,11 @@ int initBank()
 	// Initialize structure specifying possible connection types
 	char *service = "26207";
 	struct addrinfo addrCriteria;
-	memset(addrCriteria, 0, sizeof(addrCriteria));
-	serverAddr->ai_family = AF_UNSPEC;		// Any address family
-	serverAddr->ai_flags = AI_PASSIVE;		// Accept on any address/port
-	serverAddr->ai_socktype = SOCK_DGRAM;	// Only accept datagram sockets
-	serverAddr->ai_protocol = IPPRO_UDP;	// Only accept UDP protocol
+	memset(&addrCriteria, 0, sizeof(addrCriteria));
+	addrCriteria->ai_family = AF_UNSPEC;		// Any address family
+	addrCriteria->ai_flags = AI_PASSIVE;		// Accept on any address/port
+	addrCriteria->ai_socktype = SOCK_DGRAM;	// Only accept datagram sockets
+	addrCriteria->ai_protocol = IPPROTO_UDP;	// Only accept UDP protocol
 	
 	// Get list of possible server addresses
 	struct addrinfo *serverAddr;
@@ -99,7 +99,7 @@ bool handleClient(int serverSocket)
 	
 	// Confirm with client that request was completed
 	ssize_t bytesSent;
-	bytesSent = send(serverSocket, &clientRequest, sizeof(sBANK_PROTOCOL), 0, (struct sockaddr *) &clientAddr, sizeof(clientAddr));
+	bytesSent = sendto(serverSocket, &clientRequest, sizeof(sBANK_PROTOCOL), 0, (struct sockaddr *) &clientAddr, sizeof(clientAddr));
 	if (bytesSent < 0) {
 		fputs("Unable to confirm completion of request to client\n", stderr);
 		fputs("\n************************************************\n\n", stderr);
