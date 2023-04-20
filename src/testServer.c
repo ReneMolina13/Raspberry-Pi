@@ -38,7 +38,7 @@ int initBank()
 	// Create and bind a UDP socket from options given
 	int serverSocket = -1;
 	status = -1;
-	for (struct addrinfo *addr = serverAddr; addr != null && serverSocket < 0; addr = addr.ai_next) {
+	for (struct addrinfo *addr = serverAddr; addr != NULL && serverSocket < 0; addr = addr->ai_next) {
 		// Attempt to make socket
 		serverSocket = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
 		if (serverSocket < 0)
