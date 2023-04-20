@@ -59,7 +59,7 @@ int initBank()
 	printf("Server port value: %s\n", service);
 	puts("\n************************************************\n");
 	
-	// Free possible address list
+	// Free possible address list once bound to an address
 	free(serverAddr);
 	
 	// Return socket handle
