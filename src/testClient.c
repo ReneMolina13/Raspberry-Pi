@@ -141,6 +141,7 @@ int main(int argc, char **argv)
 		printf("Transaction type (D=0, W=1, I=2): %i\n", mainRequest.trans);
 		printf("Account number: %i\n", mainRequest.acctnum);
 		printf("Value of transaction: %i\n\n", mainRequest.value);
+	}
 
 	
 	// Close client socket
