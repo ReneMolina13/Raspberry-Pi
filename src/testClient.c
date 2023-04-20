@@ -67,8 +67,19 @@ bool setupSocket(NetInfo *sockData)
 		return false;
 	}
 	
-	// Create UDP client socket
-	sockData->clientSocket = socket(sockData->serverAddr->ai_family, sockData->serverAddr->ai_socktype, sockData->serverAddr->ai_protocol);
+	// Create a UDP client socket from options given
+	sockData->clientSocket = -1;
+	for(struct addrinfo *addr = sockData->serverAddr; addr != NULL; addr = addr->ai_next) {
+		sockData->clientSocket = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
+		if (sockData->clientSocket >= 0) {
+			puts("UDP socket successfully created:");
+			printSocketAddress(addr->ai_addr);
+			fputs("\n", stdout);
+			break;
+		}
+	}
+	
+	// Indicates no options were valid sockets
 	if (sockData->clientSocket < 0) {
 		fputs("Error creating socket\n", stderr);
 		return false;
@@ -155,7 +166,7 @@ int main(int argc, char **argv)
 	printf("Value of transaction: %i\n\n", mainRequest.value);
 	
 	// Free memory allocated to server address
-	free(sockData.serverAddr);
+	freeaddrinfo(sockData.serverAddr);
 
 	// Close client socket
 	if (close(sockData.clientSocket) < 0) {

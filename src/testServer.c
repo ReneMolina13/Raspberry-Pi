@@ -35,32 +35,35 @@ int initBank()
 		return -1;
 	}
 	
-	// Create UDP server socket
-	int serverSocket = socket(serverAddr->ai_family, serverAddr->ai_socktype, serverAddr->ai_protocol);
+	// Create and bind a UDP socket from options given
+	int serverSocket = -1;
+	status = -1;
+	for (addrinfo *addr = serverAddr; addr != null && serverSocket < 0; addr = addr.ai_next) {
+		// Attempt to make socket
+		serverSocket = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
+		if (serverSocket < 0)
+			continue;
+		// Attempt to bind socket
+		status = bind(serverSocket, addr->ai_addr, addr->ai_addrlen);
+		if (status != 0) {
+			close(serverSocket);
+			serverSocket = -1;
+			continue;
+		}
+		// Upon success, print out address details
+		puts("UDP socket created and bound to address:");
+		printSocketAddress(addr->ai_addr);
+		puts("\n************************************************\n");
+	}
+		
+	// Indicates no options were valid sockets
 	if (serverSocket < 0) {
-		fputs("Error creating socket\n", stderr);
+		fputs("Error creating socket and binding to a valid address\n", stderr);
 		return -1;
 	}
-
-	puts("UDP socket created:");
-	printf("Socket value: %i\n", serverSocket);
-	puts("\n************************************************\n");
-	
-	// Bind local address to socket
-	status = bind(serverSocket, serverAddr->ai_addr, serverAddr->ai_addrlen);
-	if (status < 0) {
-		fputs("Error binding local address to socket\n", stderr);
-		return -1;
-	}
-	
-	puts("UDP socket bound to address");
-	printf("Server family value: %i\n", serverAddr->ai_family);
-	printf("Server IP value: %i\n", serverAddr->ai_addr);
-	printf("Server port value: %s\n", service);
-	puts("\n************************************************\n");
 	
 	// Free possible address list once bound to an address
-	free(serverAddr);
+	freeaddrinfo(serverAddr);
 	
 	// Return socket handle
 	return serverSocket;
