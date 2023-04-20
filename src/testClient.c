@@ -97,7 +97,7 @@ bool makeBankRequest(NetInfo *sockData, sBANK_PROTOCOL *bankTransaction)
 	ssize_t bytesReceived;
 	struct sockaddr_storage fromAddr;
 	socklen_t fromAddrLength = sizeof(fromAddr);
-	bytesReceived = recvfrom(sockData->clientSocket, bankTransaction, sizeof(*bankTransaction), 0, &fromAddr, &fromAddrLength);
+	bytesReceived = recvfrom(sockData->clientSocket, bankTransaction, sizeof(*bankTransaction), 0, (struct sockaddr *) &fromAddr, &fromAddrLength);
 	// Indicates transmission error
 	if (bytesReceived < 0) {
 		fputs("Unable to receive data\n", stderr);
@@ -144,7 +144,7 @@ int main(int argc, char **argv)
 	printf("Value of transaction: %i\n\n", mainRequest.value);
 
 	// Make the transaction specified by the terminal arguments
-	if (makeBankRequest(sockData.clientSocket, &mainRequest) == false ) {
+	if (makeBankRequest(&sockData, &mainRequest) == false ) {
 		fputs("Unable to process bank request - ", stderr);
 		return -1;
 	}
