@@ -155,7 +155,7 @@ int main(int argc, char **argv)
 	printf("Value of transaction: %i\n\n", mainRequest.value);
 	
 	// Free memory allocated to server address
-	free(sockData->serverAddr);
+	free(sockData.serverAddr);
 
 	// Close client socket
 	if (close(sockData.clientSocket) < 0) {
