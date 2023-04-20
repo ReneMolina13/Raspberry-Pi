@@ -22,10 +22,10 @@ int initBank()
 	char *service = "26207";
 	struct addrinfo addrCriteria;
 	memset(&addrCriteria, 0, sizeof(addrCriteria));
-	addrCriteria->ai_family = AF_UNSPEC;		// Any address family
-	addrCriteria->ai_flags = AI_PASSIVE;		// Accept on any address/port
-	addrCriteria->ai_socktype = SOCK_DGRAM;	// Only accept datagram sockets
-	addrCriteria->ai_protocol = IPPROTO_UDP;	// Only accept UDP protocol
+	addrCriteria.ai_family = AF_UNSPEC;		// Any address family
+	addrCriteria.ai_flags = AI_PASSIVE;		// Accept on any address/port
+	addrCriteria.ai_socktype = SOCK_DGRAM;	// Only accept datagram sockets
+	addrCriteria.ai_protocol = IPPROTO_UDP;	// Only accept UDP protocol
 	
 	// Get list of possible server addresses
 	struct addrinfo *serverAddr;
