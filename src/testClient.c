@@ -51,24 +51,26 @@ bool parseCmdArgs(int argc, char **argv ,NetInfo *sockData, sBANK_PROTOCOL *main
 }
 
 
-bool connectToServer(NetInfo *sockData)
+bool setupSocket(NetInfo *sockData)
 {
-	// Create TCP client socket
-	sockData->clientSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (sockData->clientSocket < 0) {
-		puts("Error creating socket");
+	// Initialize structure specifying possible connection types
+	struct addrinfo addrCriteria;
+	memset(addrCriteria, 0, sizeof(addrCriteria));
+	addrCriteria->ai_family = AF_UNSPEC;	// Any address family
+	addrCriteria->ai_socktype = SOCK_DGRAM;	// Only accept datagram sockets
+	addrCriteria->ai_protocol = IPPRO_UDP;	// Only accept UDP protocol
+	
+	// Get list of server addresses
+	int status = getaddrinfo(sockData->cmdIP, htons(sockData->cmdPort), &addrCriteria, &(sockData->serverAddr));
+	if (status != 0) {
+		fputs("Error getting list of server addresses\n", stderr);
 		return false;
 	}
 	
-	// Initialize structure for address
-	memset(&sockData->serverAddr, 0, sizeof(sockData->serverAddr));
-	sockData->serverAddr.sin_family = AF_INET;
-	sockData->serverAddr.sin_addr.s_addr = inet_addr(sockData->cmdIP);
-	sockData->serverAddr.sin_port = htons(sockData->cmdPort);
-	
-	// Connect to server
-	if (connect(sockData->clientSocket, (struct sockaddr *) &(sockData->serverAddr), sizeof(struct sockaddr)) < 0) {
-		puts("Unable to connect to server");
+	// Create UDP client socket
+	sockData->clientSocket = socket(sockData->serverAddr->ai_family, sockData->serverAddr->ai_socktype, sockData->serverAddr->ai_protocol);
+	if (sockData->clientSocket < 0) {
+		fputs("Error creating socket\n", stderr);
 		return false;
 	}
 	
@@ -76,27 +78,43 @@ bool connectToServer(NetInfo *sockData)
 }
 
 
-int makeBankRequest(int clientSocket, sBANK_PROTOCOL *bankTransaction)
+bool makeBankRequest(int clientSocket, sBANK_PROTOCOL *bankTransaction)
 {
 	// Send the requested transaction to the server
 	ssize_t bytesSent;
-	bytesSent = send(clientSocket, bankTransaction, sizeof(sBANK_PROTOCOL), 0);
+	bytesSent = send(clientSocket, bankTransaction, sizeof(*bankTransaction), 0, sockData->serverAddr->ai_addr, sockData->serverAddr->ai_addrlen);
 	// Indicates transmission error
-	if (bytesSent < 0)
-		return -1;
+	if (bytesSent < 0) {
+		fputs("Unable to send data\n", stderr);
+		return false;
+	}
+	else if (bytesSent != sizeof(*bankTransaction)) {
+		fputs("Unexpected number of bytes sent\n", stderr);
+		return false;
+	}
 	
 	// Receive the response from the server
 	ssize_t bytesReceived;
-	bytesReceived = recv(clientSocket, bankTransaction, sizeof(sBANK_PROTOCOL), 0);
+	struct sockaddr_storage fromAddr;
+	socklen_t fromAddrLength = sizeof(fromAddr);
+	bytesReceived = recv(clientSocket, bankTransaction, sizeof(*bankTransaction), 0, &fromAddr, &fromAddrLength);
 	// Indicates transmission error
-	if (bytesReceived < 0)
-		return -1;
-	// Indicates that the server has closed the socket
-	else if (bytesReceived == 0)
-		return 0;
+	if (bytesReceived < 0) {
+		fputs("Unable to receive data\n", stderr);
+		return false;
+	}
+	else if (bytesReceived != sizeof(*bankTransaction)) {
+		fputs("Unexpected number of bytes received\n", stderr);
+		return false;
+	}
+	// Compate addresses to make sure receiving from correct source
+	else if (*************************) {
+		fputs("Received packet from unknown source\n", stderr);
+		return false;
+	}
 	
 	// Transaction successful
-	return 1;
+	return true;
 }
 
 
@@ -115,35 +133,27 @@ int main(int argc, char **argv)
 	}
 	
 	// Connect to bank server
-	if (connectToServer(&sockData) == false) {
+	if (setupSocket(&sockData) == false) {
 		fputs("Unable to connect to bank server - ", stderr);
 		return -1;
 	}
 	
-	puts("Connected to bank server\n");
 	puts("Making original transaction:");
 	printf("Transaction type (D=0, W=1, I=2): %i\n", mainRequest.trans);
 	printf("Account number: %i\n", mainRequest.acctnum);
 	printf("Value of transaction: %i\n\n", mainRequest.value);
 
-	
 	// Make the transaction specified by the terminal arguments
-	int status = makeBankRequest(sockData.clientSocket, &mainRequest);
-	if (status < 0) {
-		fputs("Original transaction failed due to transmission error - ", stderr);
+	if (makeBankRequest(sockData.clientSocket, &mainRequest) == false ) {
+		fputs("Unable to process bank request - ", stderr);
 		return -1;
 	}
-	else if (status == 0) {
-		puts("Socket in close-wait state: Initiating close handshake");
-	}
-	else {
-		puts("Original transaction completed:");
-		printf("Transaction type (D=0, W=1, I=2): %i\n", mainRequest.trans);
-		printf("Account number: %i\n", mainRequest.acctnum);
-		printf("Value of transaction: %i\n\n", mainRequest.value);
-	}
-
 	
+	puts("Original transaction completed:");
+	printf("Transaction type (D=0, W=1, I=2): %i\n", mainRequest.trans);
+	printf("Account number: %i\n", mainRequest.acctnum);
+	printf("Value of transaction: %i\n\n", mainRequest.value);
+
 	// Close client socket
 	if (close(sockData.clientSocket) < 0) {
 		fputs("Failed to properly close socket - ", stderr);

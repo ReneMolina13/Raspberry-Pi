@@ -17,8 +17,13 @@ typedef struct
 	char *cmdIP;
 	unsigned int cmdPort;
 	int clientSocket;
-	struct sockaddr_in serverAddr;
+	struct addrinfo *serverAddr;
 } NetInfo;
+
+
+//*******************************************************************************************
+// Function Prototypes
+//*******************************************************************************************
 
 
 /*
@@ -64,7 +69,7 @@ bool parseCmdArgs(int, char **, NetInfo *, sBANK_PROTOCOL *);
 	- NetInfo *sockData: Client socket handle and sockaddr_in structure is stored to 
 			this structure
 */
-bool connectToServer(NetInfo *sockData);
+bool setupSocket(NetInfo *sockData);
 
 /*
 	makeBankRequest function:

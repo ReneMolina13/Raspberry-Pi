@@ -7,7 +7,7 @@
 #include "testServer.h"
 
 
-int initBank(struct sockaddr_in *serverAddr)
+int initBank()
 {
 	// Initialize bank accounts
 	srand(time(NULL));
@@ -18,72 +18,69 @@ int initBank(struct sockaddr_in *serverAddr)
 		pthread_mutex_init(&acctData[i].mutex, NULL);
 	}
 	
-	// Create TCP server socket
-	int serverSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+	// Initialize structure specifying possible connection types
+	char *service = "26207";
+	struct addrinfo addrCriteria;
+	memset(addrCriteria, 0, sizeof(addrCriteria));
+	serverAddr->ai_family = AF_UNSPEC;		// Any address family
+	serverAddr->ai_flags = AI_PASSIVE;		// Accept on any address/port
+	serverAddr->ai_socktype = SOCK_DGRAM;	// Only accept datagram sockets
+	serverAddr->ai_protocol = IPPRO_UDP;	// Only accept UDP protocol
+	
+	// Get list of possible server addresses
+	struct addrinfo *serverAddr;
+	int status = getaddrinfo(NULL, service, &addrCriteria, &serverAddr);
+	if (status != 0) {
+		fputs("Error getting list of server addresses\n", stderr);
+		return -1;
+	}
+	
+	// Create UDP server socket
+	int serverSocket = socket(serverAddr->ai_family, serverAddr->ai_socktype, serverAddr->ai_protocol);
 	if (serverSocket < 0) {
-		puts("Error creating socket");
+		fputs("Error creating socket\n", stderr);
 		return -1;
 	}
 
-	// Initialize address structure
-	memset(serverAddr, 0, sizeof(*serverAddr));
-	serverAddr->sin_family = AF_INET;
-	serverAddr->sin_addr.s_addr = htonl(INADDR_ANY);	// Allows connection to any IP address
-	serverAddr->sin_port = htons(26207);
-	
-	puts("TCP socket created:");
+	puts("UDP socket created:");
 	printf("Socket value: %i\n", serverSocket);
 	puts("\n************************************************\n");
 	
 	// Bind local address to socket
-	if (bind(serverSocket, (struct sockaddr *) serverAddr, sizeof(struct sockaddr)) < 0) {
-		puts("Error binding local address to socket");
+	status = bind(serverSocket, serverAddr->ai_addr, serverAddr->ai_addrlen);
+	if (status < 0) {
+		fputs("Error binding local address to socket\n", stderr);
 		return -1;
 	}
 	
-	puts("TCP socket bound to address");
-	printf("Server family value: %i\n", serverAddr->sin_family);
-	printf("Server IP value: %i\n", serverAddr->sin_addr.s_addr);
-	printf("Server port value: %i\n", ntohs(serverAddr->sin_port));
-	
-	// Have server listen for bank customers
-	if (listen(serverSocket, NUM_ACCTS) < 0) {
-		puts("Server unable to listen for traffic");
-		return -1;
-	}
-	
+	puts("UDP socket bound to address");
+	printf("Server family value: %i\n", serverAddr->ai_family);
+	printf("Server IP value: %i\n", serverAddr->ai_addr);
+	printf("Server port value: %s\n", service);
 	puts("\n************************************************\n");
-	puts("Server is now listening for incoming connections");
-	puts("\n************************************************\n");
-
+	
+	// Free possible address list
+	free(serverAddr);
+	
 	// Return socket handle
 	return serverSocket;
 }
 
 
-int handleClient(int clientSocket)
+bool handleClient(int serverSocket)
 {
-	static int transactionNum = 0;
-	printf("Transaction Number: %i\n", transactionNum++);
-	
 	// Receive request from client
+	struct sockaddr_storage clientAddr;
+	socklen_t clientAddrLength = sizeof(clientAddr);
 	sBANK_PROTOCOL clientRequest;
 	ssize_t bytesReceived;
-	bytesReceived = recv(clientSocket, &clientRequest, sizeof(sBANK_PROTOCOL), 0);
+	bytesReceived = recvfrom(serverSocket, &clientRequest, sizeof(sBANK_PROTOCOL), 0, (struct sockaddr *) &clientAddr, &clientAddrLength);
 	if (bytesReceived < 0) {
-		puts("Unable to receive request from client");
-		puts("\n************************************************\n");
-		return -1;
+		fputs("Unable to receive request from client\n", stderr);
+		fputs("\n************************************************\n\n", stderr);
+		return false;
 	}
-	else if (bytesReceived == 0) {
-		puts("Client has closed socket");
-		puts("\n************************************************\n");
-		transactionNum = 0;
-		return 0;
-	}
-	else
-		printf("Received %li bytes out of a possible %lu\n\n", bytesReceived, sizeof(sBANK_PROTOCOL));
-				
+	
 	puts("Received request from client:");
 	printf("Transaction type (D=0, W=1, I=2): %i\n", clientRequest.trans);
 	printf("Account number: %i\n", clientRequest.acctnum);
@@ -102,19 +99,22 @@ int handleClient(int clientSocket)
 	
 	// Confirm with client that request was completed
 	ssize_t bytesSent;
-	bytesSent = send(clientSocket, &clientRequest, sizeof(sBANK_PROTOCOL), 0);
+	bytesSent = send(serverSocket, &clientRequest, sizeof(sBANK_PROTOCOL), 0, (struct sockaddr *) &clientAddr, sizeof(clientAddr));
 	if (bytesSent < 0) {
-		puts("Unable to confirm completion of request to client");
-		puts("\n************************************************\n");
-		return -1;
+		fputs("Unable to confirm completion of request to client\n", stderr);
+		fputs("\n************************************************\n\n", stderr);
+		return false;
 	}
-	else
-		printf("Sent %li bytes out of a possible %lu\n", bytesSent, sizeof(sBANK_PROTOCOL));
+	else if (bytesSent != bytesReceived) {
+		fputs("Send unexpected number of bytes\n", stderr);
+		fputs("\n************************************************\n\n", stderr);
+		return false;
+	}
 	
 	puts("Receipt received by client");
 	puts("\n************************************************\n");
 
-	return 1;
+	return true;
 }
 
 
@@ -171,8 +171,7 @@ int main()
 	puts("\n************************************************\n");
 
 	// Initialize bank server
-	struct sockaddr_in serverAddr;
-	int serverSocket = initBank(&serverAddr);
+	int serverSocket = initBank();
 	if (serverSocket < 0) {
 		fputs("Failed to initialize bank server - ", stderr);
 		return -1;
@@ -180,49 +179,14 @@ int main()
 
 	// Run forever (assuming no errors)
 	while (1) {
-		// Accept client connection
-		char clientName[INET_ADDRSTRLEN];
-		struct sockaddr_in clientAddr;
-		socklen_t clientAddrLength = sizeof(clientAddr);
-		int clientSocket = accept(serverSocket, (struct sockaddr *) &clientAddr, &clientAddrLength);
-		if (clientSocket < 0) {
-			fputs("Unable to accept client connection - ", stderr);
+		// Handle a single request from a client
+		if (handleClient(serverSocket) == false) {
+			fputs("Unable to handle client request - ", stderr);
 			return -1;
 		}
-		inet_ntop(AF_INET, &clientAddr.sin_addr.s_addr, clientName, sizeof(clientName));
-			
-		puts("Server accepted connection request:");
-		printf("Client socket value: %i\n", clientSocket);
-		printf("Client family value: %i\n", clientAddr.sin_family);
-		printf("Client IP value: %s\n", clientName);
-		printf("Client port value: %i\n", ntohs(clientAddr.sin_port));
-		puts("\n************************************************\n");
-		
-		// Handle requests until client ends connection
-		int status;
-		while (1) {
-			status = handleClient(clientSocket);
-			if (status < 0) {
-				fputs("Unable to handle client request - ", stderr);
-				return -1;
-			}
-			else if (status == 0) {
-				puts("Socket in close-wait state: Initiating close handshake");
-				break;
-			}
-		}
-		
-		// Client closed socket
-		if (close(clientSocket) < 0) {
-			fputs("Unable to properly close client socket - ", stderr);
-			return -1;
-		}
-
-		puts("Successfully closed client socket");
-		puts("\n************************************************\n");
 	}
 		
-	// Close server socket
+	// Close server socket (never reached)
 	if (close(serverSocket) < 0) {
 		fputs("Unable to properly close server socket - ", stderr);
 		return -1;

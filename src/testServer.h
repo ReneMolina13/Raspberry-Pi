@@ -14,7 +14,6 @@
 // Number of bank accounts
 #define NUM_ACCTS 100
 
-
 // Server-side banking information
 typedef struct
 {
@@ -44,7 +43,7 @@ typedef struct
 	- struct sockaddr_in *serverAddr: By the time the function returns, this structure has been
 			filled with the connection info for the bank server
 */
-int initBank(struct sockaddr_in *);
+int initBank();
 
 
 /*
@@ -65,7 +64,7 @@ int initBank(struct sockaddr_in *);
 			error sending or receiving data on the socket. Value is 0 if the client closed
 			the connected socket. Value is 1 if the transaction was successful
 */
-int handleClient(int clientSocket);
+bool handleClient(int);
 
 
 /*
