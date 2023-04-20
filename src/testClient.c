@@ -22,7 +22,7 @@ bool parseCmdArgs(int argc, char **argv ,NetInfo *sockData, sBANK_PROTOCOL *main
 	
 	// Extract command line arguemnts into appropriate structures
 	sockData->cmdIP = *(argv + 1);
-	sockData->cmdPort = atoi(*(argv + 2));
+	sockData->cmdPort = *(argv + 2);
 	switch(**(argv + 3)) {
 	case 'B':
 	case 'b':
@@ -55,13 +55,13 @@ bool setupSocket(NetInfo *sockData)
 {
 	// Initialize structure specifying possible connection types
 	struct addrinfo addrCriteria;
-	memset(addrCriteria, 0, sizeof(addrCriteria));
-	addrCriteria->ai_family = AF_UNSPEC;	// Any address family
-	addrCriteria->ai_socktype = SOCK_DGRAM;	// Only accept datagram sockets
-	addrCriteria->ai_protocol = IPPRO_UDP;	// Only accept UDP protocol
+	memset(&addrCriteria, 0, sizeof(addrCriteria));
+	addrCriteria.ai_family = AF_UNSPEC;	// Any address family
+	addrCriteria.ai_socktype = SOCK_DGRAM;	// Only accept datagram sockets
+	addrCriteria.ai_protocol = IPPROTO_UDP;	// Only accept UDP protocol
 	
 	// Get list of server addresses
-	int status = getaddrinfo(sockData->cmdIP, htons(sockData->cmdPort), &addrCriteria, &(sockData->serverAddr));
+	int status = getaddrinfo(sockData->cmdIP, sockData->cmdPort, &addrCriteria, &(sockData->serverAddr));
 	if (status != 0) {
 		fputs("Error getting list of server addresses\n", stderr);
 		return false;

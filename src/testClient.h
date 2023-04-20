@@ -15,7 +15,7 @@
 typedef struct
 {
 	char *cmdIP;
-	unsigned int cmdPort;
+	char *cmdPort;
 	int clientSocket;
 	struct addrinfo *serverAddr;
 } NetInfo;
