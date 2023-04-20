@@ -1,7 +1,6 @@
 # define list of object fies
-CLTOBJ= testClient.o
-SRVOBJ= testServer.o
-TSTOBJ= test.o
+CLTOBJ= testClient.o test.o
+SRVOBJ= testServer.o test.o
 
 # set compiler flags (debug, optimization, & pthread library)
 CFLAGS=-g -O3 -lpthread
