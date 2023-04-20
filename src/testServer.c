@@ -114,7 +114,7 @@ bool handleClient(int serverSocket)
 		return false;
 	}
 	
-	puts("Receipt received by client");
+	puts("Receipt sent to client");
 	puts("\n************************************************\n");
 
 	return true;
