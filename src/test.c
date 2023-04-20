@@ -4,7 +4,7 @@
 */
 
 
-#include "testClient.h"
+#include "test.h"
 
 
 void printSocketAddress(struct socketaddr *addr)
