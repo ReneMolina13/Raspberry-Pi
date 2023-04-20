@@ -1,80 +1,10 @@
 /*
 	Rene Molina
-	EE 4374 - Operating Systems
-	Due Date: 4/12/2023
-	Assigned: 3/27/2023
-	
-	This program creates a bank server which allows clients to perform 
-	deposit, withdraw, and bank inquiry operations. Once the operation 
-	has been completed, the client is given a receipt of the transaction. 
-	Note that each time the bank server program is run, each of the 100 
-	bank accounts are set to contain random amounts of money
+	EE 4230 - Senior Design 2
 */
 
 
 #include "testServer.h"
-
-
-void *clientThread(void *param)
-{
-	// Extract input arguments
-	ThreadArgs *parameter = (ThreadArgs *) param;
-	pthread_t tid = parameter->tid;
-	int serverSocket = parameter->serverSocket;
-	int errorCode = parameter->errorCode;
-	
-	// Run forever (assuming no errors)
-	while (errorCode >= 0) {
-		// Accept client connection
-		char clientName[INET_ADDRSTRLEN];
-		struct sockaddr_in clientAddr;
-		socklen_t clientAddrLength = sizeof(clientAddr);
-		int clientSocket = accept(serverSocket, (struct sockaddr *) &clientAddr, &clientAddrLength);
-		if (clientSocket < 0) {
-			errorCode = ACCEPT_ERROR;
-			break;
-		}
-		inet_ntop(AF_INET, &clientAddr.sin_addr.s_addr, clientName, sizeof(clientName));
-			
-		puts("Server accepted connection request:");
-		printf("Client socket value: %i\n", clientSocket);
-		printf("Client family value: %i\n", clientAddr.sin_family);
-		printf("Client IP value: %s\n", clientName);
-		printf("Client port value: %i\n", ntohs(clientAddr.sin_port));
-		puts("\n************************************************\n");
-		
-		// Handle requests until client ends connection
-		int status;
-		while (1) {
-			status = handleClient(clientSocket);
-			if (status < 0) {
-				errorCode = TRANSMISSION_ERROR;
-				break;
-			}
-			else if (status == 0) {
-				puts("Socket in close-wait state: Initiating close handshake");
-				break;
-			}
-		}
-		
-		// Client closed socket
-		if (errorCode >= 0)
-			if (close(clientSocket) < 0)
-				errorCode = CLOSE_ERROR;
-	
-		puts("Successfully closed client socket");
-		puts("\n************************************************\n");
-	}
-	
-	// Error has occured: kill all other threads and exit
-	int i;
-	for (i = 0; args[i].tid != tid; i++)
-		pthread_kill(args[i].tid, SIGKILL);
-	for (++i; i < NUM_ACCTS; i++)
-		pthread_kill(args[i].tid, SIGKILL);
-	parameter->errorCode = errorCode;
-	pthread_exit(0);
-}
 
 
 int initBank(struct sockaddr_in *serverAddr)
@@ -248,31 +178,49 @@ int main()
 		return -1;
 	}
 
-	// Initialize threads to handle client requests
-	pthread_attr_init(&attr);
-	for (int i = 0; i < NUM_ACCTS; i++) {
-		args[i].serverSocket = serverSocket;
-		args[i].errorCode = 0;
-		pthread_create(&(args[i].tid), &attr, clientThread, (void *) &(args[i]));
-	}
-	
-	// Wait for threads to return (indicates error)
-	for (int i = 0; i < NUM_ACCTS; i++) {
-		pthread_join(args[i].tid, NULL);
-		switch(args[i].errorCode) {
-		case ACCEPT_ERROR:
+	// Run forever (assuming no errors)
+	while (errorCode >= 0) {
+		// Accept client connection
+		char clientName[INET_ADDRSTRLEN];
+		struct sockaddr_in clientAddr;
+		socklen_t clientAddrLength = sizeof(clientAddr);
+		int clientSocket = accept(serverSocket, (struct sockaddr *) &clientAddr, &clientAddrLength);
+		if (clientSocket < 0) {
 			fputs("Unable to accept client connection - ", stderr);
 			return -1;
-		case TRANSMISSION_ERROR:
-			fputs("Unable to handle client request - ", stderr);
-			return -1;
-		case CLOSE_ERROR:
+		}
+		inet_ntop(AF_INET, &clientAddr.sin_addr.s_addr, clientName, sizeof(clientName));
+			
+		puts("Server accepted connection request:");
+		printf("Client socket value: %i\n", clientSocket);
+		printf("Client family value: %i\n", clientAddr.sin_family);
+		printf("Client IP value: %s\n", clientName);
+		printf("Client port value: %i\n", ntohs(clientAddr.sin_port));
+		puts("\n************************************************\n");
+		
+		// Handle requests until client ends connection
+		int status;
+		while (1) {
+			status = handleClient(clientSocket);
+			if (status < 0) {
+				fputs("Unable to handle client request - ", stderr);
+				return -1;
+			}
+			else if (status == 0) {
+				puts("Socket in close-wait state: Initiating close handshake");
+				break;
+			}
+		}
+		
+		// Client closed socket
+		if (close(clientSocket) < 0) {
 			fputs("Unable to properly close client socket - ", stderr);
 			return -1;
 		}
+
+		puts("Successfully closed client socket");
+		puts("\n************************************************\n");
 	}
-	
-	// Never reached
 		
 	// Close server socket
 	if (close(serverSocket) < 0) {

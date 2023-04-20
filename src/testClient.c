@@ -1,48 +1,10 @@
 /*
 	Rene Molina
-	EE 4374 - Operating Systems
-	Due Date: 4/12/2023
-	Assigned: 3/27/2023
-	
-	This program creates a client TCP socket which connects to the bank server 
-	at the IP address and port number (26207) provided by the user. Also included 
-	in the command line arguments are the transaction type, bank account number, 
-	and value of transaction (in pennies). The client socket connects to the bank 
-	server and completes the desired transaction. After this, a random number 
-	between 0 and 100 threads are created which each simultaneously make random, 
-	valid transactions with the bank server. Finally, the program asks the user 
-	if they want to make another transaction. If so, the user enters the transaction 
-	info on the console (IP address and port number remain unchanged), and a new
-	process of the bank client gets created with the entered info as the command
-	line arguments. This continues until the user no longer wants to make another
-	transaction, at which point all of the created processes terminate
+	EE 4230- Senior Design 2
 */
 
 
 #include "testClient.h"
-
-
-int activeThreads = 0;
-
-
-void *serverThread(void *param)
-{
-	printf("%i ", ++activeThreads);
-
-	int *parameter = (int *) param;
-	int clientSocket = *parameter;
-	int clientStatus = *(parameter+1);
-	
-	// Initialize bank protocol structure
-	sBANK_PROTOCOL randomRequest;
-	randomRequest.trans = rand() % 3;
-	randomRequest.acctnum = rand() % 100;
-	randomRequest.value = rand();
-	
-	clientStatus = makeBankRequest(clientSocket, &randomRequest);
-	*(parameter+1) = clientStatus;
-	pthread_exit(0);
-}
 
 
 bool parseCmdArgs(int argc, char **argv ,NetInfo *sockData, sBANK_PROTOCOL *mainRequest)
@@ -138,158 +100,6 @@ int makeBankRequest(int clientSocket, sBANK_PROTOCOL *bankTransaction)
 }
 
 
-int makeThreads(int socket)
-{
-	puts("Creating a random number of threads to make random bank transactions");
-	
-	// Create between 0 and 100 threads to make random bank server requests
-	srand(time(NULL));
-	int numThreads = (rand() % 100) + 1;
-	tid = (pthread_t *) malloc(numThreads * sizeof(pthread_t));
-	pthread_attr_init(&attr);
-	
-	printf("%i threads will be created\n\n", numThreads);
-	fputs("Thread Count: ", stdout);
-
-	// Create the chosen number of threads
-	int socketStatus[numThreads][2];
-	for (int i = 0; i < numThreads; i++) {
-		socketStatus[i][0] = socket;
-		socketStatus[i][1] = 2;
-		pthread_create(tid+i, &attr, serverThread, (void *) socketStatus[i]);
-	}
-	int threadStatus[numThreads];
-	
-	// Wait for all threads to terminate
-	for (int i = 0; i < numThreads; i++) {
-		pthread_join(*(tid + i), NULL);
-		threadStatus[i] = socketStatus[i][1];
-	}
-	
-	// Free array of tid structures and extract status values 
-	free(tid);
-	
-	// Check if any threads were unsuccessful with their bank transactions
-	bool transmissionError = false;
-	bool socketClosed = false;
-	for (int i = 0; i < numThreads; i++) {
-		if (threadStatus[i] < 0) {
-			transmissionError = true;
-			fputs("Transmission error", stdout);
-		}
-		else if (threadStatus[i] == 0) {
-			socketClosed = true;
-			fputs("Socket closed", stdout);
-		}
-	}	
-	
-	// Return value depends on type of error (if any)
-	if (transmissionError == true)
-		return -1;
-	else if (socketClosed == true)
-		return 0;
-	else {
-		puts("\n\nAll threads have terminated successfully");
-		return 1;
-	}
-}
-
-
-bool newTransaction(NetInfo *sockData)
-{
-	// Ask if user wants to request another transaction
-	printf("Would you like to make another transaction? (y/n): ");
-	char c = getchar();
-	if (c != 'y' && c != 'Y')
-		return true;
-	
-	// Ask user for transaction type (to determine if value argument is needed)
-	printf("\nEnter in new transaction for bank server\n");
-	printf("Transaction (B = balance inquiry, D = deposit, W = withdraw): ");
-	int numArgs;
-	getchar();
-	c = getchar();
-	if (c == 'B' || c == 'b')
-		numArgs = 6;
-	else
-		numArgs = 7;
-	
-	// Create argument array
-	char **args = (char **) malloc(numArgs * sizeof(char *));
-	for (int i = 0; i < numArgs-1; i++)	// args[numArgs-1] is NULL
-		*(args+i) = calloc(20, sizeof(char));
-	
-	// Fill command line argument array with info from user
-	
-	int argsAssigned = 0;	// Keeps track of arguments successfully assigned
-	int buffSize = 20;
-	// Argument 0: Filename
-	strncpy(args[0], "./testClient", buffSize-1);
-	argsAssigned++;
-	// Argument 1: IP Address
-	strncpy(args[1], sockData->cmdIP, buffSize-1);
-	argsAssigned++;
-	// Argument 2: Port Number
-	snprintf(args[2], buffSize, "%u", sockData->cmdPort);
-	argsAssigned++;
-	// Argument 3: Transaction
-	snprintf(args[3], buffSize, "%c", c);
-	argsAssigned++;
-	// Argument 4: Account Number
-	printf("Account number: ");
-	argsAssigned += scanf("%19s", args[4]);
-	// Check if transaction value argument is needed
-	if (numArgs == 7) {
-		// Argument 5: Transaction Value
-		printf("Value of the transaction in pennies: ");
-		argsAssigned += scanf("%19s", args[5]);
-		// Argument 6: End of arguments list (NULL)
-		argsAssigned++;
-	}
-	else if (numArgs == 6) {
-		// Argument 5: End of arguments list (NULL)
-		argsAssigned++;
-	}
-	else {
-		fputs("Error with argument array size - ", stderr);
-		return false;
-	}
-	
-	// Check to make sure all arguments successfully assigned
-	if (argsAssigned != numArgs) {
-		fputs("Error assigning command line arguments - ", stderr);
-		return false;
-	}
-	
-	// Fork process & call this program from command line
-	int childExitStatus;
-	pid_t pid = fork();
-	if (pid < 0) {
-		fputs("Error forking process - ", stderr);
-		return false;
-	}
-	// Child process: Arguments are new transaction specified by user
-	else if (pid == 0) {
-		
-		puts("\nChild process executing");
-
-		// execvp(args[0], args);
-		execv(args[0], args);	
-	}
-	
-	// Parent frees pointer memory
-	for (int i = 0; i < numArgs-1; i++) {
-		free(*(args + i));
-	}
-	free(args);
-		
-	// Wait for child before exiting
-	wait(&childExitStatus);
-	
-	return true;
-}
-
-
 int main(int argc, char **argv)
 {	
 	puts("\n*************************************************************************************\n");
@@ -332,18 +142,6 @@ int main(int argc, char **argv)
 		printf("Account number: %i\n", mainRequest.acctnum);
 		printf("Value of transaction: %i\n\n", mainRequest.value);
 
-
-		// Create threads that make random transactions with bank server
-		status = makeThreads(sockData.clientSocket);
-		if (status < 0) {
-			fputs("Thread transaction(s) failed due to transmission error - ", stderr);
-			return -1;
-		}
-		else if (status == 0)
-			puts("Socket in close-wait state: Initiating close handshake");
-		else
-			puts("Bank transactions made by all threads were successful");
-	}
 	
 	// Close client socket
 	if (close(sockData.clientSocket) < 0) {
@@ -354,14 +152,5 @@ int main(int argc, char **argv)
 	puts("Successfully closed socket\n");
 	puts("Asking user for new transaction:");
 
-	// Ask user for next bank server transaction
-	if (newTransaction(&sockData) == false) {
-		fputs("Unable to make requested transaction - ", stderr);
-		return -1;
-	}
-	
-	puts("Parent process terminating");
-	
-	// End parent process
 	return 0;
 }
