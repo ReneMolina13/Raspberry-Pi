@@ -179,7 +179,7 @@ int main()
 	}
 
 	// Run forever (assuming no errors)
-	while (errorCode >= 0) {
+	while (1) {
 		// Accept client connection
 		char clientName[INET_ADDRSTRLEN];
 		struct sockaddr_in clientAddr;
