@@ -27,7 +27,7 @@ void printSocketAddress(const struct sockaddr *addr)
 	case AF_INET6:
 		addrNum = &((struct sockaddr_in6 *) addr)->sin6_addr;
 		printf("IPv6 value: %s", inet_ntop(addr->sa_family, addrNum, buffer, sizeof(buffer)));
-		printf("Port value: %u", ntohs(((struct sockaddr_in6) addr)->sin6_port););
+		printf("Port value: %u", ntohs(((struct sockaddr_in6) addr)->sin6_port));
 		break;
 	default:
 		puts("Unknown address family");
