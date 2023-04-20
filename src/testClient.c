@@ -151,7 +151,6 @@ int main(int argc, char **argv)
 	}
 	
 	puts("Successfully closed socket\n");
-	puts("Asking user for new transaction:");
 
 	return 0;
 }
