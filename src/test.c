@@ -7,7 +7,7 @@
 #include "test.h"
 
 
-void printSocketAddress(const struct socketaddr *addr)
+void printSocketAddress(const struct sockaddr *addr)
 {
 	// Make sure address isn't null
 	if (addr == NULL)
