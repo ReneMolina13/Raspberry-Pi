@@ -90,7 +90,7 @@ bool setupSocket(NetInfo *sockData);
 	- sBANK_PROTOCOL *bankTransaction: Once transaction is complete, values in this structure
 			represent the transaction receipt, which is returned to the calling function
 */
-int makeBankRequest(int, sBANK_PROTOCOL *);
+bool makeBankRequest(NetInfo *, sBANK_PROTOCOL *);
 
 
 #endif

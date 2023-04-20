@@ -78,11 +78,11 @@ bool setupSocket(NetInfo *sockData)
 }
 
 
-bool makeBankRequest(int clientSocket, sBANK_PROTOCOL *bankTransaction)
+bool makeBankRequest(NetInfo *sockData, sBANK_PROTOCOL *bankTransaction)
 {
 	// Send the requested transaction to the server
 	ssize_t bytesSent;
-	bytesSent = send(clientSocket, bankTransaction, sizeof(*bankTransaction), 0, sockData->serverAddr->ai_addr, sockData->serverAddr->ai_addrlen);
+	bytesSent = send(sockData->clientSocket, bankTransaction, sizeof(*bankTransaction), 0, sockData->serverAddr->ai_addr, sockData->serverAddr->ai_addrlen);
 	// Indicates transmission error
 	if (bytesSent < 0) {
 		fputs("Unable to send data\n", stderr);
@@ -97,7 +97,7 @@ bool makeBankRequest(int clientSocket, sBANK_PROTOCOL *bankTransaction)
 	ssize_t bytesReceived;
 	struct sockaddr_storage fromAddr;
 	socklen_t fromAddrLength = sizeof(fromAddr);
-	bytesReceived = recv(clientSocket, bankTransaction, sizeof(*bankTransaction), 0, &fromAddr, &fromAddrLength);
+	bytesReceived = recv(sockData->clientSocket, bankTransaction, sizeof(*bankTransaction), 0, &fromAddr, &fromAddrLength);
 	// Indicates transmission error
 	if (bytesReceived < 0) {
 		fputs("Unable to receive data\n", stderr);
