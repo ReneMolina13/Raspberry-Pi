@@ -40,7 +40,7 @@ typedef struct
 //*******************************************************************************************
 
 
-void printSocketAddress(struct sockaddr *);
+void printSocketAddress(const struct sockaddr *);
 
 
 #endif
