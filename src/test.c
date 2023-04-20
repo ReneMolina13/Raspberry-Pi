@@ -20,14 +20,14 @@ void printSocketAddress(const struct sockaddr *addr)
 	// Print out correct IP address type
 	switch(addr->sa_family) {
 	case AF_INET:
-		addrNum = &((struct sockaddr_in *) addr)->sin_addr;
+		addrNum = &(((struct sockaddr_in *) addr)->sin_addr);
 		printf("IPv4 value: %s", inet_ntop(addr->sa_family, addrNum, buffer, sizeof(buffer)));
-		printf("Port value: %u", ntohs(((struct sockaddr_in) addr)->sin_port);
+		printf("Port value: %u", ntohs(((struct sockaddr_in *) addr)->sin_port);
 		break;
 	case AF_INET6:
 		addrNum = &((struct sockaddr_in6 *) addr)->sin6_addr;
 		printf("IPv6 value: %s", inet_ntop(addr->sa_family, addrNum, buffer, sizeof(buffer)));
-		printf("Port value: %u", ntohs(((struct sockaddr_in6) addr)->sin6_port));
+		printf("Port value: %u", ntohs(((struct sockaddr_in6 *) addr)->sin6_port));
 		break;
 	default:
 		puts("Unknown address family");
