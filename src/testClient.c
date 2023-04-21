@@ -127,7 +127,7 @@ bool sendPackets(NetInfo *sockData, sBANK_PROTOCOL *bankTransaction)
 }
 
 
-bool latencyTesting(NetInfo *sockData, int test)
+bool runCmdTest(char *cmdIP, int test)
 {
 	char **args;
 	
@@ -138,27 +138,20 @@ bool latencyTesting(NetInfo *sockData, int test)
 		args[0] = "ping";
 		args[1] = "-c";
 		args[2] = "10";
-		args[3] = sockData->cmdIP;
+		args[3] = cmdIP;
 		args[4] = NULL;
 		break;
 	case TRACEROUTE:
 		args = (char **) malloc(3 * sizeof(char *));
 		args[0] = "traceroute";
-		args[1] = sockData->cmdIP;
+		args[1] = cmdIP;
 		args[2] = NULL;
-		break;
-	case OWAMP:
-		args = 
-		args[0] = "owping";
-		break;
-	case TWAMP:
-	
 		break;
 	case IPERF:
 		args = (char **) malloc(6 * sizeof(char *));
 		args[0] = "iperf";
 		args[1] = "-c";
-		args[2] = sockData->cmdIP;
+		args[2] = cmdIP;
 		args[3] = "-u";
 		args[4] = 100;
 		args[5] = NULL;

@@ -20,14 +20,12 @@ typedef struct
 } NetInfo;
 
 
-// Latency Tests
+// Command line tests
 enum
 {
-	PING = 0,
-	TRACEROUTE = 1;
-	OWAMP = 2;
-	TWAMP = 3;
-	IPERF = 4;
+	PING = 0,		// Round trip latency, packet loss (approximate)
+	TRACEROUTE = 1;	// Round trip delay, packet loss (approximate), network path
+	IPERF = 2;		// Jitter, packet loss, throughput
 };
 
 
@@ -35,7 +33,7 @@ enum
 bool parseCmdArgs(int, char **, NetInfo *, sBANK_PROTOCOL *);
 bool setupSocket(NetInfo *sockData);
 bool sendPackets(NetInfo *, sBANK_PROTOCOL *);
-bool latencyTesting(NetInfo *);
+bool runCmdTest(char *, int);
 
 
 #endif
