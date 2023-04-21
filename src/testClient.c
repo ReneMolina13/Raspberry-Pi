@@ -127,26 +127,63 @@ bool sendPackets(NetInfo *sockData, sBANK_PROTOCOL *bankTransaction)
 }
 
 
-bool latencyTesting(NetInfo *sockData)
+bool latencyTesting(NetInfo *sockData, int test)
 {
-	char *args[5];
-	args[0] = "ping";
-	args[1] = "-c";
-	args[2] = "10";
-	args[3] = sockData->cmdIP;
-	args[4] = NULL;
+	char **args;
+	
+	switch(test) {
+	case PING:
+		args = (char **) malloc(5 * sizeof(char *));
+		int numPings = 10;
+		args[0] = "ping";
+		args[1] = "-c";
+		args[2] = "10";
+		args[3] = sockData->cmdIP;
+		args[4] = NULL;
+		break;
+	case TRACEROUTE:
+		args = (char **) malloc(3 * sizeof(char *));
+		args[0] = "traceroute";
+		args[1] = sockData->cmdIP;
+		args[2] = NULL;
+		break;
+	case OWAMP:
+		args = 
+		args[0] = "owping";
+		break;
+	case TWAMP:
+	
+		break;
+	case IPERF:
+		args = (char **) malloc(6 * sizeof(char *));
+		args[0] = "iperf";
+		args[1] = "-c";
+		args[2] = sockData->cmdIP;
+		args[3] = "-u";
+		args[4] = 100;
+		args[5] = NULL;
+		break;
+	default:
+		fputs("Invalid latency test\n", stderr);
+		return false;
+	}
 	
 	int childExitStatus;
 	int pid = fork();
+	// Fork error
 	if (pid < 0) {
 		fputs("Unable to fork process\n", stderr);
 		return false;
 	}
+	// Child process
 	else if (pid == 0)
 		execvp(args[0], args);
-	wait(&childExitStatus);
-	
-	return true;
+	// Parent process
+	else {
+		free(args);
+		wait(&childExitStatus);
+		return true;
+	}
 }
 
 
@@ -188,7 +225,7 @@ int main(int argc, char **argv)
 		return -1;
 	}
 	
-	puts("Successfully closed socket\n");
+	puts("Successfully closed socket");
 	puts("\n************************************************\n");
 
 	return 0;
