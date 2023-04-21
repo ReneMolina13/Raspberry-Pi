@@ -141,9 +141,9 @@ bool latencyTesting(NetInfo *sockData)
 		fputs("Unable to fork process\n", stderr);
 		return false;
 	}
-	else if (pid == 0) {
+	else if (pid == 0)
 		execvp(args[0], args);
-	}
+	wait();
 }
 
 
