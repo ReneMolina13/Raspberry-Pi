@@ -134,7 +134,6 @@ bool runCmdTest(char *cmdIP, int test)
 	switch(test) {
 	case PING:
 		args = (char **) malloc(5 * sizeof(char *));
-		int numPings = 10;
 		args[0] = "ping";
 		args[1] = "-c";
 		args[2] = "10";
@@ -153,7 +152,7 @@ bool runCmdTest(char *cmdIP, int test)
 		args[1] = "-c";
 		args[2] = cmdIP;
 		args[3] = "-u";
-		args[4] = 100;
+		args[4] = "100";
 		args[5] = NULL;
 		break;
 	default:
