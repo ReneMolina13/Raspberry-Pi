@@ -129,7 +129,7 @@ bool sendPackets(NetInfo *sockData, sBANK_PROTOCOL *bankTransaction)
 
 bool latencyTesting(NetInfo *sockData)
 {
-	char *args[35;
+	char *args[5];
 	args[0] = "ping";
 	args[1] = "-c";
 	args[2] = "10";
