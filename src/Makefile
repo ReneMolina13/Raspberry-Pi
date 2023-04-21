@@ -3,7 +3,7 @@ CLTOBJ= testClient.o test.o
 SRVOBJ= testServer.o test.o
 
 # set compiler flags (debug, optimization, & pthread library)
-CFLAGS=-g -O3 -lpthread
+CFLAGS=-g -O3
 
 # first target is built by default
 all: testClient testServer
