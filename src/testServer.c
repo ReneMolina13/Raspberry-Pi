@@ -7,19 +7,9 @@
 #include "testServer.h"
 
 
-int initBank()
+int initServer(char *service)
 {
-	// Initialize bank accounts
-	srand(time(NULL));
-	for (int i = 0; i < NUM_ACCTS; i++) {
-		// Set account balances to random values
-		acctData[i].balance = rand();
-		// Initialize account mutexes
-		pthread_mutex_init(&acctData[i].mutex, NULL);
-	}
-	
 	// Initialize structure specifying possible connection types
-	char *service = "26207";
 	struct addrinfo addrCriteria;
 	memset(&addrCriteria, 0, sizeof(addrCriteria));
 	addrCriteria.ai_family = AF_UNSPEC;		// Any address family
@@ -72,109 +62,46 @@ int initBank()
 
 bool handleClient(int serverSocket)
 {
-	// Receive request from client
+	// Location to store client address & length
 	struct sockaddr_storage clientAddr;
 	socklen_t clientAddrLength = sizeof(clientAddr);
+	// Store data received from client into structure
 	sBANK_PROTOCOL clientRequest;
-	ssize_t bytesReceived;
-	bytesReceived = recvfrom(serverSocket, &clientRequest, sizeof(sBANK_PROTOCOL), 0, (struct sockaddr *) &clientAddr, &clientAddrLength);
+	ssize_t bytesReceived = recvfrom(serverSocket, &clientRequest, sizeof(sBANK_PROTOCOL), 0, (struct sockaddr *) &clientAddr, &clientAddrLength);
 	if (bytesReceived < 0) {
 		fputs("Unable to receive request from client\n", stderr);
-		fputs("\n************************************************\n\n", stderr);
 		return false;
 	}
 	
-	puts("Received request from client:");
-	printf("Transaction type (D=0, W=1, I=2): %i\n", clientRequest.trans);
-	printf("Account number: %i\n", clientRequest.acctnum);
-	printf("Value of transaction: %i\n\n", clientRequest.value);
-	
-	// Perform requested transaction 
-	if (processTransaction(&clientRequest) == false)
-		puts("Unable to complete transaction");
-	else
-		puts("Transaction Completed");
-	
-	puts("Receipt for client: ");
-	printf("Transaction type (D=0, W=1, I=2): %i\n", clientRequest.trans);
-	printf("Account number: %i\n", clientRequest.acctnum);
-	printf("Value of transaction: %i\n\n", clientRequest.value);
-	
-	// Confirm with client that request was completed
+	// Send packet to client
 	ssize_t bytesSent;
 	bytesSent = sendto(serverSocket, &clientRequest, sizeof(sBANK_PROTOCOL), 0, (struct sockaddr *) &clientAddr, sizeof(clientAddr));
 	if (bytesSent < 0) {
-		fputs("Unable to confirm completion of request to client\n", stderr);
-		fputs("\n************************************************\n\n", stderr);
+		fputs("Transmission Error\n", stderr);
 		return false;
 	}
 	else if (bytesSent != bytesReceived) {
 		fputs("Send unexpected number of bytes\n", stderr);
-		fputs("\n************************************************\n\n", stderr);
 		return false;
 	}
 	
-	puts("Receipt sent to client");
-	puts("\n************************************************\n");
-
 	return true;
-}
-
-
-bool processTransaction(sBANK_PROTOCOL *request)
-{	
-	// Checks for a valid account number
-	if (request->acctnum < 0 || request->acctnum >= NUM_ACCTS) {
-		puts("Invalid account number");
-		return false;
-	}
-	
-	// Use mutex to prevent race conditions
-	pthread_mutex_lock(&acctData[request->acctnum].mutex);
-
-	// Check for valid request
-	bool success = true;
-	switch(request->trans) {
-	
-	// Deposit
-	case BANK_TRANS_DEPOSIT:
-		acctData[request->acctnum].balance += request->value;
-		break;
-	
-	// Withdraw
-	case BANK_TRANS_WITHDRAW:
-		// Check for sufficient funds
-		if (acctData[request->acctnum].balance < request->value) {
-			puts("Insufficient Funds");
-			request->value = 0;
-			success = false;
-		}
-		else 
-			acctData[request->acctnum].balance -= request->value;
-		break;
-		
-	// Show account balance
-	case BANK_TRANS_INQUIRY:
-		request->value = acctData[request->acctnum].balance;
-		break;
-		
-	default:
-		puts("Invalid transaction");
-		success = false;
-	}
-	
-	// Unlock mutex and return whether transaction was successful
-	pthread_mutex_unlock(&acctData[request->acctnum].mutex);
-	return success;
 }
 
 
 int main()
 {	
-	puts("\n************************************************\n");
+	puts("\n********************************************************************************\n");
 
+	// Only argument is port/service, extra arguments ignored
+	if (argc < 2) {
+		puts("Not enough arguments entered:");
+		puts("1st argument should be port address / service of the server");
+		return -1;
+	}
+	
 	// Initialize bank server
-	int serverSocket = initBank();
+	int serverSocket = initServer(argv[1]);
 	if (serverSocket < 0) {
 		fputs("Failed to initialize bank server - ", stderr);
 		return -1;

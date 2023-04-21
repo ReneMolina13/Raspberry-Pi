@@ -89,11 +89,10 @@ bool setupSocket(NetInfo *sockData)
 }
 
 
-bool makeBankRequest(NetInfo *sockData, sBANK_PROTOCOL *bankTransaction)
+bool sendPackets(NetInfo *sockData, sBANK_PROTOCOL *bankTransaction)
 {
 	// Send the requested transaction to the server
-	ssize_t bytesSent;
-	bytesSent = sendto(sockData->clientSocket, bankTransaction, sizeof(*bankTransaction), 0, sockData->serverAddr->ai_addr, sockData->serverAddr->ai_addrlen);
+	ssize_t bytesSent = sendto(sockData->clientSocket, bankTransaction, sizeof(*bankTransaction), 0, sockData->serverAddr->ai_addr, sockData->serverAddr->ai_addrlen);
 	// Indicates transmission error
 	if (bytesSent < 0) {
 		fputs("Unable to send data\n", stderr);
@@ -118,11 +117,6 @@ bool makeBankRequest(NetInfo *sockData, sBANK_PROTOCOL *bankTransaction)
 		fputs("Unexpected number of bytes received\n", stderr);
 		return false;
 	}
-	// Compate addresses to make sure receiving from correct source
-	// else if (*************************) {
-		// fputs("Received packet from unknown source\n", stderr);
-		// return false;
-	// }
 	
 	// Transaction successful
 	return true;
@@ -149,21 +143,11 @@ int main(int argc, char **argv)
 		return -1;
 	}
 	
-	puts("Making original transaction:");
-	printf("Transaction type (D=0, W=1, I=2): %i\n", mainRequest.trans);
-	printf("Account number: %i\n", mainRequest.acctnum);
-	printf("Value of transaction: %i\n\n", mainRequest.value);
-
 	// Make the transaction specified by the terminal arguments
 	if (makeBankRequest(&sockData, &mainRequest) == false ) {
 		fputs("Unable to process bank request - ", stderr);
 		return -1;
 	}
-	
-	puts("Original transaction completed:");
-	printf("Transaction type (D=0, W=1, I=2): %i\n", mainRequest.trans);
-	printf("Account number: %i\n", mainRequest.acctnum);
-	printf("Value of transaction: %i\n\n", mainRequest.value);
 	
 	// Free memory allocated to server address
 	freeaddrinfo(sockData.serverAddr);
