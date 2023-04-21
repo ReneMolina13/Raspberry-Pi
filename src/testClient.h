@@ -27,7 +27,7 @@ typedef struct
 
 bool parseCmdArgs(int, char **, NetInfo *, sBANK_PROTOCOL *);
 bool setupSocket(NetInfo *sockData);
-bool makeBankRequest(NetInfo *, sBANK_PROTOCOL *);
+bool sendPackets(NetInfo *, sBANK_PROTOCOL *);
 
 
 #endif
