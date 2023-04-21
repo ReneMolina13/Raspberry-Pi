@@ -11,7 +11,6 @@
 #include "test.h"
 
 
-// Structure holding connection info (from cmd line & necessary structures)
 typedef struct
 {
 	char *cmdIP;
@@ -21,10 +20,7 @@ typedef struct
 } NetInfo;
 
 
-//*******************************************************************************************
-// Function Prototypes
-//*******************************************************************************************
-
+// Function prototypes
 bool parseCmdArgs(int, char **, NetInfo *, sBANK_PROTOCOL *);
 bool setupSocket(NetInfo *sockData);
 bool sendPackets(NetInfo *, sBANK_PROTOCOL *);
