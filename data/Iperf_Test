@@ -1,2 +1,2 @@
 #! /bin/bash
-iperf $1 $2 $3 $4 > iperfData.txt
+iperf3 $1 $2 $3 $4 > iperfData.txt
