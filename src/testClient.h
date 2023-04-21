@@ -24,6 +24,7 @@ typedef struct
 bool parseCmdArgs(int, char **, NetInfo *, sBANK_PROTOCOL *);
 bool setupSocket(NetInfo *sockData);
 bool sendPackets(NetInfo *, sBANK_PROTOCOL *);
+bool latencyTesting(NetInfo *);
 
 
 #endif

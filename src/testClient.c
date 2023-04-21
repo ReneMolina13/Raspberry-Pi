@@ -127,6 +127,24 @@ bool sendPackets(NetInfo *sockData, sBANK_PROTOCOL *bankTransaction)
 }
 
 
+bool latencyTesting(NetInfo *sockData)
+{
+	char *args[3];
+	args[0] = "ping";
+	args[1] = sockData->cmdIP;
+	args[2] = NULL;
+	
+	int pid = fork();
+	if (pid < 0) {
+		fputs("Unable to fork process\n", stderr);
+		return false;
+	}
+	else if (pid == 0) {
+		execvp(args[0], args);
+	}
+}
+
+
 int main(int argc, char **argv)
 {	
 	puts("\n************************************************\n");
@@ -152,6 +170,9 @@ int main(int argc, char **argv)
 		fputs("Unable to process bank request - ", stderr);
 		return -1;
 	}
+	
+	// Perform latency testing
+	latencyTesting(&sockData);
 	
 	// Free memory allocated to server address
 	freeaddrinfo(sockData.serverAddr);
