@@ -163,6 +163,7 @@ int main(int argc, char **argv)
 	}
 	
 	puts("Successfully closed socket\n");
+	puts("\n************************************************\n");
 
 	return 0;
 }
