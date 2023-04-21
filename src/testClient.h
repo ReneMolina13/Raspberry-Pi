@@ -24,8 +24,8 @@ typedef struct
 enum
 {
 	PING = 0,		// Round trip latency, packet loss (approximate)
-	TRACEROUTE = 1;	// Round trip delay, packet loss (approximate), network path
-	IPERF = 2;		// Jitter, packet loss, throughput
+	TRACEROUTE = 1,	// Round trip delay, packet loss (approximate), network path
+	IPERF = 2,		// Jitter, packet loss, throughput
 };
 
 
