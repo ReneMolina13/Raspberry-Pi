@@ -14,6 +14,7 @@
 #include <time.h>
 #include <string.h>
 #include <stdbool.h>
+#include <sys/wait.h>
 #include <sys/socket.h>	
 #include <arpa/inet.h>
 #include <netdb.h>

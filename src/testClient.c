@@ -136,6 +136,7 @@ bool latencyTesting(NetInfo *sockData)
 	args[3] = sockData->cmdIP;
 	args[4] = NULL;
 	
+	int childExitStatus;
 	int pid = fork();
 	if (pid < 0) {
 		fputs("Unable to fork process\n", stderr);
@@ -143,7 +144,9 @@ bool latencyTesting(NetInfo *sockData)
 	}
 	else if (pid == 0)
 		execvp(args[0], args);
-	wait();
+	wait(&childExitStatus);
+	
+	return true;
 }
 
 
