@@ -206,7 +206,9 @@ int main(int argc, char **argv)
 	}
 	
 	// Perform latency testing
-	latencyTesting(&sockData);
+	runCmdTest(sockData->cmdIP, PING);
+	runCmdTest(sockData->cmdIP, TRACEROUTE);
+	runCmdTest(sockData->cmdIP, IPERF);
 	
 	// Free memory allocated to server address
 	freeaddrinfo(sockData.serverAddr);
