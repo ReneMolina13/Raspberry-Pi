@@ -148,7 +148,7 @@ bool runCmdTest(char *cmdIP, int test)
 		break;
 	case IPERF:
 		args = (char **) malloc(6 * sizeof(char *));
-		args[0] = "iperf";
+		args[0] = "iperf3";
 		args[1] = "-c";
 		args[2] = cmdIP;
 		args[3] = "-u";
