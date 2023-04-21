@@ -73,7 +73,7 @@ bool handleClient(int serverSocket)
 		return false;
 	}
 	
-	printf("Received %i bytes from the server\n", bytesReceived);
+	printf("Received %i bytes from the client\n", bytesReceived);
 	
 	// Send packet to client
 	ssize_t bytesSent;
@@ -87,7 +87,7 @@ bool handleClient(int serverSocket)
 		return false;
 	}
 	
-	printf("Sent %i bytes to the server\n", bytesSent);
+	printf("Sent %i bytes to the client\n", bytesSent);
 	
 	return true;
 }

@@ -103,6 +103,8 @@ bool sendPackets(NetInfo *sockData, sBANK_PROTOCOL *bankTransaction)
 		return false;
 	}
 	
+	printf("Sent %i bytes to the server\n", bytesSent);
+	
 	// Receive the response from the server
 	ssize_t bytesReceived;
 	struct sockaddr_storage fromAddr;
@@ -117,6 +119,8 @@ bool sendPackets(NetInfo *sockData, sBANK_PROTOCOL *bankTransaction)
 		fputs("Unexpected number of bytes received\n", stderr);
 		return false;
 	}
+	
+	printf("Received %i bytes from the server\n", bytesReceived);
 	
 	// Transaction successful
 	return true;
