@@ -73,6 +73,8 @@ bool handleClient(int serverSocket)
 		return false;
 	}
 	
+	printf("Received %i bytes from the server\n", bytesReceived);
+	
 	// Send packet to client
 	ssize_t bytesSent;
 	bytesSent = sendto(serverSocket, &clientRequest, sizeof(sBANK_PROTOCOL), 0, (struct sockaddr *) &clientAddr, sizeof(clientAddr));
@@ -84,6 +86,8 @@ bool handleClient(int serverSocket)
 		fputs("Send unexpected number of bytes\n", stderr);
 		return false;
 	}
+	
+	printf("Sent %i bytes to the server\n", bytesSent);
 	
 	return true;
 }
