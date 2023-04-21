@@ -10,7 +10,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <pthread.h>
 #include <unistd.h>
 #include <time.h>
 #include <string.h>
@@ -18,12 +17,6 @@
 #include <sys/socket.h>	
 #include <arpa/inet.h>
 #include <netdb.h>
-
-
-// Bank Transaction Types
-#define BANK_TRANS_DEPOSIT 0
-#define BANK_TRANS_WITHDRAW 1
-#define BANK_TRANS_INQUIRY 2
 
 
 // Client-side banking protocol
