@@ -139,7 +139,7 @@ bool runCmdTest(char *cmdIP, int test)
 		args[2] = "10";
 		args[3] = cmdIP;
 		args[4] = ">";
-		args[5] = "pingData.txt";
+		args[5] = "../data/pingData.txt";
 		args[6] = NULL;
 		break;
 	case TRACEROUTE:
@@ -147,7 +147,7 @@ bool runCmdTest(char *cmdIP, int test)
 		args[0] = "traceroute";
 		args[1] = cmdIP;
 		args[2] = ">";
-		args[3] = "tracerouteData.txt";
+		args[3] = "../data/tracerouteData.txt";
 		args[4] = NULL;
 		break;
 	case IPERF:
@@ -158,7 +158,7 @@ bool runCmdTest(char *cmdIP, int test)
 		args[3] = "-u";
 		args[4] = "100";
 		args[5] = ">";
-		args[6] = "iperfData.txt";
+		args[6] = "../data/iperfData.txt";
 		args[7] = NULL;
 		break;
 	default:
