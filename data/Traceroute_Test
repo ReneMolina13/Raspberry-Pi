@@ -1,0 +1,2 @@
+#! /bin/bash
+traceroute $1 > traceroute.txt
