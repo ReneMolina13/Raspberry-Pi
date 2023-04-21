@@ -144,7 +144,7 @@ int main(int argc, char **argv)
 	}
 	
 	// Make the transaction specified by the terminal arguments
-	if (makeBankRequest(&sockData, &mainRequest) == false ) {
+	if (sendPackets(&sockData, &mainRequest) == false ) {
 		fputs("Unable to process bank request - ", stderr);
 		return -1;
 	}
