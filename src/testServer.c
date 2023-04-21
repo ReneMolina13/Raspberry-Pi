@@ -89,7 +89,7 @@ bool handleClient(int serverSocket)
 }
 
 
-int main()
+int main(int argc, char **argv)
 {	
 	puts("\n********************************************************************************\n");
 
