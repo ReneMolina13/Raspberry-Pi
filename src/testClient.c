@@ -133,27 +133,33 @@ bool runCmdTest(char *cmdIP, int test)
 	
 	switch(test) {
 	case PING:
-		args = (char **) malloc(5 * sizeof(char *));
+		args = (char **) malloc(7 * sizeof(char *));
 		args[0] = "ping";
 		args[1] = "-c";
 		args[2] = "10";
 		args[3] = cmdIP;
-		args[4] = NULL;
+		args[4] = ">";
+		args[5] = "pingData.txt";
+		args[6] = NULL;
 		break;
 	case TRACEROUTE:
-		args = (char **) malloc(3 * sizeof(char *));
+		args = (char **) malloc(5 * sizeof(char *));
 		args[0] = "traceroute";
 		args[1] = cmdIP;
-		args[2] = NULL;
+		args[2] = ">";
+		args[3] = "tracerouteData.txt";
+		args[4] = NULL;
 		break;
 	case IPERF:
-		args = (char **) malloc(6 * sizeof(char *));
+		args = (char **) malloc(8 * sizeof(char *));
 		args[0] = "iperf3";
 		args[1] = "-c";
 		args[2] = cmdIP;
 		args[3] = "-u";
 		args[4] = "100";
-		args[5] = NULL;
+		args[5] = ">";
+		args[6] = "iperfData.txt";
+		args[7] = NULL;
 		break;
 	default:
 		fputs("Invalid latency test\n", stderr);
