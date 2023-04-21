@@ -95,7 +95,7 @@ bool handleClient(int serverSocket)
 
 int main(int argc, char **argv)
 {	
-	puts("\n********************************************************************************\n");
+	puts("\n************************************************\n");
 
 	// Only argument is port/service, extra arguments ignored
 	if (argc < 2) {
@@ -118,6 +118,7 @@ int main(int argc, char **argv)
 			fputs("Unable to handle client request - ", stderr);
 			return -1;
 		}
+		puts("\n************************************************\n");
 	}
 		
 	// Close server socket (never reached)
