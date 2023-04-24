@@ -23,7 +23,7 @@ bool clientSetup(int argc, char **argv ,NetInfo *sockData, Packets *packets)
 	
 	// Initialize data packets
 	srand(time(NULL));
-	*(packets->oneByte) = rand() % 128;
+	packets->oneByte = rand() % 128;
 	for (int i = 0; i < 2; i++)
 		packets->two_bytes[i] = rand() % 128;
 	for (int i = 0; i < 4; i++)
@@ -102,7 +102,7 @@ bool setupSocket(NetInfo *sockData)
 bool makeTraffic(const NetInfo *sockData, Packets *packets)
 {
 	bool retVal = true;
-	retVal *= sendPacket(sockData, packets->oneByte, sizeof(packets->oneByte));
+	retVal *= sendPacket(sockData, &packets->oneByte, sizeof(packets->oneByte));
 	retVal *= sendPacket(sockData, packets->two_bytes, sizeof(packets->two_bytes));
 	retVal *= sendPacket(sockData, packets->four_bytes, sizeof(packets->four_bytes));
 	retVal *= sendPacket(sockData, packets->eight_bytes, sizeof(packets->eight_bytes));

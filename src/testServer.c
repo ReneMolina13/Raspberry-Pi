@@ -62,7 +62,7 @@ int initServer(char *service)
 
 bool handleClient(int serverSocket, Packets *packets)
 {
-	if (receivePacket(serverSocket, packets->oneByte, sizeof(packets->oneByte)) == false)
+	if (receivePacket(serverSocket, &packets->oneByte, sizeof(packets->oneByte)) == false)
 		return false;
 	if (receivePacket(serverSocket, packets->two_bytes, sizeof(packets->two_bytes)) == false)
 		return false;
