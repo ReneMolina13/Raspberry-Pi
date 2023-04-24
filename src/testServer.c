@@ -63,17 +63,17 @@ int initServer(char *service)
 bool handleClient(int serverSocket, Packets *packets)
 {
 	bool retVal = true;
-	retVal *= receivePacket(serverSocket, packets->one_kb, sizeof(one_kb));
-	retVal *= receivePacket(serverSocket, packets->two_kb, sizeof(two_kb));
-	retVal *= receivePacket(serverSocket, packets->four_kb, sizeof(four_kb));
-	retVal *= receivePacket(serverSocket, packets->eight_kb, sizeof(eight_kb));
-	retVal *= receivePacket(serverSocket, packets->sixteen_kb, sizeof(sixteen_kb));
-	retVal *= receivePacket(serverSocket, packets->thirty_two_kb, sizeof(thirty_two_kb));
-	retVal *= receivePacket(serverSocket, packets->sixty_four_kb, sizeof(sixty_four_kb));
-	retVal *= receivePacket(serverSocket, packets->one_eigth_mb, sizeof(one_eigth_mb));
-	retVal *= receivePacket(serverSocket, packets->one_fourth_mb, sizeof(one_fourth_mb));
-	retVal *= receivePacket(serverSocket, packets->one_half_mb, sizeof(one_half_mb));
-	retVal *= receivePacket(serverSocket, packets->one_mb, sizeof(one_mb));
+	retVal *= receivePacket(serverSocket, packets->one_kb, sizeof(packets->one_kb));
+	retVal *= receivePacket(serverSocket, packets->two_kb, sizeof(packets->two_kb));
+	retVal *= receivePacket(serverSocket, packets->four_kb, sizeof(packets->four_kb));
+	retVal *= receivePacket(serverSocket, packets->eight_kb, sizeof(packets->eight_kb));
+	retVal *= receivePacket(serverSocket, packets->sixteen_kb, sizeof(packets->sixteen_kb));
+	retVal *= receivePacket(serverSocket, packets->thirty_two_kb, sizeof(packets->thirty_two_kb));
+	retVal *= receivePacket(serverSocket, packets->sixty_four_kb, sizeof(packets->sixty_four_kb));
+	retVal *= receivePacket(serverSocket, packets->one_eigth_mb, sizeof(packets->one_eigth_mb));
+	retVal *= receivePacket(serverSocket, packets->one_fourth_mb, sizeof(packets->one_fourth_mb));
+	retVal *= receivePacket(serverSocket, packets->one_half_mb, sizeof(packets->one_half_mb));
+	retVal *= receivePacket(serverSocket, packets->one_mb, sizeof(packets->one_mb));
 	return retVal;
 }
 
