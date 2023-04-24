@@ -22,7 +22,7 @@
 
 typedef struct
 {
-	char *oneByte;
+	char oneByte;
 	char two_bytes[2];
 	char four_bytes[4];
 	char eight_bytes[8];
