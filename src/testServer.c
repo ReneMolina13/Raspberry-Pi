@@ -117,7 +117,7 @@ bool receivePacket(int serverSocket, char *packet, unsigned int packetSize)
 		return false;
 	}
 	
-	printf("Received %i bytes from the client\n", bytesReceived);
+	printf("Received %li bytes from the client\n", bytesReceived);
 	
 	// Send packet to client
 	ssize_t bytesSent = sendto(serverSocket, packet, packetSize, 0, (struct sockaddr *) &clientAddr, sizeof(clientAddr));
@@ -130,7 +130,7 @@ bool receivePacket(int serverSocket, char *packet, unsigned int packetSize)
 		return false;
 	}
 	
-	printf("Sent %i bytes to the client\n", bytesSent);
+	printf("Sent %li bytes to the client\n", bytesSent);
 	
 	return true;
 }
