@@ -126,7 +126,7 @@ bool sendPacket(const NetInfo *sockData, char *packet, unsigned int packetSize)
 	ssize_t bytesReceived;
 	struct sockaddr_storage fromAddr;
 	socklen_t fromAddrLength = sizeof(fromAddr);
-	bytesReceived = recvfrom(sockData->clientSocket, packets, packetSize, 0, (struct sockaddr *) &fromAddr, &fromAddrLength);
+	bytesReceived = recvfrom(sockData->clientSocket, packet, packetSize, 0, (struct sockaddr *) &fromAddr, &fromAddrLength);
 	// Indicates transmission error
 	if (bytesReceived < 0) {
 		fputs("Unable to receive data\n", stderr);
