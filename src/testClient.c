@@ -23,6 +23,19 @@ bool clientSetup(int argc, char **argv ,NetInfo *sockData, Packets *packets)
 	
 	// Initialize data packets
 	srand(time(NULL));
+	packets->oneByte = rand() % 128;
+	for (int i = 0; i < 2; i++)
+		packets->two_bytes[i] = rand() % 128;
+	for (int i = 0; i < 4; i++)
+		packets->four_bytes[i] = rand() % 128;
+	for (int i = 0; i < 8; i++)
+		packets->eight_bytes[i] = rand() % 128;
+	for (int i = 0; i < 16; i++)
+		packets->sixteen_bytes[i] = rand() % 128;
+	for (int i = 0; i < 32; i++)
+		packets->thirty_two_bytes[i] = rand() % 128;
+	for (int i = 0; i < 64; i++)
+		packets->sixty_four_bytes[i] = rand() % 128;
 	for (int i = 0; i < 128; i++)
 		packets->one_eigth_kb[i] = rand() % 128;
 	for (int i = 0; i < 256; i++)
@@ -42,7 +55,7 @@ bool clientSetup(int argc, char **argv ,NetInfo *sockData, Packets *packets)
 	for (int i = 0; i < 32768; i++)
 		packets->thirty_two_kb[i] = rand() % 128;
 	for (int i = 0; i < 65507; i++)
-		packets->sixty_four_kb[i] = rand() % 128;
+		packets->max_size_udp[i] = rand() % 128;
 	
 	return true;
 }
@@ -89,6 +102,13 @@ bool setupSocket(NetInfo *sockData)
 bool makeTraffic(const NetInfo *sockData, Packets *packets)
 {
 	bool retVal = true;
+	retVal *= sendPacket(sockData, packets->oneByte, sizeof(packets->oneByte));
+	retVal *= sendPacket(sockData, packets->two_bytes, sizeof(packets->two_bytes));
+	retVal *= sendPacket(sockData, packets->four_bytes, sizeof(packets->four_bytes));
+	retVal *= sendPacket(sockData, packets->eight_bytes, sizeof(packets->eight_bytes));
+	retVal *= sendPacket(sockData, packets->sixteen_bytes, sizeof(packets->sixteen_bytes));
+	retVal *= sendPacket(sockData, packets->thirty_two_bytes, sizeof(packets->thirty_two_bytes));
+	retVal *= sendPacket(sockData, packets->sixty_four_bytes, sizeof(packets->sixty_four_bytes));
 	retVal *= sendPacket(sockData, packets->one_eigth_kb, sizeof(packets->one_eigth_kb));
 	retVal *= sendPacket(sockData, packets->one_fourth_kb, sizeof(packets->one_fourth_kb));
 	retVal *= sendPacket(sockData, packets->one_half_kb, sizeof(packets->one_half_kb));

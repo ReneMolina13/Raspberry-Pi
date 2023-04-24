@@ -62,6 +62,20 @@ int initServer(char *service)
 
 bool handleClient(int serverSocket, Packets *packets)
 {
+	if (receivePacket(serverSocket, packets->oneByte, sizeof(packets->oneByte)) == false)
+		return false;
+	if (receivePacket(serverSocket, packets->two_bytes, sizeof(packets->two_bytes)) == false)
+		return false;
+	if (receivePacket(serverSocket, packets->four_bytes, sizeof(packets->four_bytes)) == false)
+		return false;
+	if (receivePacket(serverSocket, packets->eight_bytes, sizeof(packets->eight_bytes)) == false)
+		return false;
+	if (receivePacket(serverSocket, packets->sixteen_bytes, sizeof(packets->sixteen_bytes)) == false)
+		return false;
+	if (receivePacket(serverSocket, packets->thirty_two_bytes, sizeof(packets->thirty_two_bytes)) == false)
+		return false;
+	if (receivePacket(serverSocket, packets->sixty_four_bytes, sizeof(packets->sixty_four_bytes)) == false)
+		return false;
 	if (receivePacket(serverSocket, packets->one_eigth_kb, sizeof(packets->one_eigth_kb)) == false)
 		return false;
 	if (receivePacket(serverSocket, packets->one_fourth_kb, sizeof(packets->one_fourth_kb)) == false)

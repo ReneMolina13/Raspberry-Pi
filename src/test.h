@@ -22,6 +22,13 @@
 
 typedef struct
 {
+	char *oneByte;
+	char two_bytes[2];
+	char four_bytes[4];
+	char eight_bytes[8];
+	char sixteen_bytes[16];
+	char thirty_two_bytes[32];
+	char sixty_four_bytes[64];
 	char one_eigth_kb[128];
 	char one_fourth_kb[256];
 	char one_half_kb[512];
