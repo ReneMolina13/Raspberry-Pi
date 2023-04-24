@@ -23,8 +23,6 @@ bool clientSetup(int argc, char **argv ,NetInfo *sockData, Packets *packets)
 	
 	// Initialize data packets
 	srand(time(NULL));
-	Packets packets;
-
 	for (int i = 0; i < 1024; i++)
 		packets->one_kb[i] = rand() % 128;
 	for (int i = 0; i < 2048; i++)
