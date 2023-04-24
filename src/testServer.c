@@ -150,7 +150,7 @@ int main(int argc, char **argv)
 	// Initialize bank server
 	int serverSocket = initServer(argv[1]);
 	if (serverSocket < 0) {
-		fputs("Failed to initialize bank server - ", stderr);
+		fputs("Failed to initialize server - ", stderr);
 		return -1;
 	}
 
