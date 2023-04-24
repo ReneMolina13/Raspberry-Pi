@@ -160,16 +160,18 @@ int main(int argc, char **argv)
 	
 	// Connect to server
 	if (setupSocket(&sockData) == false) {
-		fputs("Unable to connect to bank server - ", stderr);
+		fputs("Unable to connect to server - ", stderr);
 		return -1;
 	}
 	
 	// Make the transaction specified by the terminal arguments
 	Packets serverPackets;
 	if (makeTraffic(&sockData, &serverPackets) == false ) {
-		fputs("Unable to process bank request - ", stderr);
+		fputs("Error creating network traffic - ", stderr);
 		return -1;
 	}
+	
+	puts("\n************************************************\n");
 	
 	// Free memory allocated to server address
 	freeaddrinfo(sockData.serverAddr);
