@@ -45,7 +45,6 @@ bool runPing(char *ipAddr, unsigned int numPackets, unsigned int numBytes, doubl
 	args[2] = "10";
 	args[3] = ipAddr;
 	args[4] = NULL;
-	break;
 	
 	int childExitStatus;
 	int pid = fork();
