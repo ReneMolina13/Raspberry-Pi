@@ -91,17 +91,17 @@ bool setupSocket(NetInfo *sockData)
 bool makeTraffic(const NetInfo *sockData, Packets *packets)
 {
 	bool retVal = true;
-	retVal *= sendPacket(&sockData, &packets->one_kb, sizeof(one_kb));
-	retVal *= sendPacket(&sockData, &packets->two_kb, sizeof(two_kb));
-	retVal *= sendPacket(&sockData, &packets->four_kb, sizeof(four_kb));
-	retVal *= sendPacket(&sockData, &packets->eight_kb, sizeof(eight_kb));
-	retVal *= sendPacket(&sockData, &packets->sixteen_kb, sizeof(sixteen_kb));
-	retVal *= sendPacket(&sockData, &packets->thirty_two_kb, sizeof(thirty_two_kb));
-	retVal *= sendPacket(&sockData, &packets->sixty_four_kb, sizeof(sixty_four_kb));
-	retVal *= sendPacket(&sockData, &packets->one_eigth_mb, sizeof(one_eigth_mb));
-	retVal *= sendPacket(&sockData, &packets->one_fourth_mb, sizeof(one_fourth_mb));
-	retVal *= sendPacket(&sockData, &packets->one_half_mb, sizeof(one_half_mb));
-	retVal *= sendPacket(&sockData, &packets->one_mb, sizeof(one_mb));
+	retVal *= sendPacket(&sockData, packets->one_kb, sizeof(one_kb));
+	retVal *= sendPacket(&sockData, packets->two_kb, sizeof(two_kb));
+	retVal *= sendPacket(&sockData, packets->four_kb, sizeof(four_kb));
+	retVal *= sendPacket(&sockData, packets->eight_kb, sizeof(eight_kb));
+	retVal *= sendPacket(&sockData, packets->sixteen_kb, sizeof(sixteen_kb));
+	retVal *= sendPacket(&sockData, packets->thirty_two_kb, sizeof(thirty_two_kb));
+	retVal *= sendPacket(&sockData, packets->sixty_four_kb, sizeof(sixty_four_kb));
+	retVal *= sendPacket(&sockData, packets->one_eigth_mb, sizeof(one_eigth_mb));
+	retVal *= sendPacket(&sockData, packets->one_fourth_mb, sizeof(one_fourth_mb));
+	retVal *= sendPacket(&sockData, packets->one_half_mb, sizeof(one_half_mb));
+	retVal *= sendPacket(&sockData, packets->one_mb, sizeof(one_mb));
 	return retVal;
 }
 
