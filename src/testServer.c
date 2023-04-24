@@ -122,15 +122,15 @@ bool receivePacket(int serverSocket, char *packet, unsigned int packetSize)
 	// Send packet to client
 	ssize_t bytesSent = sendto(serverSocket, packet, packetSize, 0, (struct sockaddr *) &clientAddr, sizeof(clientAddr));
 	if (bytesSent < 0) {
-		fputs("Transmission Error\n", stderr);
+		fputs("Transmission Error\n\n", stderr);
 		return false;
 	}
 	else if (bytesSent != packetSize) {
-		fputs("Send unexpected number of bytes\n", stderr);
+		fputs("Send unexpected number of bytes\n\n", stderr);
 		return false;
 	}
 	
-	printf("Sent %li bytes to the client\n", bytesSent);
+	printf("Sent %li bytes to the client\n\n", bytesSent);
 	
 	return true;
 }
@@ -160,7 +160,7 @@ int main(int argc, char **argv)
 		// Handle a single request from a client
 		if (handleClient(serverSocket, &packets) == false)
 			fputs("\nUnable to handle client request\n", stderr);
-		puts("\n************************************************\n");
+		puts("************************************************\n");
 	}
 		
 	// Close server socket (never reached)

@@ -146,15 +146,15 @@ bool sendPacket(const NetInfo *sockData, char *packet, unsigned int packetSize)
 	bytesReceived = recvfrom(sockData->clientSocket, packet, packetSize, 0, (struct sockaddr *) &fromAddr, &fromAddrLength);
 	// Indicates transmission error
 	if (bytesReceived < 0) {
-		fputs("Unable to receive data\n", stderr);
+		fputs("Unable to receive data\n\n", stderr);
 		return false;
 	}
 	else if (bytesReceived != packetSize) {
-		fputs("Unexpected number of bytes received\n", stderr);
+		fputs("Unexpected number of bytes received\n\n", stderr);
 		return false;
 	}
 	
-	printf("Received %li bytes from the server\n", bytesReceived);
+	printf("Received %li bytes from the server\n\n", bytesReceived);
 	
 	// Transaction successful
 	return true;
@@ -190,7 +190,7 @@ int main(int argc, char **argv)
 		return -1;
 	}
 	
-	puts("\n************************************************\n");
+	puts("************************************************\n");
 	
 	// Free memory allocated to server address
 	freeaddrinfo(sockData.serverAddr);
