@@ -62,19 +62,30 @@ int initServer(char *service)
 
 bool handleClient(int serverSocket, Packets *packets)
 {
-	bool retVal = true;
-	retVal *= receivePacket(serverSocket, packets->one_kb, sizeof(packets->one_kb));
-	retVal *= receivePacket(serverSocket, packets->two_kb, sizeof(packets->two_kb));
-	retVal *= receivePacket(serverSocket, packets->four_kb, sizeof(packets->four_kb));
-	retVal *= receivePacket(serverSocket, packets->eight_kb, sizeof(packets->eight_kb));
-	retVal *= receivePacket(serverSocket, packets->sixteen_kb, sizeof(packets->sixteen_kb));
-	retVal *= receivePacket(serverSocket, packets->thirty_two_kb, sizeof(packets->thirty_two_kb));
-	retVal *= receivePacket(serverSocket, packets->sixty_four_kb, sizeof(packets->sixty_four_kb));
-	retVal *= receivePacket(serverSocket, packets->one_eigth_mb, sizeof(packets->one_eigth_mb));
-	retVal *= receivePacket(serverSocket, packets->one_fourth_mb, sizeof(packets->one_fourth_mb));
-	retVal *= receivePacket(serverSocket, packets->one_half_mb, sizeof(packets->one_half_mb));
-	retVal *= receivePacket(serverSocket, packets->one_mb, sizeof(packets->one_mb));
-	return retVal;
+	if (receivePacket(serverSocket, packets->one_kb, sizeof(packets->one_kb)) == false)
+		return false;
+	if (receivePacket(serverSocket, packets->two_kb, sizeof(packets->two_kb)) == false)
+		return false;
+	if (receivePacket(serverSocket, packets->four_kb, sizeof(packets->four_kb)) == false)
+		return false;
+	if (receivePacket(serverSocket, packets->eight_kb, sizeof(packets->eight_kb)) == false)
+		return false;
+	if (receivePacket(serverSocket, packets->sixteen_kb, sizeof(packets->sixteen_kb)) == false)
+		return false;
+	if (receivePacket(serverSocket, packets->thirty_two_kb, sizeof(packets->thirty_two_kb)) == false)
+		return false;
+	if (receivePacket(serverSocket, packets->sixty_four_kb, sizeof(packets->sixty_four_kb)) == false)
+		return false;
+	if (receivePacket(serverSocket, packets->one_eigth_mb, sizeof(packets->one_eigth_mb)) == false)
+		return false;
+	if (receivePacket(serverSocket, packets->one_fourth_mb, sizeof(packets->one_fourth_mb)) == false)
+		return false;
+	if (receivePacket(serverSocket, packets->one_half_mb, sizeof(packets->one_half_mb)) == false)
+		return false;
+	if (receivePacket(serverSocket, packets->one_mb, sizeof(packets->one_mb)) == false)
+		return false;
+	
+	return true;
 }
 
 
@@ -135,10 +146,8 @@ int main(int argc, char **argv)
 	Packets packets;
 	while (1) {
 		// Handle a single request from a client
-		if (handleClient(serverSocket, &packets) == false) {
+		if (handleClient(serverSocket, &packets) == false)
 			fputs("Unable to handle client request - ", stderr);
-			return -1;
-		}
 		puts("\n************************************************\n");
 	}
 		
