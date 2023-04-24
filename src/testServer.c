@@ -62,6 +62,12 @@ int initServer(char *service)
 
 bool handleClient(int serverSocket, Packets *packets)
 {
+	if (receivePacket(serverSocket, packets->one_eigth_kb, sizeof(packets->one_eigth_kb)) == false)
+		return false;
+	if (receivePacket(serverSocket, packets->one_fourth_kb, sizeof(packets->one_fourth_kb)) == false)
+		return false;
+	if (receivePacket(serverSocket, packets->one_half_kb, sizeof(packets->one_half_kb)) == false)
+		return false;
 	if (receivePacket(serverSocket, packets->one_kb, sizeof(packets->one_kb)) == false)
 		return false;
 	if (receivePacket(serverSocket, packets->two_kb, sizeof(packets->two_kb)) == false)
@@ -74,15 +80,7 @@ bool handleClient(int serverSocket, Packets *packets)
 		return false;
 	if (receivePacket(serverSocket, packets->thirty_two_kb, sizeof(packets->thirty_two_kb)) == false)
 		return false;
-	if (receivePacket(serverSocket, packets->sixty_four_kb, sizeof(packets->sixty_four_kb)) == false)
-		return false;
-	if (receivePacket(serverSocket, packets->one_eigth_mb, sizeof(packets->one_eigth_mb)) == false)
-		return false;
-	if (receivePacket(serverSocket, packets->one_fourth_mb, sizeof(packets->one_fourth_mb)) == false)
-		return false;
-	if (receivePacket(serverSocket, packets->one_half_mb, sizeof(packets->one_half_mb)) == false)
-		return false;
-	if (receivePacket(serverSocket, packets->one_mb, sizeof(packets->one_mb)) == false)
+	if (receivePacket(serverSocket, packets->max_size_udp, sizeof(packets->max_size_udp)) == false)
 		return false;
 	
 	return true;
@@ -147,7 +145,7 @@ int main(int argc, char **argv)
 	while (1) {
 		// Handle a single request from a client
 		if (handleClient(serverSocket, &packets) == false)
-			fputs("Unable to handle client request - ", stderr);
+			fputs("\nUnable to handle client request\n", stderr);
 		puts("\n************************************************\n");
 	}
 		
