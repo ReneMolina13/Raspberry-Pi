@@ -153,7 +153,7 @@ int main(int argc, char **argv)
 	Packets packets;	// Holds different size data packets (1KB - 1MB)
 	
 	// Parse command line arguments
-	if (parseCmdArgs(argc, argv, &sockData, &packets) == false) {
+	if (clientSetup(argc, argv, &sockData, &packets) == false) {
 		fputs("Unable to parse command line arguments - ", stderr);
 		return -1;
 	}
@@ -166,7 +166,7 @@ int main(int argc, char **argv)
 	
 	// Make the transaction specified by the terminal arguments
 	Packets serverPackets;
-	if (sendPackets(&sockData, &serverPackets) == false ) {
+	if (makeTraffic(&sockData, &serverPackets) == false ) {
 		fputs("Unable to process bank request - ", stderr);
 		return -1;
 	}
