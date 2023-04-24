@@ -60,29 +60,49 @@ int initServer(char *service)
 }
 
 
-bool handleClient(int serverSocket)
+bool handleClient(int serverSocket, Packets *packets)
+{
+	bool retVal = true;
+	retVal *= receivePacket(serverSocket, packets->one_kb, sizeof(one_kb));
+	retVal *= receivePacket(serverSocket, packets->two_kb, sizeof(two_kb));
+	retVal *= receivePacket(serverSocket, packets->four_kb, sizeof(four_kb));
+	retVal *= receivePacket(serverSocket, packets->eight_kb, sizeof(eight_kb));
+	retVal *= receivePacket(serverSocket, packets->sixteen_kb, sizeof(sixteen_kb));
+	retVal *= receivePacket(serverSocket, packets->thirty_two_kb, sizeof(thirty_two_kb));
+	retVal *= receivePacket(serverSocket, packets->sixty_four_kb, sizeof(sixty_four_kb));
+	retVal *= receivePacket(serverSocket, packets->one_eigth_mb, sizeof(one_eigth_mb));
+	retVal *= receivePacket(serverSocket, packets->one_fourth_mb, sizeof(one_fourth_mb));
+	retVal *= receivePacket(serverSocket, packets->one_half_mb, sizeof(one_half_mb));
+	retVal *= receivePacket(serverSocket, packets->one_mb, sizeof(one_mb));
+	return retVal;
+}
+
+
+bool receivePacket(int serverSocket, char *packet, unsigned int packetSize)
 {
 	// Location to store client address & length
 	struct sockaddr_storage clientAddr;
 	socklen_t clientAddrLength = sizeof(clientAddr);
 	// Store data received from client into structure
-	sBANK_PROTOCOL clientRequest;
-	ssize_t bytesReceived = recvfrom(serverSocket, &clientRequest, sizeof(sBANK_PROTOCOL), 0, (struct sockaddr *) &clientAddr, &clientAddrLength);
+	ssize_t bytesReceived = recvfrom(serverSocket, packet, packetSize, 0, (struct sockaddr *) &clientAddr, &clientAddrLength);
 	if (bytesReceived < 0) {
 		fputs("Unable to receive request from client\n", stderr);
+		return false;
+	}
+	else if (bytesReceived != packetSize) {
+		fputs("Unexpected number of bytes received\n", stderr);
 		return false;
 	}
 	
 	printf("Received %i bytes from the client\n", bytesReceived);
 	
 	// Send packet to client
-	ssize_t bytesSent;
-	bytesSent = sendto(serverSocket, &clientRequest, sizeof(sBANK_PROTOCOL), 0, (struct sockaddr *) &clientAddr, sizeof(clientAddr));
+	ssize_t bytesSent = sendto(serverSocket, packet, packetSize, 0, (struct sockaddr *) &clientAddr, sizeof(clientAddr));
 	if (bytesSent < 0) {
 		fputs("Transmission Error\n", stderr);
 		return false;
 	}
-	else if (bytesSent != bytesReceived) {
+	else if (bytesSent != packetSize) {
 		fputs("Send unexpected number of bytes\n", stderr);
 		return false;
 	}
@@ -112,9 +132,10 @@ int main(int argc, char **argv)
 	}
 
 	// Run forever (assuming no errors)
+	Packets packets;
 	while (1) {
 		// Handle a single request from a client
-		if (handleClient(serverSocket) == false) {
+		if (handleClient(serverSocket, &packets) == false) {
 			fputs("Unable to handle client request - ", stderr);
 			return -1;
 		}

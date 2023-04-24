@@ -7,45 +7,46 @@
 #include "testClient.h"
 
 
-bool parseCmdArgs(int argc, char **argv ,NetInfo *sockData, sBANK_PROTOCOL *mainRequest)
+bool clientSetup(int argc, char **argv ,NetInfo *sockData, Packets *packets)
 {
 	// Check for correct number of arguments
-	if (argc < 5 || argc > 6) {
+	if (argc != 3) {
 		puts("Not enough arguments entered:");
-		puts("1st argument should be IP address of the bank server");
-		puts("2nd argument should be port number of the bank server");
-		puts("3rd argument should be transaction: B = balance inquiry, D = deposit, W = withdraw");
-		puts("4th argument should be the account number");
-		puts("5th argument should be value of deposit or withdraw in pennies");
+		puts("1st argument should be IP address of the server");
+		puts("2nd argument should be port number of the server");
 		return false;
 	}
 	
-	// Extract command line arguemnts into appropriate structures
+	// Extract network info from command line arguments
 	sockData->cmdIP = *(argv + 1);
 	sockData->cmdPort = *(argv + 2);
-	switch(**(argv + 3)) {
-	case 'B':
-	case 'b':
-		mainRequest->trans = BANK_TRANS_INQUIRY;
-		mainRequest->acctnum = atoi(*(argv + 4));
-		mainRequest->value = 0;
-		break;
-	case 'D':
-	case 'd':
-		mainRequest->trans = BANK_TRANS_DEPOSIT;
-		mainRequest->acctnum = atoi(*(argv + 4));
-		mainRequest->value = atoi(*(argv + 5));
-		break;
-	case 'W':
-	case 'w':
-		mainRequest->trans = BANK_TRANS_WITHDRAW;
-		mainRequest->acctnum = atoi(*(argv + 4));
-		mainRequest->value = atoi(*(argv + 5));
-		break;
-	default:
-		puts("Invalid transaction");
-		return false;
-	}
+	
+	// Initialize data packets
+	srand(time(NULL));
+	Packets packets;
+
+	for (int i = 0; i < 1024; i++)
+		packets->one_kb[i] = rand() % 128;
+	for (int i = 0; i < 2048; i++)
+		packets->two_kb[i] = rand() % 128;
+	for (int i = 0; i < 4096; i++)
+		packets->four_kb[i] = rand() % 128;
+	for (int i = 0; i < 8192; i++)
+		packets->eight_kb[i] = rand() % 128;
+	for (int i = 0; i < 16384; i++)
+		packets->sixteen_kb[i] = rand() % 128;
+	for (int i = 0; i < 32768; i++)
+		packets->thirty_two_kb[i] = rand() % 128;
+	for (int i = 0; i < 65536; i++)
+		packets->sixty_four_kb[i] = rand() % 128;
+	for (int i = 0; i < 131072; i++)
+		packets->one_eigth_mb[i] = rand() % 128;
+	for (int i = 0; i < 262144; i++)
+		packets->one_fourth_mb[i] = rand() % 128;
+	for (int i = 0; i < 524288; i++)
+		packets->one_half_mb[i] = rand() % 128;
+	for (int i = 0; i < 1048576; i++)
+		packets->one_mb[i] = rand() % 128;
 	
 	return true;
 }
@@ -89,16 +90,34 @@ bool setupSocket(NetInfo *sockData)
 }
 
 
-bool sendPackets(NetInfo *sockData, sBANK_PROTOCOL *bankTransaction)
+bool makeTraffic(const NetInfo *sockData, Packets *packets)
+{
+	bool retVal = true;
+	retVal *= sendPacket(&sockData, &packets.one_kb, sizeof(one_kb));
+	retVal *= sendPacket(&sockData, &packets.two_kb, sizeof(two_kb));
+	retVal *= sendPacket(&sockData, &packets.four_kb, sizeof(four_kb));
+	retVal *= sendPacket(&sockData, &packets.eight_kb, sizeof(eight_kb));
+	retVal *= sendPacket(&sockData, &packets.sixteen_kb, sizeof(sixteen_kb));
+	retVal *= sendPacket(&sockData, &packets.thirty_two_kb, sizeof(thirty_two_kb));
+	retVal *= sendPacket(&sockData, &packets.sixty_four_kb, sizeof(sixty_four_kb));
+	retVal *= sendPacket(&sockData, &packets.one_eigth_mb, sizeof(one_eigth_mb));
+	retVal *= sendPacket(&sockData, &packets.one_fourth_mb, sizeof(one_fourth_mb));
+	retVal *= sendPacket(&sockData, &packets.one_half_mb, sizeof(one_half_mb));
+	retVal *= sendPacket(&sockData, &packets.one_mb, sizeof(one_mb));
+	return retVal;
+}
+
+
+bool sendPacket(const NetInfo *sockData, char *packet, unsigned int packetSize)
 {
 	// Send the requested transaction to the server
-	ssize_t bytesSent = sendto(sockData->clientSocket, bankTransaction, sizeof(*bankTransaction), 0, sockData->serverAddr->ai_addr, sockData->serverAddr->ai_addrlen);
+	ssize_t bytesSent = sendto(sockData->clientSocket, packet, packetSize, 0, sockData->serverAddr->ai_addr, sockData->serverAddr->ai_addrlen);
 	// Indicates transmission error
 	if (bytesSent < 0) {
 		fputs("Unable to send data\n", stderr);
 		return false;
 	}
-	else if (bytesSent != sizeof(*bankTransaction)) {
+	else if (bytesSent != packetSize) {
 		fputs("Unexpected number of bytes sent\n", stderr);
 		return false;
 	}
@@ -109,13 +128,13 @@ bool sendPackets(NetInfo *sockData, sBANK_PROTOCOL *bankTransaction)
 	ssize_t bytesReceived;
 	struct sockaddr_storage fromAddr;
 	socklen_t fromAddrLength = sizeof(fromAddr);
-	bytesReceived = recvfrom(sockData->clientSocket, bankTransaction, sizeof(*bankTransaction), 0, (struct sockaddr *) &fromAddr, &fromAddrLength);
+	bytesReceived = recvfrom(sockData->clientSocket, packets, packetSize, 0, (struct sockaddr *) &fromAddr, &fromAddrLength);
 	// Indicates transmission error
 	if (bytesReceived < 0) {
 		fputs("Unable to receive data\n", stderr);
 		return false;
 	}
-	else if (bytesReceived != sizeof(*bankTransaction)) {
+	else if (bytesReceived != packetSize) {
 		fputs("Unexpected number of bytes received\n", stderr);
 		return false;
 	}
@@ -127,88 +146,35 @@ bool sendPackets(NetInfo *sockData, sBANK_PROTOCOL *bankTransaction)
 }
 
 
-bool runCmdTest(char *cmdIP, int test)
-{
-	char **args;
-	
-	switch(test) {
-	case PING:
-		args = (char **) malloc(5 * sizeof(char *));
-		args[0] = "../data/Ping_Test";
-		args[1] = "-c";
-		args[2] = "10";
-		args[3] = cmdIP;
-		args[4] = NULL;
-		break;
-	case TRACEROUTE:
-		args = (char **) malloc(3 * sizeof(char *));
-		args[0] = "../data/Traceroute_Test";
-		args[1] = cmdIP;
-		args[2] = NULL;
-		break;
-	case IPERF:
-		args = (char **) malloc(6 * sizeof(char *));
-		args[0] = "../data/Iperf_Test";
-		args[1] = "-c";
-		args[2] = cmdIP;
-		args[3] = "-u";
-		args[4] = "100";
-		args[5] = NULL;
-		break;
-	default:
-		fputs("Invalid latency test\n", stderr);
-		return false;
-	}
-	
-	int childExitStatus;
-	int pid = fork();
-	// Fork error
-	if (pid < 0) {
-		fputs("Unable to fork process\n", stderr);
-		return false;
-	}
-	// Child process
-	else if (pid == 0)
-		execvp(args[0], args);
-	// Parent process
-	else {
-		free(args);
-		wait(&childExitStatus);
-		return true;
-	}
-}
-
-
 int main(int argc, char **argv)
 {	
 	puts("\n************************************************\n");
 
 	// Input structures
 	NetInfo sockData;	// Holds TCP Connection information
-	sBANK_PROTOCOL mainRequest;	// Holds bank request info from user
+	Packets packets;	// Holds different size data packets (1KB - 1MB)
 	
 	// Parse command line arguments
-	if (parseCmdArgs(argc, argv, &sockData, &mainRequest) == false) {
+	if (parseCmdArgs(argc, argv, &sockData, &packets) == false) {
 		fputs("Unable to parse command line arguments - ", stderr);
 		return -1;
 	}
 	
-	// Connect to bank server
+	// Connect to server
 	if (setupSocket(&sockData) == false) {
 		fputs("Unable to connect to bank server - ", stderr);
 		return -1;
 	}
 	
 	// Make the transaction specified by the terminal arguments
-	if (sendPackets(&sockData, &mainRequest) == false ) {
+	Packets serverPackets;
+	if (sendPackets(&sockData, &serverPackets) == false ) {
 		fputs("Unable to process bank request - ", stderr);
 		return -1;
 	}
 	
 	// Perform latency testing
-	runCmdTest(sockData.cmdIP, PING);
-	runCmdTest(sockData.cmdIP, TRACEROUTE);
-	runCmdTest(sockData.cmdIP, IPERF);
+	// runCmdTest(sockData.cmdIP, PING);
 	
 	// Free memory allocated to server address
 	freeaddrinfo(sockData.serverAddr);

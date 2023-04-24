@@ -4,8 +4,8 @@
 */
 
 
-#ifndef	BANK_SERVER_H
-#define BANK_SERVER_H
+#ifndef	TEST_SERVER_H
+#define TEST_SERVER_H
 
 
 #include "test.h"
@@ -13,7 +13,8 @@
 
 // Function prototypes
 int initServer(char *);
-bool handleClient(int);
+bool handleClient(int, Packets *);
+bool receivePacket(int, char *, unsigned int);
 
 
 #endif

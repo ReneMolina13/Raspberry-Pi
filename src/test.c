@@ -33,3 +33,93 @@ void printSocketAddress(const struct sockaddr *addr)
 		puts("Unknown address family");
 	}
 }
+
+
+bool runPing(char *ipAddr, unsigned int numPackets, unsigned int numBytes, double interval)
+{
+	char **args;
+
+	args = (char **) malloc(5 * sizeof(char *));
+	args[0] = "../data/Ping_Test";
+	args[1] = "-c";
+	args[2] = "10";
+	args[3] = ipAddr;
+	args[4] = NULL;
+	break;
+	
+	int childExitStatus;
+	int pid = fork();
+	// Fork error
+	if (pid < 0) {
+		fputs("Unable to fork process\n", stderr);
+		return false;
+	}
+	// Child process
+	else if (pid == 0)
+		execvp(args[0], args);
+	// Parent process
+	else {
+		free(args);
+		wait(&childExitStatus);
+		return true;
+	}
+}
+
+
+bool runTraceroute(char *ipAddr)
+{
+	char **args;
+	
+	args = (char **) malloc(3 * sizeof(char *));
+	args[0] = "../data/Traceroute_Test";
+	args[1] = ipAddr;
+	args[2] = NULL;
+
+	int childExitStatus;
+	int pid = fork();
+	// Fork error
+	if (pid < 0) {
+		fputs("Unable to fork process\n", stderr);
+		return false;
+	}
+	// Child process
+	else if (pid == 0)
+		execvp(args[0], args);
+	// Parent process
+	else {
+		free(args);
+		wait(&childExitStatus);
+		return true;
+	}	
+}
+
+
+bool runIperf(char *ipAddr)
+{
+	char **args;
+
+	args = (char **) malloc(6 * sizeof(char *));
+	args[0] = "../data/Iperf_Test";
+	args[1] = "-c";
+	args[2] = ipAddr;
+	args[3] = "-u";
+	args[4] = "100";
+	args[5] = NULL;
+	
+	int childExitStatus;
+	int pid = fork();
+	// Fork error
+	if (pid < 0) {
+		fputs("Unable to fork process\n", stderr);
+		return false;
+	}
+	// Child process
+	else if (pid == 0)
+		execvp(args[0], args);
+	// Parent process
+	else {
+		free(args);
+		wait(&childExitStatus);
+		return true;
+	}
+}
