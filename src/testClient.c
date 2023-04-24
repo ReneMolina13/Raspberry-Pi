@@ -181,7 +181,7 @@ int main(int argc, char **argv)
 		return -1;
 	}
 	
-	puts("\n************************************************\n");
+	puts("************************************************\n");
 	
 	// Make the transaction specified by the terminal arguments
 	Packets serverPackets;
