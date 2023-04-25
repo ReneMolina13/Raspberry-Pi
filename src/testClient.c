@@ -209,7 +209,7 @@ bool clientSetup(int argc, char **argv ,NetInfo *sockData, Packets *packets)
 {
 	// Check for correct number of arguments
 	if (argc != 3) {
-		puts("Not enough arguments entered:");
+		puts("Incorrect number of arguments entered:");
 		puts("1st argument should be IP address of the server");
 		puts("2nd argument should be port number of the server");
 		return false;
@@ -391,6 +391,20 @@ int main(int argc, char **argv)
 		args[i].packets = &packets;
 		args[i].status = true;
 		pthread_create(&args[i].tid, &attr, networkThreads, (void *) &args[i]);
+	}
+	
+	// Fork process and call testing program
+	int pid = fork();
+	if (pid < 0) {
+		fputs("Error forking process - ", stderr);
+		return false;
+	}
+	// Child process: IP address passed through command line
+	else if (pid == 0) {
+		char *args[2];
+		args[0] = "./test.c";
+		args[1] = sockData->cmdIP;
+		execv(args[0], args);
 	}
 	
 	// Wait for threads to terminate (only happens in case of error)

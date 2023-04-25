@@ -122,3 +122,23 @@ bool runIperf(char *ipAddr)
 		return true;
 	}
 }
+
+
+int main(int argc, char **argv)
+{
+	// Check for correct number of arguments
+	if (argc != 2) {
+		puts("Incorrect number of arguments entered:");
+		puts("1st argument should be IP address of the server");
+		return -1;
+	}
+	
+	// Extract IP address from command line arguments
+	char *ipAddr = argv[1];
+	
+	while (*packetStats == NULL);
+	
+	free(packetStats);
+	
+	return 0;
+}
