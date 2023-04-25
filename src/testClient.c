@@ -105,39 +105,55 @@ bool clientSetup(int argc, char **argv ,NetInfo *sockData, Packets *packets)
 	sockData->cmdIP = *(argv + 1);
 	sockData->cmdPort = *(argv + 2);
 	
-	// Initialize data packets
+	// Initialize data packets (First byte holds index for packet size - defined in test.h)
 	srand(time(NULL));
-	packets->oneByte = rand() % 128;
+	packets->oneByte = ONE_BYTE;
+	packets->two_bytes[0] = TWO_BYTES;
 	for (int i = 0; i < 2; i++)
 		packets->two_bytes[i] = rand() % 128;
+	packets->four_bytes[0] = FOUR_BYTES;
 	for (int i = 0; i < 4; i++)
 		packets->four_bytes[i] = rand() % 128;
+	packets->eight_bytes[0] = EIGHT_BYTES;
 	for (int i = 0; i < 8; i++)
 		packets->eight_bytes[i] = rand() % 128;
+	packets->sixteen_bytes[0] = SIXTEEN_BYTES;
 	for (int i = 0; i < 16; i++)
 		packets->sixteen_bytes[i] = rand() % 128;
+	packets->thirty_two_bytes[0] = THIRTY_TWO_BYTES;
 	for (int i = 0; i < 32; i++)
 		packets->thirty_two_bytes[i] = rand() % 128;
+	packets->sixty_four_bytes[0] = SIXTY_FOUR_BYTES;
 	for (int i = 0; i < 64; i++)
 		packets->sixty_four_bytes[i] = rand() % 128;
+	packets->one_eigth_kb[0] = ONE_EIGTH_KB;
 	for (int i = 0; i < 128; i++)
 		packets->one_eigth_kb[i] = rand() % 128;
+	packets->one_fourth_kb[0] = ONE_FOURTH_KB;
 	for (int i = 0; i < 256; i++)
 		packets->one_fourth_kb[i] = rand() % 128;
+	packets->one_half_kb[0] = ONE_HALF_KB;
 	for (int i = 0; i < 512; i++)
 		packets->one_half_kb[i] = rand() % 128;
+	packets->one_kb[0] = ONE_KB;
 	for (int i = 0; i < 1024; i++)
 		packets->one_kb[i] = rand() % 128;
+	packets->two_kb[0] = TWO_KB;
 	for (int i = 0; i < 2048; i++)
 		packets->two_kb[i] = rand() % 128;
+	packets->four_kb[0] = FOUR_KB;
 	for (int i = 0; i < 4096; i++)
 		packets->four_kb[i] = rand() % 128;
+	packets->eight_kb[0] = EIGHT_KB;
 	for (int i = 0; i < 8192; i++)
-		packets->eight_kb[i] = rand() % 128;
+		packets->eight_kb[i] = rand() % 128
+	packets->sixteen_kb[0] = SIXTEEN_KB;
 	for (int i = 0; i < 16384; i++)
 		packets->sixteen_kb[i] = rand() % 128;
+	packets->thirty_two_kb[0] = THIRTY_TWO_KB;
 	for (int i = 0; i < 32768; i++)
 		packets->thirty_two_kb[i] = rand() % 128;
+	packets->max_size_udp[0] = MAX_SIZE_UDP;
 	for (int i = 0; i < 65507; i++)
 		packets->max_size_udp[i] = rand() % 128;
 	
