@@ -129,7 +129,7 @@ void test(char *ipAddr, NetStats *packetStats)
 	while (1) {
 		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
 			printf("Packet size: %i, ", packetStats[i].packetSize);
-			printf("Iteration num: %i\n", packetStats[i].packetSize);
+			printf("Iteration num: %i\n", packetStats[i].iteration);
 		}
 		fputs("\n", stdout);
 	}
