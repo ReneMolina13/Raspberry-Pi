@@ -12,24 +12,6 @@
 #include <pthread.h>
 
 
-typedef struct
-{
-	char *cmdIP;
-	char *cmdPort;
-	int clientSocket;
-	struct addrinfo *serverAddr;
-} NetInfo;
-
-
-typedef struct
-{
-	pthread_t tid;
-	NetInfo *sockData;
-	Packets *packets;
-	bool status;
-} ThreadArgs;
-
-
 enum packetIndex
 {
 	ONE_BYTE = 0,
@@ -73,6 +55,24 @@ typedef struct
 	char thirty_two_kb[32768];
 	char max_size_udp[65507];
 } Packets;
+
+
+typedef struct
+{
+	char *cmdIP;
+	char *cmdPort;
+	int clientSocket;
+	struct addrinfo *serverAddr;
+} NetInfo;
+
+
+typedef struct
+{
+	pthread_t tid;
+	NetInfo *sockData;
+	Packets *packets;
+	bool status;
+} ThreadArgs;
 
 
 // Function prototypes
