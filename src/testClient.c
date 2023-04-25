@@ -194,8 +194,8 @@ void *networkThreads(void *param)
 		duration = (1000.0*end.tv_sec + 1e-6*end.tv_nsec) - (1000.0*start.tv_sec + 1e-6*start.tv_nsec);
 		
 		// Adjust average stats
-		stats->avgRoundTripTime += (duration / iteration);
-		stats->errorsPerIteration += (numErrors / (double) iteration);
+		stats->avgRoundTripTime += (duration / stats->iteration);
+		stats->errorsPerIteration += (numErrors / (double) stats->iteration);
 		numErrors = 0;
 	}
 	
