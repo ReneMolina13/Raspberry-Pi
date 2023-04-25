@@ -327,7 +327,7 @@ bool sendPacket(const NetInfo *sockData, const char *packet, unsigned int packet
 		return false;
 	}
 	
-	printf("Sent %li bytes to the server\n", bytesSent);
+	// printf("Sent %li bytes to the server\n", bytesSent);
 	
 	// Transaction successful
 	return true;
@@ -351,7 +351,7 @@ bool receivePacket(const NetInfo *sockData, char *packet, unsigned int packetSiz
 		return false;
 	}
 	
-	printf("Received %li bytes from the server\n\n", bytesReceived);
+	// printf("Received %li bytes from the server\n\n", bytesReceived);
 	
 	// Transaction successful
 	return true;
