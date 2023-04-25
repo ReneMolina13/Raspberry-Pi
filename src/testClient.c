@@ -205,7 +205,7 @@ void *networkThreads(void *param)
 }
 
 
-bool clientSetup(int argc, const char **argv ,NetInfo *sockData, Packets *packets)
+bool clientSetup(int argc, char **argv ,NetInfo *sockData, Packets *packets)
 {
 	// Check for correct number of arguments
 	if (argc != 3) {

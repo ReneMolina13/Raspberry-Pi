@@ -35,7 +35,7 @@ void printSocketAddress(const struct sockaddr *addr)
 }
 
 
-bool runPing(const char *ipAddr, unsigned int numPackets, unsigned int numBytes, double interval)
+bool runPing(char *ipAddr, unsigned int numPackets, unsigned int numBytes, double interval)
 {
 	char **args;
 
@@ -65,7 +65,7 @@ bool runPing(const char *ipAddr, unsigned int numPackets, unsigned int numBytes,
 }
 
 
-bool runTraceroute(const char *ipAddr)
+bool runTraceroute(char *ipAddr)
 {
 	char **args;
 	
@@ -93,7 +93,7 @@ bool runTraceroute(const char *ipAddr)
 }
 
 
-bool runIperf(const char *ipAddr)
+bool runIperf(char *ipAddr)
 {
 	char **args;
 
@@ -124,7 +124,7 @@ bool runIperf(const char *ipAddr)
 }
 
 
-void test(const char *ipAddr, const NetStats *packetStats)
+void test(char *ipAddr, const NetStats *packetStats)
 {
 	
 }

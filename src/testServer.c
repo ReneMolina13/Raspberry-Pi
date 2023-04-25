@@ -7,7 +7,7 @@
 #include "testServer.h"
 
 
-int initServer(const char *service)
+int initServer(char *service)
 {
 	// Initialize structure specifying possible connection types
 	struct addrinfo addrCriteria;
