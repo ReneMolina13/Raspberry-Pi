@@ -86,7 +86,7 @@ bool handleClient(int serverSocket)
 	}
 	
 	// Store data received from client into structure
-	ssize_t bytesReceived = recvfrom(serverSocket, &buffer, messageSize, 0, (struct sockaddr *) &clientAddr, &clientAddrLength);
+	bytesReceived = recvfrom(serverSocket, &buffer, messageSize, 0, (struct sockaddr *) &clientAddr, &clientAddrLength);
 	if (bytesReceived < 0) {
 		fputs("Unable to receive request from client\n", stderr);
 		return false;
