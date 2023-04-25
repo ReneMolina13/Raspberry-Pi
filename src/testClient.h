@@ -23,15 +23,6 @@ typedef struct
 
 typedef struct
 {
-	unsigned int packetSize;
-	unsigned int iteration;
-	double avgRoundTripTime;
-	double errorsPerIteration; 
-} NetStats;
-
-
-typedef struct
-{
 	pthread_t tid;
 	NetInfo *sockData;
 	NetStats *stats;

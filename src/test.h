@@ -25,6 +25,15 @@
 #define MAX_PACKET_SIZE_UDP	65507
 
 
+typedef struct
+{
+	unsigned int packetSize;
+	unsigned int iteration;
+	double avgRoundTripTime;
+	double errorsPerIteration; 
+} NetStats;
+
+
 enum packetIndex
 {
 	ONE_BYTE = 0,
@@ -75,6 +84,10 @@ void printSocketAddress(const struct sockaddr *);
 bool runPing(char *, unsigned int, unsigned int, double);
 bool runTraceroute(char *);
 bool runIperf(char *);
+
+
+// Global Variables
+NetStats packetStats[NUM_PACKET_SIZES];
 
 
 #endif
