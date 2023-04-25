@@ -87,7 +87,7 @@ bool runIperf(char *);
 
 
 // Global Variables
-NetStats *packetStats;
+extern NetStats *packetStats;
 
 
 #endif
