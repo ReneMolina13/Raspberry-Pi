@@ -374,7 +374,7 @@ int main(int argc, char **argv)
 		pthread_create(&args[i].tid, &attr, networkThreads, (void *) &args[i]);
 	}
 	
-	test(sockData.cmdIP, &packetStats);
+	test(sockData.cmdIP, packetStats);
 	
 	/*
 	// Fork process and call testing program

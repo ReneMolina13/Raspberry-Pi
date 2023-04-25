@@ -124,10 +124,8 @@ bool runIperf(char *ipAddr)
 }
 
 
-void test(char *ipAddr, NetStats **packetStats)
-{
-	NetStats *stats = *packetStats;
-	
+void test(char *ipAddr, NetStats *packetStats)
+{	
 	while (1) {
 		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
 			printf("Packet size: %i, ", stats[i].packetSize);
