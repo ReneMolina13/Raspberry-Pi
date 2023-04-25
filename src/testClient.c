@@ -274,8 +274,8 @@ int main(int argc, char **argv)
 	
 	// Create threads
 	Packets serverPackets;
-	pthread_mutex_init(&mutex);
 	pthread_attr_init(&attr);
+	pthread_mutex_init(&mutex, NULL);
 	ThreadArgs *args = (ThreadArgs *) malloc(NUM_PACKET_SIZES * sizeof(ThreadArgs));
 	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
 		args[i].sockData = &sockData;
