@@ -275,9 +275,9 @@ int main(int argc, char **argv)
 	
 	puts("************************************************\n");
 	
-	// Free memory allocated to threads and server address
-	free(tid);
+	// Free memory allocated to server address and thread argument structures
 	freeaddrinfo(sockData.serverAddr);
+	free(args);
 
 	// Close client socket
 	if (close(sockData.clientSocket) < 0) {
