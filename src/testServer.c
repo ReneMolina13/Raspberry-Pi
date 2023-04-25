@@ -68,6 +68,7 @@ bool handleClient(int serverSocket)
 	struct sockaddr_storage clientAddr;
 	socklen_t clientAddrLength = sizeof(clientAddr);
 	
+	/*
 	// Check 1st byte of data for message size index
 	unsigned int messageSize;
 	ssize_t bytesReceived = recvfrom(serverSocket, &buffer, 1, MSG_PEEK, (struct sockaddr *) &clientAddr, &clientAddrLength);
@@ -89,10 +90,10 @@ bool handleClient(int serverSocket)
 //********************************************************************************************
 	printf("Message size calculated: %u\n", messageSize);
 //********************************************************************************************
-	
+	*/
 	
 	// Store data received from client into structure
-	bytesReceived = recvfrom(serverSocket, &buffer, messageSize, 0, (struct sockaddr *) &clientAddr, &clientAddrLength);
+	bytesReceived = recvfrom(serverSocket, &buffer, 65507, 0, (struct sockaddr *) &clientAddr, &clientAddrLength);
 	if (bytesReceived < 0) {
 		fputs("Unable to receive request from client\n", stderr);
 		return false;
@@ -101,7 +102,7 @@ bool handleClient(int serverSocket)
 	printf("Received %li bytes from the client\n", bytesReceived);
 	
 	// Send packet to client
-	ssize_t bytesSent = sendto(serverSocket, &buffer, messageSize, 0, (struct sockaddr *) &clientAddr, sizeof(clientAddr));
+	ssize_t bytesSent = sendto(serverSocket, &buffer, 65507, 0, (struct sockaddr *) &clientAddr, sizeof(clientAddr));
 	if (bytesSent < 0) {
 		fputs("Transmission Error\n\n", stderr);
 		return false;
