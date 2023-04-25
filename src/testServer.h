@@ -12,13 +12,13 @@
 #include <math.h>
 
 
+// Max size of UDP packet
+#define MAX_PACKET_SIZE_UDP	65507
+
+
 // Function prototypes
 int initServer(char *);
 bool handleClient(int);
-
-
-// Global variable: max packet size constant
-const unsigned int MAX_PACKET_SIZE_UDP = 65507;
 
 
 #endif
