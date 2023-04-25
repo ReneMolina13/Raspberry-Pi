@@ -15,7 +15,7 @@ test.o: test.h
 
 # compilation instruction ($@ = target, $^ = prerequisites)
 testClient: $(CLTOBJ)
-	cc -o testClient $(CFLAGS) $(CLTOBJ)
+	cc -o testClient $(CFLAGS) $(CLTOBJ) -lpthread
 
 testServer: $(SRVOBJ)
 	cc -o testServer $(CFLAGS) $(SRVOBJ)
