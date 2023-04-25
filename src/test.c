@@ -124,19 +124,7 @@ bool runIperf(char *ipAddr)
 }
 
 
-int main(int argc, char **argv)
+void test(char *ipAddr, NetStats *packetStats)
 {
-	// Check for correct number of arguments
-	if (argc != 2) {
-		puts("Incorrect number of arguments entered:");
-		puts("1st argument should be IP address of the server");
-		return -1;
-	}
 	
-	// Extract IP address from command line arguments
-	char *ipAddr = argv[1];
-	
-	// free(packetStats);
-	
-	return 0;
 }

@@ -383,7 +383,7 @@ int main(int argc, char **argv)
 	// Initialize thread argument structures and create threads
 	pthread_attr_init(&attr);
 	pthread_mutex_init(&mutex, NULL);
-	NetStats *packetStats = (NetStats *) calloc(NUM_PACKET_SIZES, sizeof(NetStats));
+	NetStats packetStats[NUM_PACKET_SIZES];
 	ThreadArgs *args = (ThreadArgs *) malloc(NUM_PACKET_SIZES * sizeof(ThreadArgs));
 	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
 		args[i].sockData = &sockData;
@@ -399,12 +399,9 @@ int main(int argc, char **argv)
 		fputs("Error forking process - ", stderr);
 		return false;
 	}
-	// Child process: IP address passed through command line
+	// Child process: Call testing function (dosen't return)
 	else if (pid == 0) {
-		char *args[2];
-		args[0] = "./test.c";
-		args[1] = sockData.cmdIP;
-		execv(args[0], args);
+		test(sockData->cmdIP, &packetStats);
 	}
 	
 	// Wait for threads to terminate (only happens in case of error)

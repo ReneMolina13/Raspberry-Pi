@@ -84,10 +84,7 @@ void printSocketAddress(const struct sockaddr *);
 bool runPing(char *, unsigned int, unsigned int, double);
 bool runTraceroute(char *);
 bool runIperf(char *);
-
-
-// Global Variables
-extern NetStats *packetStats;
+void test(char *, const NetStats *);
 
 
 #endif
