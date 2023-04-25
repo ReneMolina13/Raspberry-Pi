@@ -87,7 +87,7 @@ bool handleClient(int serverSocket)
 	
 // TESTING
 //********************************************************************************************
-printf("Message size calculated: %u\n", messageSize);
+	printf("Message size calculated: %u\n", messageSize);
 //********************************************************************************************
 	
 	
