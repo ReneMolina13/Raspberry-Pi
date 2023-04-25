@@ -11,8 +11,8 @@ void *networkThreads(void *param)
 {
 	ThreadArgs *parameter = (ThreadArgs *) param;
 	pthread_t tid = parameter->tid;
-	NetInfo *sockData = parameter->sockData
-	Packets *sentPackets = parameter->packets
+	NetInfo *sockData = parameter->sockData;
+	Packets *sentPackets = parameter->packets;
 	Packets receivedPackets;
 	bool retVal = true;
 	
