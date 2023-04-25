@@ -9,6 +9,12 @@
 
 void *dataProcessingThread(void *param)
 {
+	// Extract parameters from argument structure
+	DataProcessingArgs *parameter = (DataProcessingArgs *) param;
+	pthread_t tid = parameter->tid;
+	char *ipAddress = parameter->ipAddress;
+	NetStats *packetStatus = parameter->packetStatus;
+	
 	while (1) {
 		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
 			printf("Packet size: %i, ", packetStats[i].packetSize);
