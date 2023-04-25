@@ -380,13 +380,14 @@ int main(int argc, char **argv)
 	
 	puts("************************************************\n");
 	
-	// Create threads
-	Packets serverPackets;
+	// Initialize thread argument structures and create threads
 	pthread_attr_init(&attr);
 	pthread_mutex_init(&mutex, NULL);
 	ThreadArgs *args = (ThreadArgs *) malloc(NUM_PACKET_SIZES * sizeof(ThreadArgs));
 	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
+		NetStats stats;
 		args[i].sockData = &sockData;
+		args[i].stats =	stats; 
 		args[i].packets = &packets;
 		args[i].status = true;
 		pthread_create(&args[i].tid, &attr, networkThreads, (void *) &args[i]);
