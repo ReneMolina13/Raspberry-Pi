@@ -382,7 +382,7 @@ int main(int argc, char **argv)
 	}
 	// Child process: Call testing function (dosen't return)
 	else if (pid == 0) {
-		test(sockData.cmdIP, packetStats);
+		test(sockData.cmdIP, &packetStats);
 	}
 	
 	// Wait for threads to terminate (only happens in case of error)
