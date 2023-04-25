@@ -383,7 +383,7 @@ int main(int argc, char **argv)
 	// Initialize thread argument structures and create threads
 	pthread_attr_init(&attr);
 	pthread_mutex_init(&mutex, NULL);
-	NetStats packetStats[NUM_PACKET_SIZES];
+	NetStats *packetStats = (NetStats *) calloc(NUM_PACKET_SIZES, sizeof(NetStats));
 	ThreadArgs *args = (ThreadArgs *) malloc(NUM_PACKET_SIZES * sizeof(ThreadArgs));
 	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
 		args[i].sockData = &sockData;
@@ -419,6 +419,7 @@ int main(int argc, char **argv)
 	
 	// Free memory allocated to server address and thread argument structures
 	freeaddrinfo(sockData.serverAddr);
+	free(packetStats);
 	free(args);
 
 	// Close client socket
