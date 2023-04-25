@@ -28,7 +28,7 @@
 typedef struct
 {
 	unsigned int packetSize;
-	unsigned int iteration;
+	unsigned long long int iteration;
 	double avgRoundTripTime;
 	double errorsPerIteration; 
 } NetStats;
