@@ -13,8 +13,7 @@
 
 // Function prototypes
 int initServer(char *);
-bool handleClient(int, Packets *);
-bool receivePacket(int, char *, unsigned int);
+bool handleClient(int);
 
 
 // Global variable: Max UDP packet size

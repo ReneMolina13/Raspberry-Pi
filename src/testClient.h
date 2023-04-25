@@ -32,9 +32,9 @@ typedef struct
 // Function prototypes
 void *networkThreads(void *param);
 bool clientSetup(int, char **, NetInfo *, Packets *);
-bool setupSocket(NetInfo *);
-bool makeTraffic(const NetInfo *, Packets *);
+bool createSocket(NetInfo *);
 bool sendPacket(const NetInfo *, char *, unsigned int);
+bool receivePacket(const NetInfo *, char *, unsigned int);
 
 
 // Global Variables
