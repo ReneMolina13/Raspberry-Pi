@@ -13,7 +13,7 @@ void *dataProcessingThread(void *param)
 	DataProcessingArgs *parameter = (DataProcessingArgs *) param;
 	pthread_t tid = parameter->tid;
 	char *ipAddress = parameter->ipAddress;
-	NetStats *packetStatus = parameter->packetStatus;
+	NetStats *packetStats = parameter->packetStats;
 	
 	while (1) {
 		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
