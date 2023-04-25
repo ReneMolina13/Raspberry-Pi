@@ -12,8 +12,8 @@ void *networkThreads(void *param)
 	ThreadArgs *parameter = (ThreadArgs *) param;
 	pthread_t tid = parameter->tid;
 	NetInfo *sockData = parameter->sockData;
+	NetStats *stats = parameter->stats;
 	Packets *sentPackets = parameter->packets;
-	ThreadStats *stats = parameter->stats;
 	Packets receivedPackets;
 	bool retVal = true;
 	struct timespec start, end;
@@ -21,11 +21,11 @@ void *networkThreads(void *param)
 	
 	// Determine packet size for this thread
 	if (tid % NUM_PACKET_SIZES != MAX_SIZE_UDP)
-		stats.packetSize = (unsigned int) pow(2, (tid % NUM_PACKET_SIZES));
+		stats->packetSize = (unsigned int) pow(2, (tid % NUM_PACKET_SIZES));
 	else
-		stats.packetSize = MAX_PACKET_SIZE_UDP;
+		stats->packetSize = MAX_PACKET_SIZE_UDP;
 	
-	for (stats.iteration = 1; retVal == true; stats.iteration++, numErrors = 0) {
+	for (stats->iteration = 1; retVal == true; stats->iteration++, numErrors = 0) {
 		// Lock mutex and start clock
 		pthread_mutex_lock(&mutex);
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start);
@@ -44,7 +44,7 @@ void *networkThreads(void *param)
 			retVal *= receivePacket(sockData, receivedPackets.two_bytes, sizeof(receivedPackets.two_bytes));
 			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
 			pthread_mutex_unlock(&mutex);
-			for (int i = 0; i < stats.packetSize; i++)
+			for (int i = 0; i < stats->packetSize; i++)
 				if (receivedPackets.two_bytes[i] != sentPackets->two_bytes[i])
 					numErrors++;
 			break;
@@ -53,7 +53,7 @@ void *networkThreads(void *param)
 			retVal *= receivePacket(sockData, receivedPackets.four_bytes, sizeof(receivedPackets.four_bytes));
 			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
 			pthread_mutex_unlock(&mutex);
-			for (int i = 0; i < stats.packetSize; i++)
+			for (int i = 0; i < stats->packetSize; i++)
 				if (receivedPackets.four_bytes[i] != sentPackets->four_bytes[i])
 					numErrors++;
 			break;
@@ -62,7 +62,7 @@ void *networkThreads(void *param)
 			retVal *= receivePacket(sockData, receivedPackets.eight_bytes, sizeof(receivedPackets.eight_bytes));
 			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
 			pthread_mutex_unlock(&mutex);
-			for (int i = 0; i < stats.packetSize; i++)
+			for (int i = 0; i < stats->packetSize; i++)
 				if (receivedPackets.eight_bytes[i] != sentPackets->eight_bytes[i])
 					numErrors++;
 			break;
@@ -71,7 +71,7 @@ void *networkThreads(void *param)
 			retVal *= receivePacket(sockData, receivedPackets.sixteen_bytes, sizeof(receivedPackets.sixteen_bytes));
 			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
 			pthread_mutex_unlock(&mutex);
-			for (int i = 0; i < stats.packetSize; i++)
+			for (int i = 0; i < stats->packetSize; i++)
 				if (receivedPackets.sixteen_bytes[i] != sentPackets->sixteen_bytes[i])
 					numErrors++;
 			break;
@@ -80,7 +80,7 @@ void *networkThreads(void *param)
 			retVal *= receivePacket(sockData, receivedPackets.thirty_two_bytes, sizeof(receivedPackets.thirty_two_bytes));
 			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
 			pthread_mutex_unlock(&mutex);
-			for (int i = 0; i < stats.packetSize; i++)
+			for (int i = 0; i < stats->packetSize; i++)
 				if (receivedPackets.thirty_two_bytes[i] != sentPackets.thirty_two_bytes[i])
 					numErrors++;
 			break;
@@ -89,7 +89,7 @@ void *networkThreads(void *param)
 			retVal *= receivePacket(sockData, receivedPackets.sixty_four_bytes, sizeof(receivedPackets.sixty_four_bytes));
 			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
 			pthread_mutex_unlock(&mutex);
-			for (int i = 0; i < stats.packetSize; i++)
+			for (int i = 0; i < stats->packetSize; i++)
 				if (receivedPackets.sixty_four_bytes[i] != sentPackets->sixty_four_bytes[i])
 					numErrors++;
 			break;
@@ -98,7 +98,7 @@ void *networkThreads(void *param)
 			retVal *= receivePacket(sockData, receivedPackets.one_eigth_kb, sizeof(receivedPackets.one_eigth_kb));
 			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
 			pthread_mutex_unlock(&mutex);
-			for (int i = 0; i < stats.packetSize; i++)
+			for (int i = 0; i < stats->packetSize; i++)
 				if (receivedPackets.one_eigth_kb[i] != sentPackets->one_eigth_kb[i])
 					numErrors++;
 			break;
@@ -107,7 +107,7 @@ void *networkThreads(void *param)
 			retVal *= receivePacket(sockData, receivedPackets.one_fourth_kb, sizeof(receivedPackets.one_fourth_kb));
 			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
 			pthread_mutex_unlock(&mutex);
-			for (int i = 0; i < stats.packetSize; i++)
+			for (int i = 0; i < stats->packetSize; i++)
 				if (receivedPackets.one_fourth_kb[i] != sentPackets->one_fourth_kb[i])
 					numErrors++;
 			break;
@@ -116,7 +116,7 @@ void *networkThreads(void *param)
 			retVal *= receivePacket(sockData, receivedPackets.one_half_kb, sizeof(receivedPackets.one_half_kb));
 			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
 			pthread_mutex_unlock(&mutex);
-			for (int i = 0; i < stats.packetSize; i++)
+			for (int i = 0; i < stats->packetSize; i++)
 				if (receivedPackets.one_half_kb[i] != sentPackets->one_half_kb[i])
 					numErrors++;
 			break;
@@ -125,7 +125,7 @@ void *networkThreads(void *param)
 			retVal *= receivePacket(sockData, receivedPackets.one_kb, sizeof(receivedPackets.one_kb));
 			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
 			pthread_mutex_unlock(&mutex);
-			for (int i = 0; i < stats.packetSize; i++)
+			for (int i = 0; i < stats->packetSize; i++)
 				if (receivedPackets.one_kb[i] != sentPackets->one_kb[i])
 					numErrors++;
 			break;
@@ -134,7 +134,7 @@ void *networkThreads(void *param)
 			retVal *= receivePacket(sockData, receivedPackets.two_kb, sizeof(receivedPackets.two_kb));
 			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
 			pthread_mutex_unlock(&mutex);
-			for (int i = 0; i < stats.packetSize; i++)
+			for (int i = 0; i < stats->packetSize; i++)
 				if (receivedPackets.two_kb[i] != sentPackets->two_kb[i])
 					numErrors++;
 			break;
@@ -143,7 +143,7 @@ void *networkThreads(void *param)
 			retVal *= receivePacket(sockData, receivedPackets.four_kb, sizeof(receivedPackets.four_kb));
 			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
 			pthread_mutex_unlock(&mutex);
-			for (int i = 0; i < stats.packetSize; i++)
+			for (int i = 0; i < stats->packetSize; i++)
 				if (receivedPackets.four_kb[i] != sentPackets->four_kb[i])
 					numErrors++;
 			break;
@@ -152,7 +152,7 @@ void *networkThreads(void *param)
 			retVal *= receivePacket(sockData, receivedPackets.eight_kb, sizeof(receivedPackets.eight_kb));
 			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
 			pthread_mutex_unlock(&mutex);
-			for (int i = 0; i < stats.packetSize; i++)
+			for (int i = 0; i < stats->packetSize; i++)
 				if (receivedPackets.eight_kb[i] != sentPackets->eight_kb[i])
 					numErrors++;
 			break;
@@ -161,7 +161,7 @@ void *networkThreads(void *param)
 			retVal *= receivePacket(sockData, receivedPackets.sixteen_kb, sizeof(receivedPackets.sixteen_kb));
 			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
 			pthread_mutex_unlock(&mutex);
-			for (int i = 0; i < stats.packetSize; i++)
+			for (int i = 0; i < stats->packetSize; i++)
 				if (receivedPackets.sixteen_kb[i] != sentPackets->sixteen_kb[i])
 					numErrors++;
 			break;
@@ -170,7 +170,7 @@ void *networkThreads(void *param)
 			retVal *= receivePacket(sockData, receivedPackets.thirty_two_kb, sizeof(receivedPackets.thirty_two_kb));
 			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
 			pthread_mutex_unlock(&mutex);
-			for (int i = 0; i < stats.packetSize; i++)
+			for (int i = 0; i < stats->packetSize; i++)
 				if (receivedPackets.thirty_two_kb[i] != sentPackets->thirty_two_kb[i])
 					numErrors++;
 			break;
@@ -179,7 +179,7 @@ void *networkThreads(void *param)
 			retVal *= receivePacket(sockData, receivedPackets.max_size_udp, sizeof(receivedPackets.max_size_udp));
 			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
 			pthread_mutex_unlock(&mutex);
-			for (int i = 0; i < stats.packetSize; i++)
+			for (int i = 0; i < stats->packetSize; i++)
 				if (receivedPackets.max_size_udp[i] != sentPackets->max_size_udp[i])
 					numErrors++;
 		}

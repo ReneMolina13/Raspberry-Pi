@@ -27,15 +27,15 @@ typedef struct
 	unsigned int iteration;
 	double avgRoundTripTime;
 	double errorsPerIteration; 
-} ThreadStats;
+} NetStats;
 
 
 typedef struct
 {
 	pthread_t tid;
 	NetInfo *sockData;
+	NetStats *stats;
 	Packets *packets;
-	ThreadStats *stats;
 	bool status;
 } ThreadArgs;
 
