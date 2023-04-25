@@ -374,6 +374,14 @@ int main(int argc, char **argv)
 		pthread_create(&args[i].tid, &attr, networkThreads, (void *) &args[i]);
 	}
 	
+	while (1) {
+		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
+			printf("Packet size: %i, ", packetStats[i].packetSize);
+			printf("Iteration num: %lli\n", packetStats[i].iteration);
+		}
+		fputs("\n", stdout);
+	}
+	
 	/*
 	// Fork process and call testing program
 	int pid = fork();
