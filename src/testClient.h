@@ -20,11 +20,25 @@ typedef struct
 } NetInfo;
 
 
+typedef struct
+{
+	pthread_t tid;
+	NetInfo *sockData;
+	Packets *packets;
+	bool status;
+} ThreadArgs;
+
+
 // Function prototypes
+void *networkThreads(void *param);
 bool clientSetup(int, char **, NetInfo *, Packets *);
 bool setupSocket(NetInfo *);
 bool makeTraffic(const NetInfo *, Packets *);
 bool sendPacket(const NetInfo *, char *, unsigned int);
+
+
+// Global Variables
+pthread_attr_t attr;
 
 
 #endif

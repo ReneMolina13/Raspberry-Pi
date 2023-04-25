@@ -17,4 +17,8 @@ bool handleClient(int, Packets *);
 bool receivePacket(int, char *, unsigned int);
 
 
+// Global variable: Max UDP packet size
+const unsigned int MAX_PACKET_SIZE_UDP = 65507;
+
+
 #endif

@@ -20,6 +20,30 @@
 #include <netdb.h>
 
 
+enum packetIndex
+{
+	ONE_BYTE = 0,
+	TWO_BYTES = 1,
+	FOUR_BYTES = 2,
+	EIGHT_BYTES = 3,
+	SIXTEEN_BYTES = 4,
+	THIRTY_TWO_BYTES = 5,
+	SIXTY_FOUR_BYTES = 6,
+	ONE_EIGTH_KB = 7,
+	ONE_FOURTH_KB = 8,
+	ONE_HALF_KB = 9,
+	ONE_KB = 10,
+	TWO_KB = 11,
+	FOUR_KB = 12,
+	EIGHT_KB = 13,
+	SIXTEEN_KB = 14,
+	THIRTY_TWO_KB = 15,
+	MAX_SIZE_UDP = 16,
+	NUM_PACKET_SIZES = 17
+};
+
+
+// Contains packets of varying sizes to be sent across the network
 typedef struct
 {
 	char oneByte;
