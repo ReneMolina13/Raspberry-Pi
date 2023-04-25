@@ -31,7 +31,7 @@ void *networkThreads(void *param)
 	else
 		stats->packetSize = MAX_PACKET_SIZE_UDP;
 		
-	for (stats->iteration = 1; retVal == true; stats->iteration++, numErrors = 0) {
+	for (stats->iteration = 1; retVal == true && stats->iteration > 0; stats->iteration++, numErrors = 0) {
 		// Start clock
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start);
 		
@@ -181,7 +181,15 @@ void *networkThreads(void *param)
 		numErrors = 0;
 	}
 	
-	// Error occured, exit
+	// Check for errors
+	if (retVal == false) {
+		fputs("Transmission error occured: ", stderr);
+	}
+	else {
+		fputs("Maximum iterations reached: ", stderr);
+	}
+	printf("Thread for %u byte packets returning\n", stats->packetSize);
+	
 	parameter->status = retVal;
 	pthread_exit(0);
 }
@@ -362,28 +370,33 @@ int main(int argc, char **argv)
 	
 	puts("************************************************\n");
 	
-	// Initialize thread argument structures and create threads
+	// Initialize thread argument structures and create network threads
 	pthread_attr_init(&attr);
 	NetStats *packetStats = (NetStats *) calloc(NUM_PACKET_SIZES, sizeof(NetStats));
-	ThreadArgs *args = (ThreadArgs *) malloc(NUM_PACKET_SIZES * sizeof(ThreadArgs));
+	ThreadArgs *thArgs = (ThreadArgs *) malloc(NUM_PACKET_SIZES * sizeof(ThreadArgs));
 	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
-		args[i].sockData = &sockData;
-		args[i].stats =	&packetStats[i]; 
-		args[i].packets = &packets;
-		args[i].status = true;
-		pthread_create(&args[i].tid, &attr, networkThreads, (void *) &args[i]);
+		thArgs[i].sockData = &sockData;
+		thArgs[i].stats =	&packetStats[i]; 
+		thArgs[i].packets = &packets;
+		thArgs[i].status = true;
+		pthread_create(&thArgs[i].tid, &attr, networkThreads, (void *) &thArgs[i]);
 	}
 	
-	// Testing function
-	test(sockData.cmdIP, packetStats);
+	// Create data processing thread
+	DataProcessingArgs dpArgs;
+	dpArgs.ipAddress = sockData.cmdIP;
+	dpArgs.packetStats = packetStats;
+	pthread_create(&dpArgs.tid, &attr, dataProcessingThread, (void *) &dpArgs);
+	
+	// Create testing thread
+	TestingArgs teArgs;
+	pthread_create(&teArgs.tid, &attr, testingThread, (void *) &teArgs);
 	
 	// Wait for threads to terminate (only happens in case of error)
 	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
 		pthread_join(args[i].tid, NULL);
 		if (args[i].status == false) {
 			fputs("Error creating network traffic - ", stderr);
-			char errorPacket[3] = "-1";
-			sendPacket(&sockData, errorPacket, 3);
 			return -1;
 		}
 	}

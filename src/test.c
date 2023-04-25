@@ -7,6 +7,24 @@
 #include "test.h"
 
 
+void *dataProcessingThread(void *param)
+{
+	while (1) {
+		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
+			printf("Packet size: %i, ", packetStats[i].packetSize);
+			printf("Iteration num: %lli\n", packetStats[i].iteration);
+		}
+		fputs("\n", stdout);
+	}
+}
+
+
+void *testingThread(void *param)
+{
+	
+}
+
+
 void printSocketAddress(const struct sockaddr *addr)
 {
 	// Make sure address isn't null
@@ -120,17 +138,5 @@ bool runIperf(char *ipAddr)
 		free(args);
 		wait(&childExitStatus);
 		return true;
-	}
-}
-
-
-void test(char *ipAddr, NetStats *packetStats)
-{	
-	while (1) {
-		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
-			printf("Packet size: %i, ", packetStats[i].packetSize);
-			printf("Iteration num: %lli\n", packetStats[i].iteration);
-		}
-		fputs("\n", stdout);
 	}
 }

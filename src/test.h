@@ -34,6 +34,20 @@ typedef struct
 } NetStats;
 
 
+typedef struct
+{
+	pthread_t tid;
+	char *ipAddress;
+	NetStats *packetStats;
+} DataProcessingArgs;
+
+
+typedef struct
+{
+	pthread_t tid;
+} TestingArgs;
+
+
 enum packetIndex
 {
 	ONE_BYTE = 0,
@@ -80,11 +94,12 @@ typedef struct
 
 
 // Function prototypes
+void *dataProcessingThread(void *);
+void *testingThread(void *);
 void printSocketAddress(const struct sockaddr *);
 bool runPing(char *, unsigned int, unsigned int, double);
 bool runTraceroute(char *);
 bool runIperf(char *);
-void test(char *, NetStats *);
 
 
 #endif
