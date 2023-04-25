@@ -9,6 +9,7 @@
 
 
 #include "test.h"
+#include <pthread.h>
 
 
 typedef struct
