@@ -40,7 +40,7 @@ void *networkThreads(void *param)
 		// Lock mutex and start clock
 		// pthread_mutex_lock(&mutex);
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start);
-		
+		printf("Thread %u: packet size = %u", tid, stats->packetSize);
 		switch (tid % NUM_PACKET_SIZES) {
 		case ONE_BYTE:
 			retVal *= sendPacket(sockData, &sentPackets->oneByte, sizeof(sentPackets->oneByte));
