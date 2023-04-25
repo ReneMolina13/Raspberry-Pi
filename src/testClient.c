@@ -16,6 +16,9 @@ void *networkThreads(void *param)
 	Packets receivedPackets;
 	bool retVal = true;
 	
+	// Mutex required to send data to server
+	pthread_mutex_lock(&mutex);
+	
 	switch (tid % NUM_PACKET_SIZES) {
 	case ONE_BYTE:
 		retVal *= sendPacket(sockData, &sentPackets->oneByte, sizeof(sentPackets->oneByte));
@@ -86,6 +89,8 @@ void *networkThreads(void *param)
 		retVal *= receivePacket(sockData, receivedPackets.max_size_udp, sizeof(receivedPackets.max_size_udp));
 	}
 	
+	// Unlock mutex, save status, and exit
+	pthread_mutex_unlock(&mutex);
 	parameter->status = retVal;
 	pthread_exit(0);
 }
@@ -269,6 +274,7 @@ int main(int argc, char **argv)
 	
 	// Create threads
 	Packets serverPackets;
+	pthread_mutex_init(&mutex);
 	pthread_attr_init(&attr);
 	ThreadArgs *args = (ThreadArgs *) malloc(NUM_PACKET_SIZES * sizeof(ThreadArgs));
 	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
