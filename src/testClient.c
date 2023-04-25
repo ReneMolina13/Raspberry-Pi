@@ -398,6 +398,7 @@ int main(int argc, char **argv)
 		pthread_create(&args[i].tid, &attr, networkThreads, (void *) &args[i]);
 	}
 	
+	/*
 	// Fork process and call testing program
 	int pid = fork();
 	if (pid < 0) {
@@ -408,6 +409,7 @@ int main(int argc, char **argv)
 	else if (pid == 0) {
 		test(sockData.cmdIP, &packetStats);
 	}
+	*/
 	
 	// Wait for threads to terminate (only happens in case of error)
 	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
