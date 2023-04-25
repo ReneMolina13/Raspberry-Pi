@@ -386,7 +386,7 @@ int main(int argc, char **argv)
 	ThreadArgs *args = (ThreadArgs *) malloc(NUM_PACKET_SIZES * sizeof(ThreadArgs));
 	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
 		args[i].sockData = &sockData;
-		args[i].stats =	&packetStats[i]; 
+		args[i].stats =	&(packetStats[i]); 
 		args[i].packets = &packets;
 		args[i].status = true;
 		pthread_create(&args[i].tid, &attr, networkThreads, (void *) &args[i]);
