@@ -85,6 +85,12 @@ bool handleClient(int serverSocket)
 		messageSize = (unsigned int) pow(2, (int) buffer[0]);
 	}
 	
+// TESTING
+//********************************************************************************************
+printf("Message size calculated: %u\n", messageSize);
+//********************************************************************************************
+	
+	
 	// Store data received from client into structure
 	bytesReceived = recvfrom(serverSocket, &buffer, messageSize, 0, (struct sockaddr *) &clientAddr, &clientAddrLength);
 	if (bytesReceived < 0) {
