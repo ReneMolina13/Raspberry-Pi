@@ -146,7 +146,7 @@ bool clientSetup(int argc, char **argv ,NetInfo *sockData, Packets *packets)
 		packets->four_kb[i] = rand() % 128;
 	packets->eight_kb[0] = EIGHT_KB;
 	for (int i = 0; i < 8192; i++)
-		packets->eight_kb[i] = rand() % 128
+		packets->eight_kb[i] = rand() % 128;
 	packets->sixteen_kb[0] = SIXTEEN_KB;
 	for (int i = 0; i < 16384; i++)
 		packets->sixteen_kb[i] = rand() % 128;
