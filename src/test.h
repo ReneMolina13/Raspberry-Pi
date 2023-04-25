@@ -81,10 +81,10 @@ typedef struct
 
 // Function prototypes
 void printSocketAddress(const struct sockaddr *);
-bool runPing(char *, unsigned int, unsigned int, double);
-bool runTraceroute(char *);
-bool runIperf(char *);
-void test(char *, const NetStats *);
+bool runPing(const char *, unsigned int, unsigned int, double);
+bool runTraceroute(const char *);
+bool runIperf(const char *);
+void test(const char *, const NetStats *);
 
 
 #endif

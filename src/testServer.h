@@ -12,7 +12,7 @@
 
 
 // Function prototypes
-int initServer(char *);
+int initServer(const char *);
 bool handleClient(int);
 
 

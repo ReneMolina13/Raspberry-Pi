@@ -205,7 +205,7 @@ void *networkThreads(void *param)
 }
 
 
-bool clientSetup(int argc, char **argv ,NetInfo *sockData, Packets *packets)
+bool clientSetup(int argc, const char **argv ,NetInfo *sockData, Packets *packets)
 {
 	// Check for correct number of arguments
 	if (argc != 3) {
@@ -313,7 +313,7 @@ bool createSocket(NetInfo *sockData)
 }
 
 
-bool sendPacket(const NetInfo *sockData, char *packet, unsigned int packetSize)
+bool sendPacket(const NetInfo *sockData, const char *packet, unsigned int packetSize)
 {
 	// Send the requested transaction to the server
 	ssize_t bytesSent = sendto(sockData->clientSocket, packet, packetSize, 0, sockData->serverAddr->ai_addr, sockData->serverAddr->ai_addrlen);
