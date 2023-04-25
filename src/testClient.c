@@ -31,6 +31,11 @@ void *networkThreads(void *param)
 	else
 		stats->packetSize = MAX_PACKET_SIZE_UDP;
 	
+// TESTING
+//********************************************************************************************
+	printf("Thread %u: packet size = %u", tid, stats->packetSize);
+//********************************************************************************************
+	
 	for (stats->iteration = 1; retVal == true; stats->iteration++, numErrors = 0) {
 		// Lock mutex and start clock
 		pthread_mutex_lock(&mutex);
