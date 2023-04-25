@@ -86,7 +86,7 @@ void *networkThreads(void *param)
 		retVal *= receivePacket(sockData, receivedPackets.max_size_udp, sizeof(receivedPackets.max_size_udp));
 	}
 	
-	*(parameter->status) = retVal;
+	parameter->status = retVal;
 	pthread_exit(0);
 }
 
