@@ -9,15 +9,21 @@
 
 void *networkThreads(void *param)
 {
+	// Unpack thread arguments structure
 	ThreadArgs *parameter = (ThreadArgs *) param;
 	pthread_t tid = parameter->tid;
 	NetInfo *sockData = parameter->sockData;
 	NetStats *stats = parameter->stats;
 	Packets *sentPackets = parameter->packets;
+	// Packets received from server to compare for errors
 	Packets receivedPackets;
-	bool retVal = true;
+	// Used to measure round-trip time each iteration
+	double duration;
 	struct timespec start, end;
+	// Holds number of errors each iteration
 	unsigned int numErrors;
+	// True if no transmission errors have occured
+	bool retVal = true;
 	
 	// Determine packet size for this thread
 	if (tid % NUM_PACKET_SIZES != MAX_SIZE_UDP)
@@ -185,11 +191,11 @@ void *networkThreads(void *param)
 		}
 		
 		// Calculate time taken to send & receive data
-		double duration = (1000.0*end.tv_sec + 1e-6*end.tv_nsec) - (1000.0*start.tv_sec + 1e-6*start.tv_nsec);
+		duration = (1000.0*end.tv_sec + 1e-6*end.tv_nsec) - (1000.0*start.tv_sec + 1e-6*start.tv_nsec);
 		
 		// Adjust average stats
-		avgRoundTripTime += (duration / iteration);
-		errorsPerIteration += (numErrors / (double) iteration);
+		stats->avgRoundTripTime += (duration / iteration);
+		stats->errorsPerIteration += (numErrors / (double) iteration);
 		numErrors = 0;
 	}
 	
