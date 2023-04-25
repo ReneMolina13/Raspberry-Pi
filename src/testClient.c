@@ -403,7 +403,7 @@ int main(int argc, char **argv)
 	else if (pid == 0) {
 		char *args[2];
 		args[0] = "./test.c";
-		args[1] = sockData->cmdIP;
+		args[1] = sockData.cmdIP;
 		execv(args[0], args);
 	}
 	
