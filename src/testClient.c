@@ -387,7 +387,7 @@ int main(int argc, char **argv)
 	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
 		NetStats stats;
 		args[i].sockData = &sockData;
-		args[i].stats =	stats; 
+		args[i].stats =	&stats; 
 		args[i].packets = &packets;
 		args[i].status = true;
 		pthread_create(&args[i].tid, &attr, networkThreads, (void *) &args[i]);
