@@ -124,7 +124,7 @@ bool runIperf(char *ipAddr)
 }
 
 
-void test(char *ipAddr, const NetStats **packetStats)
+void test(char *ipAddr, const NetStats *packetStats[NUM_PACKET_SIZES])
 {
 	
 }
