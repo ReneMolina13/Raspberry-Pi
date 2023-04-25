@@ -406,7 +406,7 @@ int main(int argc, char **argv)
 	// Free memory allocated to server address and thread argument structures
 	freeaddrinfo(sockData.serverAddr);
 	free(packetStats);
-	free(args);
+	free(thArgs);
 
 	// Close client socket
 	if (close(sockData.clientSocket) < 0) {
