@@ -9,6 +9,7 @@
 
 
 #include "test.h"
+#include <math.h>
 
 
 // Function prototypes
