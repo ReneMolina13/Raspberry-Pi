@@ -136,8 +136,6 @@ int main(int argc, char **argv)
 	// Extract IP address from command line arguments
 	char *ipAddr = argv[1];
 	
-	while (*packetStats == NULL);
-	
 	free(packetStats);
 	
 	return 0;
