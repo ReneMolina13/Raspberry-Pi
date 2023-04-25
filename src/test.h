@@ -87,7 +87,7 @@ bool runIperf(char *);
 
 
 // Global Variables
-NetStats packetStats[17];
+NetStats packetStats[NUM_PACKET_SIZES];
 
 
 #endif
