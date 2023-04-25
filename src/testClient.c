@@ -45,7 +45,7 @@ void *networkThreads(void *param)
 			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
 			pthread_mutex_unlock(&mutex);
 			for (int i = 0; i < stats.packetSize; i++)
-				if (receivedPackets.two_bytes[i] != sentPackets->two_bytes[i];
+				if (receivedPackets.two_bytes[i] != sentPackets->two_bytes[i])
 					numErrors++;
 			break;
 		case FOUR_BYTES:
@@ -63,7 +63,7 @@ void *networkThreads(void *param)
 			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
 			pthread_mutex_unlock(&mutex);
 			for (int i = 0; i < stats.packetSize; i++)
-				if (receivedPackets.eight_bytes[i] != sentPackets->eight_bytes[i]
+				if (receivedPackets.eight_bytes[i] != sentPackets->eight_bytes[i])
 					numErrors++;
 			break;
 		case SIXTEEN_BYTES:
@@ -373,7 +373,6 @@ int main(int argc, char **argv)
 	}
 	
 	puts("************************************************\n");
-	
 	
 	// Create threads
 	Packets serverPackets;
