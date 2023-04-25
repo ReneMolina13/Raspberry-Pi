@@ -40,6 +40,7 @@ bool receivePacket(const NetInfo *, char *, unsigned int);
 
 // Global Variables
 pthread_attr_t attr;
+pthread_mutex_t mutex;
 
 
 #endif
