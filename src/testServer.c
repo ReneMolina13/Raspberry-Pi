@@ -63,37 +63,13 @@ int initServer(char *service)
 bool handleClient(int serverSocket)
 {
 	// Buffer to store received packet (size of largest possible UDP packet)
-	static char buffer[65507];
+	static char buffer[MAX_PACKET_SIZE_UDP];
 	// Location to store client address & length
 	struct sockaddr_storage clientAddr;
 	socklen_t clientAddrLength = sizeof(clientAddr);
 	
-	/*
-	// Check 1st byte of data for message size index
-	unsigned int messageSize;
-	ssize_t bytesReceived = recvfrom(serverSocket, &buffer, 1, MSG_PEEK, (struct sockaddr *) &clientAddr, &clientAddrLength);
-	if (bytesReceived < 0) {
-		fputs("Unable to receive request from client\n", stderr);
-		return false;
-	}
-	
-	// Determine message size based on size index
-	switch((int) buffer[0]) {
-	case MAX_SIZE_UDP:
-		messageSize = 65507;
-		break;
-	default:
-		messageSize = (unsigned int) pow(2, (int) buffer[0]);
-	}
-	
-// TESTING
-//********************************************************************************************
-	printf("Message size calculated: %u\n", messageSize);
-//********************************************************************************************
-	*/
-	
 	// Store data received from client into structure
-	ssize_t bytesReceived = recvfrom(serverSocket, &buffer, 65507, 0, (struct sockaddr *) &clientAddr, &clientAddrLength);
+	ssize_t bytesReceived = recvfrom(serverSocket, &buffer, MAX_PACKET_SIZE_UDP, 0, (struct sockaddr *) &clientAddr, &clientAddrLength);
 	if (bytesReceived < 0) {
 		fputs("Unable to receive request from client\n", stderr);
 		return false;
@@ -101,8 +77,8 @@ bool handleClient(int serverSocket)
 	
 	printf("Received %li bytes from the client\n", bytesReceived);
 	
-	// Send packet to client
-	ssize_t bytesSent = sendto(serverSocket, &buffer, 65507, 0, (struct sockaddr *) &clientAddr, sizeof(clientAddr));
+	// Send packet to client (bytes not used get quietly discarded at client socket)
+	ssize_t bytesSent = sendto(serverSocket, &buffer, MAX_PACKET_SIZE_UDP, 0, (struct sockaddr *) &clientAddr, sizeof(clientAddr));
 	if (bytesSent < 0) {
 		fputs("Transmission Error\n\n", stderr);
 		return false;
