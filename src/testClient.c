@@ -394,7 +394,7 @@ int main(int argc, char **argv)
 	
 	// Wait for threads to terminate (only happens in case of error)
 	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
-		pthread_join(args[i].tid, NULL);
+		pthread_join(thArgs[i].tid, NULL);
 		if (args[i].status == false) {
 			fputs("Error creating network traffic - ", stderr);
 			return -1;
