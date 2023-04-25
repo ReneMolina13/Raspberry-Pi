@@ -81,7 +81,7 @@ void *networkThreads(void *param)
 			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
 			pthread_mutex_unlock(&mutex);
 			for (int i = 0; i < stats->packetSize; i++)
-				if (receivedPackets.thirty_two_bytes[i] != sentPackets.thirty_two_bytes[i])
+				if (receivedPackets.thirty_two_bytes[i] != sentPackets->thirty_two_bytes[i])
 					numErrors++;
 			break;
 		case SIXTY_FOUR_BYTES:
