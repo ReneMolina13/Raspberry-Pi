@@ -11,7 +11,7 @@ void *networkThreads(void *param)
 {
 	// Unpack thread arguments structure
 	ThreadArgs *parameter = (ThreadArgs *) param;
-	pthread_t tid = parameter->tid;
+	unsigned int packetIndex = parameter->packetIndex;
 	NetInfo *sockData = parameter->sockData;
 	NetStats *stats = parameter->stats;
 	Packets *sentPackets = parameter->packets;
@@ -26,8 +26,8 @@ void *networkThreads(void *param)
 	bool retVal = true;
 	
 	// Determine packet size for this thread
-	if (tid % NUM_PACKET_SIZES != MAX_SIZE_UDP)
-		stats->packetSize = (unsigned int) pow(2, (tid % NUM_PACKET_SIZES));
+	if (packetIndex != MAX_SIZE_UDP)
+		stats->packetSize = (unsigned int) pow(2, (packetIndex));
 	else
 		stats->packetSize = MAX_PACKET_SIZE_UDP;
 		
@@ -35,7 +35,7 @@ void *networkThreads(void *param)
 		// Start clock
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start);
 		
-		switch (tid % NUM_PACKET_SIZES) {
+		switch (packetIndex) {
 		case ONE_BYTE:
 			retVal *= sendPacket(sockData, &sentPackets->oneByte, sizeof(sentPackets->oneByte));
 			retVal *= receivePacket(sockData, &receivedPackets.oneByte, sizeof(receivedPackets.oneByte));
@@ -375,6 +375,7 @@ int main(int argc, char **argv)
 	NetStats *packetStats = (NetStats *) calloc(NUM_PACKET_SIZES, sizeof(NetStats));
 	ThreadArgs *thArgs = (ThreadArgs *) malloc(NUM_PACKET_SIZES * sizeof(ThreadArgs));
 	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
+		thArgs[i].packetIndex = i;
 		thArgs[i].sockData = &sockData;
 		thArgs[i].stats =	&packetStats[i]; 
 		thArgs[i].packets = &packets;
