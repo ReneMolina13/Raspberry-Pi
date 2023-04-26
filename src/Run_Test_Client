@@ -1,4 +1,5 @@
 #! /bin/bash
+clear
 rm ../data/testingData.csv
 cp ../data/testDataTemplate.csv ../data/testingData.csv
 ./testClient 192.168.1.103 26207
