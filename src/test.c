@@ -37,7 +37,7 @@ void *dataProcessingThread(void *param)
 		while (getc(outFile) != '\n');
 		
 		// Iterate through one packet size at a time
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
 			// Move to 2nd column of current row & reset for output
 			while(getc(outFile) != ',');
 			fseek(outFile, 0, SEEK_CUR);
@@ -54,7 +54,6 @@ void *dataProcessingThread(void *param)
 			errorsPerKB = 1000 * errorsPerIteration / packetSize;
 			fprintf(outFile, "%.2f,", errorsPerKB);
 			// Add a newline to end row & reset for input
-			fputc('\n', outFile);
 			fseek(outFile, 0, SEEK_CUR);
 		}
 		// Reset to start of file stream
