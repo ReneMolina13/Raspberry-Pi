@@ -15,14 +15,24 @@ void *dataProcessingThread(void *param)
 	char *ipAddress = parameter->ipAddress;
 	NetStats *packetStats = parameter->packetStats;
 	// Temp variables for file output
-	unsigned int packetSize;
-	unsigned long long int iteration;
-	double avgRoundTripTime;
-	double errorsPerIteration;
-	double errorsPerKB;
+	unsigned int bytesPerPacket[NUM_PACKET_SIZES];
+	unsigned long long int iterations[NUM_PACKET_SIZES];
+	double avgRoundTripTime[NUM_PACKET_SIZES];
+	double errorsPerPacket[NUM_PACKET_SIZES];
+	double errorsPerKB[NUM_PACKET_SIZES];
+	// Variables for average over all packet sizes
+	unsigned long long int totalIterations = 0;
+	int remainder = 0;
+	double totalAvgRTT = 0;
+	double avgEpPk = 0;
+	double avgEpKB = 0;
 	
 	// Detach thread (makes it not joinable)
 	pthread_detach(tid);
+	
+	// Obtain all packet sizes
+	for (int i = 0; i < NUM_PACKET_SIZES; i++)
+		bytesPerPacket[i] = packetStats[i].bytesPerPacket;
 	
 	while (1) {
 		// Open file to store data produced by network threads
@@ -39,22 +49,42 @@ void *dataProcessingThread(void *param)
 		// Iterate through one packet size at a time
 		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
 			// Store current statistical data in temporary buffer
-			packetSize = packetStats[i].packetSize;
-			iteration = packetStats[i].iteration;
-			avgRoundTripTime = packetStats[i].avgRoundTripTime;
-			errorsPerIteration = packetStats[i].errorsPerIteration;
+			iterations[i] = packetStats[i].iteration;
+			avgRoundTripTime[i] = packetStats[i].avgRoundTripTime;
+			errorsPerPacket[i] = packetStats[i].errorsPerPacket;
 			// Write packet size to spreadsheet
-			fprintf(outFile, "%u-Byte Packet,", packetSize);
+			fprintf(outFile, "%u-Byte Packet,", bytesPerPacket[i]);
 			// Write average round-trip time (ms) to spreadsheet
-			fprintf(outFile, "%.2f,", avgRoundTripTime);
+			fprintf(outFile, "%.2f,", avgRoundTripTime[i]);
 			// Write number of incorrect bits per packet
-			fprintf(outFile, "%.2f,", errorsPerIteration);
+			fprintf(outFile, "%.2f,", errorsPerPacket[i]);
 			// Calculate and write number of incorrect bits per KB
-			errorsPerKB = 1000 * errorsPerIteration / packetSize;
-			fprintf(outFile, "%.2f,", errorsPerKB);
+			errorsPerKB[i] = 1000 * errorsPerPacket[i] / bytesPerPacket[i];
+			fprintf(outFile, "%.2f,", errorsPerKB[i]);
 			// Add a newline to end row
 			fputc('\n', outFile);
 		}
+		
+		// Determine total number of iterations
+		for (int i = 0; i < NUM_PACKET_SIZES; i++)
+			totalIterations += iterations[i];
+		
+		// Find averages
+		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
+			totalAvgRTT += (avgRoundTripTime[i] * iteration[i]) / totalIterations;
+			avgEpPk += (errorsPerPacket[i] * iteration[i]) / totalIterations;
+			avgEpKB += (errorsPerKB[i] * iteration[i]) / totalIterations;
+		}
+		
+		// Print averages to spreadsheet
+		fprintf("Averages,%.2f,%.2f,%.2f,\n", totalAvgRTT, avgEpPk, avgEpKB);
+		
+		// Reset averages to zero
+		totalIterations = 0;
+		totalAvgRTT = 0;
+		avgEpPk = 0;
+		avgEpKB = 0;
+		
 		// Close file
 		fclose(outFile);
 		break;

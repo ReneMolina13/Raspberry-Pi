@@ -24,6 +24,8 @@
 
 // Max size of UDP packet
 #define MAX_PACKET_SIZE_UDP	65507
+// Max number of iterations before calculations begin to overflow
+#define MAX_ITERATIONS	250000000
 
 
 enum packetIndex
@@ -51,10 +53,10 @@ enum packetIndex
 
 typedef struct
 {
-	unsigned int packetSize;
-	unsigned long long int iteration;
+	unsigned int bytesPerPacket;
+	unsigned int iteration;
 	double avgRoundTripTime;
-	double errorsPerIteration; 
+	double errorsPerPacket; 
 } NetStats;
 
 
