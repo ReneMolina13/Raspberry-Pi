@@ -77,7 +77,7 @@ void *dataProcessingThread(void *param)
 		}
 		
 		// Print averages to spreadsheet
-		fprintf("Averages,%.2f,%.2f,%.2f,\n", totalAvgRTT, avgEpPk, avgEpKB);
+		fprintf(outFile, "Averages,%.2f,%.2f,%.2f,\n", totalAvgRTT, avgEpPk, avgEpKB);
 		
 		// Reset averages to zero
 		totalIterations = 0;
