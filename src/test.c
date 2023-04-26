@@ -35,6 +35,9 @@ void *dataProcessingThread(void *param)
 		bytesPerPacket[i] = packetStats[i].bytesPerPacket;
 	
 	while (1) {
+		// Sleep for 10 seconds
+		sleep(10);
+		
 		// Open file to store data produced by network threads
 		FILE *outFile = fopen("../data/testingData.csv", "w");
 		
@@ -76,7 +79,7 @@ void *dataProcessingThread(void *param)
 			avgEpKB += (errorsPerKB[i] * iteration[i]) / totalIterations;
 		}
 		
-		// Print averages to spreadsheet
+		// Write averages to spreadsheet
 		fprintf(outFile, "Averages,%.2f,%.2f,%.2f,\n", totalAvgRTT, avgEpPk, avgEpKB);
 		
 		// Reset averages to zero
