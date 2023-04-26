@@ -24,18 +24,18 @@ void *dataProcessingThread(void *param)
 	// Detach thread (makes it not joinable)
 	pthread_detach(tid);
 	
-	// Open file to store data produced by network threads
-	FILE *outFile = fopen("../data/testingData.csv", "r+");
-	
-	if (outFile == NULL) {
-		fputs("Could not open testing file\n", stderr);
-		goto exit;
-	}
-	
 	while (1) {
-		// Move to start of 2nd line in file & reset for writing
-		while (getc(outFile) != '\n');
-		fseek(outFile, 0, SEEK_CUR);
+		// Open file to store data produced by network threads
+		FILE *outFile = fopen("../data/testingData.csv", "w");
+		
+		if (outFile == NULL) {
+			fputs("Could not open testing file\n", stderr);
+			goto exit;
+		}
+		
+		// Write 1st line of file (contains labels for spreadsheet)
+		fprintf(outFile, "Packet Type,Average Round-Trip Time,Errors/Packet,Errors/KB,\n");
+		
 		// Iterate through one packet size at a time
 		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
 			// Store current statistical data in temporary buffer
@@ -52,16 +52,15 @@ void *dataProcessingThread(void *param)
 			// Calculate and write number of incorrect bits per KB
 			errorsPerKB = 1000 * errorsPerIteration / packetSize;
 			fprintf(outFile, "%.2f,", errorsPerKB);
-			// Add a newline to end row & reset for input
-			fseek(outFile, 0, SEEK_CUR);
+			// Add a newline to end row
+			fputc('\n', outFile);
 		}
-		// Reset to start of file stream
-		rewind(outFile);
+		// Close file
+		fclose(outFile);
 		break;
 	}
 	
 exit:
-	fclose(outFile);
 	return 0;
 }
 
