@@ -26,6 +26,8 @@ void *dataProcessingThread(void *param)
 	double totalAvgRTT = 0;
 	double avgEpPk = 0;
 	double avgEpKB = 0;
+	// Amount of time for thread to sleep before writing to spreadsheet each time
+	unsigned int sleepSeconds = 10;
 	
 	// Detach thread (makes it not joinable)
 	pthread_detach(tid);
@@ -36,7 +38,7 @@ void *dataProcessingThread(void *param)
 	
 	while (1) {
 		// Sleep for 10 seconds
-		sleep(10);
+		sleep(sleepSeconds);
 		
 		// Open file to store data produced by network threads
 		FILE *outFile = fopen("../data/testingData.csv", "w");
@@ -88,8 +90,9 @@ void *dataProcessingThread(void *param)
 		avgEpPk = 0;
 		avgEpKB = 0;
 		
-		// Close file
+		// Close file and let user know file has been written
 		fclose(outFile);
+		printf("File is written, will be updated in %i seconds\n\n", sleepSeconds);
 		break;
 	}
 	
