@@ -18,13 +18,24 @@ void *dataProcessingThread(void *param)
 	// Detach thread (makes it not joinable)
 	pthread_detach(tid);
 	
+	// Open file to store data produced by network threads
+	FILE *outFile = fopen("../data/testingData.csv", "r+");
+	
+	if (outFile == NULL) {
+		fputs("Could not open testing file\n", stderr);
+		return -1;
+	}
+	
 	while (1) {
+		// Iterate through one packet size at a time
 		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
-			printf("Packet size: %i, ", packetStats[i].packetSize);
-			printf("Iteration num: %lli\n", packetStats[i].iteration);
+			printf("Thread 0 size: %u\n", packetStats[i].packetSize);
 		}
 		fputs("\n", stdout);
+		break;
 	}
+	
+	fclose(outFile);
 	
 	return 0;
 }

@@ -26,29 +26,6 @@
 #define MAX_PACKET_SIZE_UDP	65507
 
 
-typedef struct
-{
-	unsigned int packetSize;
-	unsigned long long int iteration;
-	double avgRoundTripTime;
-	double errorsPerIteration; 
-} NetStats;
-
-
-typedef struct
-{
-	pthread_t tid;
-	char *ipAddress;
-	NetStats *packetStats;
-} DataProcessingArgs;
-
-
-typedef struct
-{
-	pthread_t tid;
-} TestingArgs;
-
-
 enum packetIndex
 {
 	ONE_BYTE = 0,
@@ -70,6 +47,29 @@ enum packetIndex
 	MAX_SIZE_UDP = 16,
 	NUM_PACKET_SIZES = 17
 };
+
+
+typedef struct
+{
+	unsigned int packetSize;
+	unsigned long long int iteration;
+	double avgRoundTripTime;
+	double errorsPerIteration; 
+} NetStats;
+
+
+typedef struct
+{
+	pthread_t tid;
+	char *ipAddress;
+	NetStats *packetStats;
+} DataProcessingArgs;
+
+
+typedef struct
+{
+	pthread_t tid;
+} TestingArgs;
 
 
 typedef struct
