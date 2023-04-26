@@ -23,7 +23,7 @@ void *dataProcessingThread(void *param)
 	
 	if (outFile == NULL) {
 		fputs("Could not open testing file\n", stderr);
-		return -1;
+		goto exit;
 	}
 	
 	while (1) {
@@ -35,8 +35,8 @@ void *dataProcessingThread(void *param)
 		break;
 	}
 	
+exit:
 	fclose(outFile);
-	
 	return 0;
 }
 
