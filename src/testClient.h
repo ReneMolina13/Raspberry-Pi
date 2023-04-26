@@ -22,6 +22,7 @@ typedef struct
 
 typedef struct
 {
+	pthread_t tid;
 	unsigned int packetIndex;
 	NetInfo *sockData;
 	NetStats *stats;

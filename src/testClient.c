@@ -11,6 +11,7 @@ void *networkThreads(void *param)
 {
 	// Unpack thread arguments structure
 	ThreadArgs *parameter = (ThreadArgs *) param;
+	pthread_t tid = parameter->tid;
 	unsigned int packetIndex = parameter->packetIndex;
 	NetInfo *sockData = parameter->sockData;
 	NetStats *stats = parameter->stats;
