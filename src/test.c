@@ -16,7 +16,7 @@ void *dataProcessingThread(void *param)
 	NetStats *packetStats = parameter->packetStats;
 	// Temp variables for file output
 	unsigned int bytesPerPacket[NUM_PACKET_SIZES];
-	unsigned long long int iterations[NUM_PACKET_SIZES];
+	unsigned long long int iteration[NUM_PACKET_SIZES];
 	double avgRoundTripTime[NUM_PACKET_SIZES];
 	double errorsPerPacket[NUM_PACKET_SIZES];
 	double errorsPerKB[NUM_PACKET_SIZES];
@@ -49,7 +49,7 @@ void *dataProcessingThread(void *param)
 		// Iterate through one packet size at a time
 		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
 			// Store current statistical data in temporary buffer
-			iterations[i] = packetStats[i].iteration;
+			iteration[i] = packetStats[i].iteration;
 			avgRoundTripTime[i] = packetStats[i].avgRoundTripTime;
 			errorsPerPacket[i] = packetStats[i].errorsPerPacket;
 			// Write packet size to spreadsheet
@@ -67,7 +67,7 @@ void *dataProcessingThread(void *param)
 		
 		// Determine total number of iterations
 		for (int i = 0; i < NUM_PACKET_SIZES; i++)
-			totalIterations += iterations[i];
+			totalIterations += iteration[i];
 		
 		// Find averages
 		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
