@@ -14,6 +14,12 @@ void *dataProcessingThread(void *param)
 	pthread_t tid = parameter->tid;
 	char *ipAddress = parameter->ipAddress;
 	NetStats *packetStats = parameter->packetStats;
+	// Temp variables for file output
+	unsigned int packetSize;
+	unsigned long long int iteration;
+	double avgRoundTripTime;
+	double errorsPerIteration;
+	double errorsPerKB;
 	
 	// Detach thread (makes it not joinable)
 	pthread_detach(tid);
@@ -27,11 +33,32 @@ void *dataProcessingThread(void *param)
 	}
 	
 	while (1) {
+		// Move to start of 2nd line in file
+		while (getc(outFile) != '\n');
+		
 		// Iterate through one packet size at a time
 		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
-			printf("Thread 0 size: %u\n", packetStats[i].packetSize);
+			// Move to 2nd column of current row & reset for output
+			while(getc(outFile) != ',');
+			fseek(outFile, 0, SEEK_CUR);
+			// Store current statistical data in temporary buffer
+			packetSize = packetStats[i].packetSize;
+			iteration = packetStats[i].iteration;
+			avgRoundTripTime = packetStats[i].avgRoundTripTime;
+			errorsPerIteration = packetStats[i].errorsPerIteration;
+			// Write average round-trip time (ms) to spreadsheet
+			fprintf(outFile, "%.2f,", avgRoundTripTime);
+			// Write number of incorrect bits per packet
+			fprintf(outFile, "%.2f,", errorsPerIteration);
+			// Calculate and write number of incorrect bits per KB
+			errorsPerKB = 1000 * errorsPerIteration / packetSize;
+			fprintf(outFile, "%.2f,", errorsPerKB);
+			// Add a newline to end row & reset for input
+			fputc('\n', outFile);
+			fseek(outFile, 0, SEEK_CUR);
 		}
-		fputs("\n", stdout);
+		// Reset to start of file stream
+		rewind(outFile);
 	}
 	
 exit:
