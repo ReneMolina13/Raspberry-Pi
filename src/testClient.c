@@ -177,8 +177,8 @@ void *networkThreads(void *param)
 		duration = (1000.0*end.tv_sec + 1e-6*end.tv_nsec) - (1000.0*start.tv_sec + 1e-6*start.tv_nsec);
 		
 		// Adjust averages (new_avg = ((i-1)(old_avg) + new_value) / i)
-		stats->avgRoundTripTime = (((stats->iteration-1) * avgRoundTripTime) + duration) / stats->iteration;
-		stats->errorsPerPacket = (((stats->iteration-1) * errorsPerPacket) + numErrors) / stats->iteration;
+		stats->avgRoundTripTime = (((stats->iteration-1) * stats->avgRoundTripTime) + duration) / stats->iteration;
+		stats->errorsPerPacket = (((stats->iteration-1) * stats->errorsPerPacket) + numErrors) / stats->iteration;
 	}
 	
 	// Check for errors
