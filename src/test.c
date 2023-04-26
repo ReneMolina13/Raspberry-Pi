@@ -33,19 +33,18 @@ void *dataProcessingThread(void *param)
 	}
 	
 	while (1) {
-		// Move to start of 2nd line in file
+		// Move to start of 2nd line in file & reset for writing
 		while (getc(outFile) != '\n');
-		
+		fseek(outFile, 0, SEEK_CUR);
 		// Iterate through one packet size at a time
 		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
-			// Move to 2nd column of current row & reset for output
-			while(getc(outFile) != ',');
-			fseek(outFile, 0, SEEK_CUR);
 			// Store current statistical data in temporary buffer
 			packetSize = packetStats[i].packetSize;
 			iteration = packetStats[i].iteration;
 			avgRoundTripTime = packetStats[i].avgRoundTripTime;
 			errorsPerIteration = packetStats[i].errorsPerIteration;
+			// Write packet size to spreadsheet
+			fprintf(outFile, "%u-Byte Packet,", packetSize);
 			// Write average round-trip time (ms) to spreadsheet
 			fprintf(outFile, "%.2f,", avgRoundTripTime);
 			// Write number of incorrect bits per packet
