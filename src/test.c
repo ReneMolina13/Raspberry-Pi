@@ -59,6 +59,7 @@ void *dataProcessingThread(void *param)
 		}
 		// Reset to start of file stream
 		rewind(outFile);
+		break;
 	}
 	
 exit:
