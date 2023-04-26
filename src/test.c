@@ -8,12 +8,15 @@
 
 
 void *dataProcessingThread(void *param)
-{
+{	
 	// Extract parameters from argument structure
 	DataProcessingArgs *parameter = (DataProcessingArgs *) param;
 	pthread_t tid = parameter->tid;
 	char *ipAddress = parameter->ipAddress;
 	NetStats *packetStats = parameter->packetStats;
+	
+	// Detach thread (makes it not joinable)
+	pthread_detach(tid);
 	
 	while (1) {
 		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
@@ -22,12 +25,21 @@ void *dataProcessingThread(void *param)
 		}
 		fputs("\n", stdout);
 	}
+	
+	return;
 }
 
 
 void *testingThread(void *param)
 {
+	// Extract parameters from argument structure
+	TestingArgs *parameter = (TestingArgs *) param;
+	pthread_t tid = parameter->tid;
 	
+	// Detach thread (makes it not joinable)
+	pthread_detach(tid);
+	
+	return;
 }
 
 

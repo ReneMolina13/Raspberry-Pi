@@ -392,7 +392,7 @@ int main(int argc, char **argv)
 	TestingArgs teArgs;
 	pthread_create(&teArgs.tid, &attr, testingThread, (void *) &teArgs);
 	
-	// Wait for threads to terminate (only happens in case of error or overflow)
+	// Wait for network threads to terminate (only happens in case of error or overflow)
 	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
 		pthread_join(thArgs[i].tid, NULL);
 		if (thArgs[i].status == false) {
