@@ -45,11 +45,11 @@ void *dataProcessingThread(void *param)
 		
 		if (outFile == NULL) {
 			fputs("Could not open testing file\n", stderr);
-			goto exit;
+			break;
 		}
 		
 		// Write 1st line of file (contains labels for spreadsheet)
-		fprintf(outFile, "Packet Type,Average Round-Trip Time,Errors/Packet,Errors/KB,\n");
+		fprintf(outFile, "Packet Size,Average Round-Trip Time (ms),Errors/Packet,Errors/KB,\n");
 		
 		// Iterate through one packet size at a time
 		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
@@ -93,10 +93,8 @@ void *dataProcessingThread(void *param)
 		// Close file and let user know file has been written
 		fclose(outFile);
 		printf("File is written, will be updated in %i seconds\n\n", sleepSeconds);
-		break;
 	}
 	
-exit:
 	return 0;
 }
 
