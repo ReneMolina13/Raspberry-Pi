@@ -26,7 +26,7 @@ void *dataProcessingThread(void *param)
 		fputs("\n", stdout);
 	}
 	
-	return;
+	return 0;
 }
 
 
@@ -39,7 +39,7 @@ void *testingThread(void *param)
 	// Detach thread (makes it not joinable)
 	pthread_detach(tid);
 	
-	return;
+	return 0;
 }
 
 
