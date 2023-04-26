@@ -37,7 +37,7 @@ void *dataProcessingThread(void *param)
 		while (getc(outFile) != '\n');
 		
 		// Iterate through one packet size at a time
-		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
+		for (int i = 0; i < 1; i++) {
 			// Move to 2nd column of current row & reset for output
 			while(getc(outFile) != ',');
 			fseek(outFile, 0, SEEK_CUR);
