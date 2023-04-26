@@ -32,7 +32,6 @@ void *dataProcessingThread(void *param)
 			printf("Thread 0 size: %u\n", packetStats[i].packetSize);
 		}
 		fputs("\n", stdout);
-		break;
 	}
 	
 exit:
