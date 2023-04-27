@@ -91,7 +91,7 @@ void *dataProcessingThread(void *param)
 		avgIterations = ((double) totalIterations) / NUM_PACKET_SIZES;
 		
 		// Write averages to spreadsheet
-		fprintf(outFile, "Averages,%u,%.2f,%.2f,%.2f,%.2f,\n", avgIterations, avgKBpS, totalAvgRTT, avgEpPk, avgEpKB);
+		fprintf(outFile, "Averages,%u,%.2f,%.2f,%.2f,%.2f,\n", avgIterations, totalAvgRTT, avgKBpS, avgEpPk, avgEpKB);
 		
 		// Reset averages to zero
 		totalIterations = 0;
