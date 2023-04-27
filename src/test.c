@@ -84,7 +84,7 @@ void *dataProcessingThread(void *param)
 		// Find averages
 		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
 			totalAvgRTT += (avgRoundTripTime[i] * iteration[i]) / totalIterations;
-			avgKBpS += (kiloBytesPerSecond * iteration[i]) / totalIterations;
+			avgKBpS += (kiloBytesPerSecond[i] * iteration[i]) / totalIterations;
 			avgEpPk += (errorsPerPacket[i] * iteration[i]) / totalIterations;
 			avgEpKB += (errorsPerKB[i] * iteration[i]) / totalIterations;
 		}
