@@ -34,7 +34,7 @@ void *networkThreads(void *param)
 // TESTING
 //********************************************************************************************
 		printf("Packet size: %u\n", stats->bytesPerPacket);
-		printf("Packet contents: %s\n\n", sentPacket);
+		printf("Packet contents: %100s\n\n", sentPacket);
 //********************************************************************************************
 		
 		// retVal *= sendPacket(sockData, sentPacket, sizeof(sentPacket));
