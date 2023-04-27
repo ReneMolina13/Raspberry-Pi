@@ -34,7 +34,6 @@ void *networkThreads(void *param)
 		retVal *= receivePacket(sockData, receivedPacket, stats->bytesPerPacket);
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
 		
-
 		// Count number of incorrect bytes in received packet
 		for (int i = 0; i < stats->bytesPerPacket; i++)
 			if (receivedPacket[i] != sentPacket[i])
