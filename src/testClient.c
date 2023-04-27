@@ -34,16 +34,9 @@ void *networkThreads(void *param)
 		retVal *= receivePacket(sockData, receivedPacket, stats->bytesPerPacket);
 		// Stop clock and release semaphore
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
-		// pthread_mutex_unlock(&mutex);
+		pthread_mutex_unlock(&mutex);
 
-// TESTING
-//********************************************************************************************
-			printf("Packet Sent: %.100s\n", sentPacket);
-			printf("Packet Received: %.100s\n\n", receivedPacket);
-			pthread_mutex_unlock(&mutex);
-			sleep(300);
-//********************************************************************************************
-
+		// Count number of incorrect bytes in received packet
 		for (int i = 0; i < stats->bytesPerPacket; i++)
 			if (receivedPacket[i] != sentPacket[i])
 				numErrors++;
