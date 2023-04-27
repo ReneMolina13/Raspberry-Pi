@@ -27,12 +27,12 @@ void *networkThreads(void *param)
 	// Send and receive assigned packet to/from server
 	for (stats->iteration = 1; retVal == true && stats->iteration <= MAX_ITERATIONS; stats->iteration++, numErrors = 0) {
 		// Measure round-trip time to send and receive data from server
-		pthread_mutex_lock(&mutex);	
+		// pthread_mutex_lock(&mutex);	
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start);
 		retVal *= sendPacket(sockData, sentPacket, stats->bytesPerPacket);
 		retVal *= receivePacket(sockData, receivedPacket, stats->bytesPerPacket);
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
-		pthread_mutex_unlock(&mutex);
+		// pthread_mutex_unlock(&mutex);
 		
 		// Count number of incorrect bytes in received packet
 		for (int i = 0; i < stats->bytesPerPacket; i++)
