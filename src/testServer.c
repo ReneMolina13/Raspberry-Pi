@@ -75,6 +75,11 @@ bool handleClient(int serverSocket)
 		return false;
 	}
 	
+// TESTING
+//********************************************************************************************
+	printf("Data received: %s", buffer);
+//********************************************************************************************
+	
 	// printf("Received %li bytes from the client\n", bytesReceived);
 	
 	// Send packet to client (bytes not used get quietly discarded at client socket)
