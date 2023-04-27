@@ -15,13 +15,13 @@ void *dataProcessingThread(void *param)
 	NetStats *packetStats = parameter->packetStats;
 	// Temp variables for file output
 	unsigned int bytesPerPacket[NUM_PACKET_SIZES];
-	unsigned long long int iteration[NUM_PACKET_SIZES];
+	unsigned int iteration[NUM_PACKET_SIZES];
 	double avgRoundTripTime[NUM_PACKET_SIZES];
 	double errorsPerPacket[NUM_PACKET_SIZES];
 	double errorsPerKB[NUM_PACKET_SIZES];
 	// Variables for average over all packet sizes
-	unsigned long long int totalIterations = 0;
-	int remainder = 0;
+	unsigned int avgIterations;
+	unsigned int totalIterations = 0;
 	double totalAvgRTT = 0;
 	double avgEpPk = 0;
 	double avgEpKB = 0;
@@ -82,9 +82,10 @@ void *dataProcessingThread(void *param)
 			avgEpPk += (errorsPerPacket[i] * iteration[i]) / totalIterations;
 			avgEpKB += (errorsPerKB[i] * iteration[i]) / totalIterations;
 		}
+		avgIterations = ((double) totalIterations) / NUM_PACKET_SIZES;
 		
 		// Write averages to spreadsheet
-		fprintf(outFile, "Averages,%.2f,%.2f,%.2f,\n", totalAvgRTT, avgEpPk, avgEpKB);
+		fprintf(outFile, "Averages,%u,%.2f,%.2f,%.2f,\n", avgIterations, totalAvgRTT, avgEpPk, avgEpKB);
 		
 		// Reset averages to zero
 		totalIterations = 0;
