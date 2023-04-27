@@ -32,10 +32,12 @@ void *networkThreads(void *param)
 		retVal *= receivePacket(sockData, receivedPacket, sizeof(receivedPacket));
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
 
+/*
 // TESTING
 //********************************************************************************************
 			printf("Packet Sent: %s\nPacket Received: %s\n\n", sentPacket, receivedPacket);
 //********************************************************************************************
+*/
 
 		for (int i = 0; i < stats->bytesPerPacket; i++)
 			if (receivedPacket[i] != sentPacket[i])
@@ -133,8 +135,8 @@ bool clientSetup(int argc, char **argv ,NetInfo *sockData, Packets *packets)
 	// Initialize data packet sizes
 	for (int i = 0; i < INDEX_MAX_SIZE_UDP; i++) {
 		packets->packetSizes[i] = (int) pow(2, i);
-		packets->sentPackets[i] = (char *) malloc(packetSizes[i] * sizeof(char));
-		packets->receivedPackets[i] = (char *) calloc(packetSizes[i], sizeof(char));
+		packets->sentPackets[i] = (char *) malloc(packets->packetSizes[i] * sizeof(char));
+		packets->receivedPackets[i] = (char *) calloc(packets->packetSizes[i], sizeof(char));
 	}
 	packets->packetSizes[INDEX_MAX_SIZE_UDP] = MAX_PACKET_SIZE_UDP;
 	packets->sentPackets[INDEX_MAX_SIZE_UDP] = (char *) malloc(MAX_PACKET_SIZE_UDP * sizeof(char));
