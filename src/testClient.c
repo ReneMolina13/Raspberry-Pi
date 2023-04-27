@@ -27,14 +27,14 @@ void *networkThreads(void *param)
 	// Generate network stats by sending packets to/from server
 	for (stats->iteration = 1; retVal == true && stats->iteration <= MAX_ITERATIONS; stats->iteration++, numErrors = 0) {
 		// Take semaphore and start clock
-		pthread_mutex_lock(&mutex);
+		// pthread_mutex_lock(&mutex);
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start);
 		// Send & receive packet from server
 		retVal *= sendPacket(sockData, sentPacket, stats->bytesPerPacket);
 		retVal *= receivePacket(sockData, receivedPacket, stats->bytesPerPacket);
 		// Stop clock and release semaphore
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
-		pthread_mutex_unlock(&mutex);
+		// pthread_mutex_unlock(&mutex);
 
 		// Count number of incorrect bytes in received packet
 		for (int i = 0; i < stats->bytesPerPacket; i++)
@@ -142,7 +142,9 @@ bool createSocket(NetInfo *sockData)
 bool sendPacket(const NetInfo *sockData, const char *packet, unsigned int packetSize)
 {
 	// Send the requested transaction to the server
+	pthread_mutex_lock(&mutex);
 	ssize_t bytesSent = sendto(sockData->clientSocket, packet, packetSize, 0, sockData->serverAddr->ai_addr, sockData->serverAddr->ai_addrlen);
+	pthread_mutex_unlock(&mutex);
 	// Indicates transmission error
 	if (bytesSent < 0) {
 		fputs("Unable to send data\n", stderr);
@@ -152,8 +154,6 @@ bool sendPacket(const NetInfo *sockData, const char *packet, unsigned int packet
 		fputs("Unexpected number of bytes sent\n", stderr);
 		return false;
 	}
-	
-	// printf("Sent %li bytes to the server\n", bytesSent);
 	
 	// Transaction successful
 	return true;
@@ -176,8 +176,6 @@ bool receivePacket(const NetInfo *sockData, char *packet, unsigned int packetSiz
 		fputs("Unexpected number of bytes received\n\n", stderr);
 		return false;
 	}
-	
-	// printf("Received %li bytes from the server\n\n", bytesReceived);
 	
 	// Transaction successful
 	return true;
