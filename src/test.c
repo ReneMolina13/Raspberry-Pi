@@ -26,13 +26,10 @@ void *dataProcessingThread(void *param)
 	double avgEpPk = 0;
 	double avgEpKB = 0;
 	// Amount of time for thread to sleep before writing to spreadsheet each time
-	unsigned int sleepSeconds = 10;
+	unsigned int sleepSeconds = 15;
 	
 	// Detach thread (makes it not joinable)
 	pthread_detach(tid);
-	
-	// Give threads time to build up packet data
-	sleep(sleepSeconds);
 	
 	// Obtain all packet sizes
 	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
@@ -40,7 +37,7 @@ void *dataProcessingThread(void *param)
 	}
 	
 	while (1) {
-		// Sleep for 10 seconds
+		// Sleep for an arbitrary amount of time (to let statistics get updated)
 		sleep(sleepSeconds);
 		
 		// Open file to store data produced by network threads
