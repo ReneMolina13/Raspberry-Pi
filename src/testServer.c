@@ -74,14 +74,7 @@ bool handleClient(int serverSocket)
 		fputs("Unable to receive request from client\n", stderr);
 		return false;
 	}
-	
-// TESTING
-//********************************************************************************************
-	printf("Data received: %s", buffer);
-//********************************************************************************************
-	
-	// printf("Received %li bytes from the client\n", bytesReceived);
-	
+		
 	// Send packet to client (bytes not used get quietly discarded at client socket)
 	ssize_t bytesSent = sendto(serverSocket, &buffer, MAX_PACKET_SIZE_UDP, 0, (struct sockaddr *) &clientAddr, sizeof(clientAddr));
 	if (bytesSent < 0) {
@@ -89,7 +82,12 @@ bool handleClient(int serverSocket)
 		return false;
 	}
 	
-	// printf("Sent %li bytes to the client\n\n", bytesSent);
+// TESTING
+//********************************************************************************************
+	printf("Received %li bytes from the client\n", bytesReceived);
+	printf("Data received: %s", buffer);
+	printf("Sent %li bytes to the client\n\n", bytesSent);
+//********************************************************************************************
 	
 	return true;
 }
