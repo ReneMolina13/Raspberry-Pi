@@ -24,17 +24,13 @@ void *networkThreads(void *param)
 	// True if no transmission errors have occured
 	bool retVal = true;
 	
-	// Send and receive assigned packet to/from server
+	// Generate network stats
 	for (stats->iteration = 1; retVal == true && stats->iteration <= MAX_ITERATIONS; stats->iteration++, numErrors = 0) {
-		// Take semaphore and start clock
-		pthread_mutex_lock(&mutex);
+		// Time how long it takes to send & receive data from server
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start);
-		// Send & receive packet from server
 		retVal *= sendPacket(sockData, sentPacket, stats->bytesPerPacket);
 		retVal *= receivePacket(sockData, receivedPacket, stats->bytesPerPacket);
-		// Stop clock and release semaphore
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
-		pthread_mutex_unlock(&mutex);
 
 		// Count number of incorrect bytes in received packet
 		for (int i = 0; i < stats->bytesPerPacket; i++)
@@ -75,9 +71,6 @@ bool clientSetup(int argc, char **argv ,NetInfo *sockData, Packets *packets)
 	// Extract network info from command line arguments
 	sockData->cmdIP = *(argv + 1);
 	sockData->cmdPort = *(argv + 2);
-	
-	// Initialize semaphore
-	pthread_mutex_init(&mutex, NULL);
 	
 	// Initialize data packet sizes
 	for (int i = 0; i < INDEX_MAX_SIZE_UDP; i++) {
