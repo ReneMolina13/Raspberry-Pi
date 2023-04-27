@@ -24,16 +24,18 @@ void *networkThreads(void *param)
 	// True if no transmission errors have occured
 	bool retVal = true;
 	
-	// Send and receive assigned packet to/from server
+	// Generate network stats by sending packets to/from server
 	for (stats->iteration = 1; retVal == true && stats->iteration <= MAX_ITERATIONS; stats->iteration++, numErrors = 0) {
-		// Measure round-trip time to send and receive data from server
-		// pthread_mutex_lock(&mutex);	
+		// Take semaphore and start clock
+		pthread_mutex_lock(&mutex);
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start);
+		// Send & receive packet from server
 		retVal *= sendPacket(sockData, sentPacket, stats->bytesPerPacket);
 		retVal *= receivePacket(sockData, receivedPacket, stats->bytesPerPacket);
+		// Stop clock and release semaphore
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
-		// pthread_mutex_unlock(&mutex);
-		
+		pthread_mutex_unlock(&mutex);
+
 		// Count number of incorrect bytes in received packet
 		for (int i = 0; i < stats->bytesPerPacket; i++)
 			if (receivedPacket[i] != sentPacket[i])
