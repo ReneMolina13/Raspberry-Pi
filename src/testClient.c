@@ -90,7 +90,7 @@ bool clientSetup(int argc, char **argv ,NetInfo *sockData, Packets *packets)
 	srand(time(NULL));
 	for (int i = 0; i < NUM_PACKET_SIZES; i++)
 		for (int j = 0; j < packets->packetSizes[i]; j++)
-			packets->sentPackets[i][j] = 127;
+			packets->sentPackets[i][j] = 178;
 	
 	return true;
 }
