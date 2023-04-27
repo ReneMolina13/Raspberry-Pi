@@ -38,7 +38,7 @@ void *networkThreads(void *param)
 
 // TESTING
 //********************************************************************************************
-			// printf("Packet Sent: %s\nPacket Received: %s\n\n", sentPacket, receivedPacket);
+			printf("Packet Sent: %s\nPacket Received: %4s\n\n", sentPacket, receivedPacket);
 //********************************************************************************************
 
 		for (int i = 0; i < stats->bytesPerPacket; i++)
