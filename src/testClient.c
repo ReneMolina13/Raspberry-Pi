@@ -47,14 +47,6 @@ void *networkThreads(void *param)
 		// Adjust averages (new_avg = ((i-1)(old_avg) + new_value) / i)
 		stats->avgRoundTripTime = (((stats->iteration-1) * stats->avgRoundTripTime) + duration) / stats->iteration;
 		stats->errorsPerPacket = (((stats->iteration-1) * stats->errorsPerPacket) + numErrors) / stats->iteration;
-		
-// TESTING
-//********************************************************************************************
-		pthread_mutex_lock(&mutex);
-		printf("Packet Sent:     %.10s\n", sentPacket);
-		printf("Packet Received: %.10s\n\n", receivedPacket);
-		pthread_mutex_unlock(&mutex);
-//********************************************************************************************
 	}
 	
 	// Check if error occured or if max iterations were reached
