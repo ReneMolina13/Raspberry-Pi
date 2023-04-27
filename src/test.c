@@ -32,7 +32,7 @@ void *dataProcessingThread(void *param)
 	// Detach thread (makes it not joinable)
 	pthread_detach(tid);
 	
-	// Sleep to allow threads to initialize packet sizes
+	// Give threads time to build up packet data
 	sleep(sleepSeconds);
 	
 	// Obtain all packet sizes
@@ -68,16 +68,7 @@ void *dataProcessingThread(void *param)
 			// Write number of incorrect bits per packet
 			fprintf(outFile, "%.2f,", errorsPerPacket[i]);
 			// Calculate and write number of incorrect bits per KB
-			errorsPerKB[i] = 1000 * (errorsPerPacket[i] / bytesPerPacket[i]);
-			
-// TESTING
-//********************************************************************************************
-			printf("Packet Size: %u:\n", bytesPerPacket[i]);
-			printf("Errors Per Packet: %.2f", errorsPerPacket[i]);
-			printf("Errors Per KB: %.2f", errorsPerKB[i]);
-			fputs("\n", stdout);
-//********************************************************************************************
-			
+			errorsPerKB[i] = 1000 * errorsPerPacket[i] / bytesPerPacket[i];
 			fprintf(outFile, "%.2f,", errorsPerKB[i]);
 			// Add a newline to end row
 			fputc('\n', outFile);
