@@ -17,12 +17,14 @@ void *dataProcessingThread(void *param)
 	unsigned int bytesPerPacket[NUM_PACKET_SIZES];
 	unsigned int iteration[NUM_PACKET_SIZES];
 	double avgRoundTripTime[NUM_PACKET_SIZES];
+	double kiloBytesPerSecond[NUM_PACKET_SIZES];
 	double errorsPerPacket[NUM_PACKET_SIZES];
 	double errorsPerKB[NUM_PACKET_SIZES];
 	// Variables for average over all packet sizes
 	unsigned int avgIterations;
 	unsigned int totalIterations = 0;
 	double totalAvgRTT = 0;
+	double avgKBpS = 0;
 	double avgEpPk = 0;
 	double avgEpKB = 0;
 	// Amount of time for thread to sleep before writing to spreadsheet each time
@@ -63,6 +65,9 @@ void *dataProcessingThread(void *param)
 			fprintf(outFile, "%u,", iteration[i]);
 			// Write average round-trip time (ms) to spreadsheet
 			fprintf(outFile, "%.2f,", avgRoundTripTime[i]);
+			// Calculate and write average latency for this packet (KB/s = B/ms)
+			kiloBytesPerSecond[i] = bytesPerPacket[i] / avgRoundTripTime[i];
+			fprintf(outFile, "%.2f,", kiloBytesPerSecond[i]);
 			// Write number of incorrect bits per packet
 			fprintf(outFile, "%.2f,", errorsPerPacket[i]);
 			// Calculate and write number of incorrect bits per KB
@@ -79,6 +84,7 @@ void *dataProcessingThread(void *param)
 		// Find averages
 		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
 			totalAvgRTT += (avgRoundTripTime[i] * iteration[i]) / totalIterations;
+			avgKBpS += (kiloBytesPerSecond * iteration[i]) / totalIterations;
 			avgEpPk += (errorsPerPacket[i] * iteration[i]) / totalIterations;
 			avgEpKB += (errorsPerKB[i] * iteration[i]) / totalIterations;
 		}
