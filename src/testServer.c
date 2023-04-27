@@ -85,7 +85,7 @@ bool handleClient(int serverSocket)
 // TESTING
 //********************************************************************************************
 	printf("Received %li bytes from the client\n", bytesReceived);
-	printf("Data received: %s", buffer);
+	printf("Data received: %s\n", buffer);
 	printf("Sent %li bytes to the client\n\n", bytesSent);
 //********************************************************************************************
 	
