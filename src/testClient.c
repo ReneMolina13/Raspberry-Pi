@@ -47,6 +47,11 @@ void *networkThreads(void *param)
 		// Adjust averages (new_avg = ((i-1)(old_avg) + new_value) / i)
 		stats->avgRoundTripTime = (((stats->iteration-1) * stats->avgRoundTripTime) + duration) / stats->iteration;
 		stats->errorsPerPacket = (((stats->iteration-1) * stats->errorsPerPacket) + numErrors) / stats->iteration;
+		
+// TESTING
+//********************************************************************************************
+			sleep(10);
+//********************************************************************************************		
 	}
 	
 	// Check if error occured or if max iterations were reached
