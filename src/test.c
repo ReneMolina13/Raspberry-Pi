@@ -51,7 +51,7 @@ void *dataProcessingThread(void *param)
 		}
 		
 		// Write 1st line of file (contains labels for spreadsheet)
-		fprintf(outFile, "Packet Size,Packets Sent,Average Round-Trip Time (ms),Errors/Packet,Errors/KB,\n");
+		fprintf(outFile, "Packet Size,Packets Sent,Average Round-Trip Time (ms) Average Latency (KB/s),Errors/Packet,Errors/KB,\n");
 		
 		// Iterate through one packet size at a time
 		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
