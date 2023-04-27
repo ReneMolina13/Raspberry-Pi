@@ -30,15 +30,8 @@ void *networkThreads(void *param)
 		pthread_mutex_lock(&mutex);
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start);
 		// Send & receive packet from server
-
-// TESTING
-//********************************************************************************************
-		printf("Packet size: %u\n", stats->bytesPerPacket);
-		printf("Packet contents: %.100s\n\n", sentPacket);
-//********************************************************************************************
-		
-		// retVal *= sendPacket(sockData, sentPacket, sizeof(sentPacket));
-		// retVal *= receivePacket(sockData, receivedPacket, sizeof(receivedPacket));
+		retVal *= sendPacket(sockData, sentPacket, stats->bytesPerPacket);
+		retVal *= receivePacket(sockData, receivedPacket, stats->bytesPerPacket);
 		// Stop clock and release semaphore
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
 		pthread_mutex_unlock(&mutex);
@@ -46,7 +39,6 @@ void *networkThreads(void *param)
 // TESTING
 //********************************************************************************************
 			sleep(300);
-			// printf("Packet Sent: %c%c%c%c\n\n", sentPacket[0], sentPacket[1], sentPacket[2], sentPacket[3]);
 //********************************************************************************************
 
 		for (int i = 0; i < stats->bytesPerPacket; i++)
@@ -59,11 +51,6 @@ void *networkThreads(void *param)
 		// Adjust averages (new_avg = ((i-1)(old_avg) + new_value) / i)
 		stats->avgRoundTripTime = (((stats->iteration-1) * stats->avgRoundTripTime) + duration) / stats->iteration;
 		stats->errorsPerPacket = (((stats->iteration-1) * stats->errorsPerPacket) + numErrors) / stats->iteration;
-		
-// TESTING
-//********************************************************************************************
-		// sleep(180);
-//********************************************************************************************		
 	}
 	
 	// Check if error occured or if max iterations were reached
