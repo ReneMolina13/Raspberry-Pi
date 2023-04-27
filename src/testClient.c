@@ -131,6 +131,7 @@ bool createSocket(NetInfo *sockData)
 			char hostName[NI_MAXHOST];
 			// char service[NI_MAXSERV];
 			gethostname(hostName, NI_MAXHOST);
+			printf("Hostname: %s\n", hostName);
 //********************************************************************************************			
 			
 			break;
