@@ -32,12 +32,10 @@ void *networkThreads(void *param)
 		retVal *= receivePacket(sockData, receivedPacket, sizeof(receivedPacket));
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
 
-/*
 // TESTING
 //********************************************************************************************
 			printf("Packet Sent: %s\nPacket Received: %s\n\n", sentPacket, receivedPacket);
 //********************************************************************************************
-*/
 
 		for (int i = 0; i < stats->bytesPerPacket; i++)
 			if (receivedPacket[i] != sentPacket[i])
