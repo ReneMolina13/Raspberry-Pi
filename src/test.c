@@ -49,7 +49,7 @@ void *dataProcessingThread(void *param)
 		}
 		
 		// Write 1st line of file (contains labels for spreadsheet)
-		fprintf(outFile, "Packet Size,Average Round-Trip Time (ms),Errors/Packet,Errors/KB,\n");
+		fprintf(outFile, "Packet Size,Packets Sent,Average Round-Trip Time (ms),Errors/Packet,Errors/KB,\n");
 		
 		// Iterate through one packet size at a time
 		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
@@ -59,6 +59,8 @@ void *dataProcessingThread(void *param)
 			errorsPerPacket[i] = packetStats[i].errorsPerPacket;
 			// Write packet size to spreadsheet
 			fprintf(outFile, "%u-Byte Packet,", bytesPerPacket[i]);
+			// Write number of packets sent of this size so far
+			fprintf(outFile, "%u,", iteration[i]);
 			// Write average round-trip time (ms) to spreadsheet
 			fprintf(outFile, "%.2f,", avgRoundTripTime[i]);
 			// Write number of incorrect bits per packet
