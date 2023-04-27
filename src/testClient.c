@@ -88,10 +88,12 @@ bool clientSetup(int argc, char **argv ,NetInfo *sockData, Packets *packets)
 	
 	// Initialize data packets to be sent out with random (printable) characters
 	srand(time(NULL));
-	for (int i = 0; i < NUM_PACKET_SIZES; i++)
-		for (int j = 0; j < packets->packetSizes[i]; j++)
+	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
+		for (int j = 0; j < packets->packetSizes[i]-1; j++)
 			packets->sentPackets[i][j] = (rand() % 94) + 33;
-	
+		// Null-terminate each packet
+		packets->sentPackets[i][packets->packetSizes[i]-1] = '\0';
+	}
 	return true;
 }
 
