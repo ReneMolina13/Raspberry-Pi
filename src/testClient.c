@@ -86,11 +86,11 @@ bool clientSetup(int argc, char **argv ,NetInfo *sockData, Packets *packets)
 	packets->sentPackets[INDEX_MAX_SIZE_UDP] = (char *) malloc(MAX_PACKET_SIZE_UDP * sizeof(char));
 	packets->receivedPackets[INDEX_MAX_SIZE_UDP] = (char *) calloc(MAX_PACKET_SIZE_UDP, sizeof(char));
 	
-	// Initialize data packets to be sent out
+	// Initialize data packets to be sent out with random (printable) characters
 	srand(time(NULL));
 	for (int i = 0; i < NUM_PACKET_SIZES; i++)
 		for (int j = 0; j < packets->packetSizes[i]; j++)
-			packets->sentPackets[i][j] = rand() % 128;
+			packets->sentPackets[i][j] = 127;
 	
 	return true;
 }
