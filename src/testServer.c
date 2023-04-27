@@ -63,7 +63,7 @@ int initServer(char *service)
 bool handleClient(int serverSocket)
 {
 	// Buffer to store received packet (size of largest possible UDP packet)
-	static char buffer[MAX_PACKET_SIZE_UDP];
+	char buffer[MAX_PACKET_SIZE_UDP];
 	// Location to store client address & length
 	struct sockaddr_storage clientAddr;
 	socklen_t clientAddrLength = sizeof(clientAddr);
