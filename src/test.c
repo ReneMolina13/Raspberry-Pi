@@ -64,7 +64,16 @@ void *dataProcessingThread(void *param)
 			// Write number of incorrect bits per packet
 			fprintf(outFile, "%.2f,", errorsPerPacket[i]);
 			// Calculate and write number of incorrect bits per KB
-			errorsPerKB[i] = 1000 * errorsPerPacket[i] / bytesPerPacket[i];
+			errorsPerKB[i] = 1000 * (errorsPerPacket[i] / bytesPerPacket[i]);
+			
+// TESTING
+//********************************************************************************************
+			// printf("Packet Size: %u:\n", bytesPerPacket[i]);
+			// printf("Errors Per Packet: %.2f", errorsPerPacket[i]);
+			// printf("Errors Per KB: %.2f", errorsPerKB[i]);
+			// fputs("\n", stdout);
+//********************************************************************************************
+			
 			fprintf(outFile, "%.2f,", errorsPerKB[i]);
 			// Add a newline to end row
 			fputc('\n', outFile);
