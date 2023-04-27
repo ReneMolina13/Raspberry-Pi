@@ -26,11 +26,15 @@ void *networkThreads(void *param)
 	
 	// Send and receive assigned packet to/from server
 	for (stats->iteration = 1; retVal == true && stats->iteration <= MAX_ITERATIONS; stats->iteration++, numErrors = 0) {
-		// Start clock
+		// Take semaphore and start clock
+		pthread_mutex_lock(&mutex);
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start);
+		// Send & receive packet from server
 		retVal *= sendPacket(sockData, sentPacket, sizeof(sentPacket));
 		retVal *= receivePacket(sockData, receivedPacket, sizeof(receivedPacket));
+		// Stop clock and release semaphore
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
+		pthread_mutex_unlock(&mutex);
 
 // TESTING
 //********************************************************************************************
@@ -50,7 +54,7 @@ void *networkThreads(void *param)
 		
 // TESTING
 //********************************************************************************************
-			sleep(20);
+		sleep(20);
 //********************************************************************************************		
 	}
 	
@@ -80,6 +84,9 @@ bool clientSetup(int argc, char **argv ,NetInfo *sockData, Packets *packets)
 	// Extract network info from command line arguments
 	sockData->cmdIP = *(argv + 1);
 	sockData->cmdPort = *(argv + 2);
+	
+	// Initialize semaphore
+	pthread_mutex_init(&mutex, NULL);
 	
 	// Initialize data packet sizes
 	for (int i = 0; i < INDEX_MAX_SIZE_UDP; i++) {
