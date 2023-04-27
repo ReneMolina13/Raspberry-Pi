@@ -23,10 +23,10 @@ typedef struct
 typedef struct
 {
 	pthread_t tid;
-	unsigned int packetIndex;
 	NetInfo *sockData;
 	NetStats *stats;
-	Packets *packets;
+	char *sentPacket;
+	char *receivedPacket;
 	bool status;
 } ThreadArgs;
 
@@ -35,6 +35,7 @@ typedef struct
 void *networkThreads(void *param);
 bool clientSetup(int, char **, NetInfo *, Packets *);
 bool createSocket(NetInfo *);
+// void makeStats(void *param);
 bool sendPacket(const NetInfo *, const char *, unsigned int);
 bool receivePacket(const NetInfo *, char *, unsigned int);
 

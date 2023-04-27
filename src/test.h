@@ -46,7 +46,7 @@ enum packetIndex
 	EIGHT_KB = 13,
 	SIXTEEN_KB = 14,
 	THIRTY_TWO_KB = 15,
-	MAX_SIZE_UDP = 16,
+	INDEX_MAX_SIZE_UDP = 16,
 	NUM_PACKET_SIZES = 17
 };
 
@@ -63,7 +63,6 @@ typedef struct
 typedef struct
 {
 	pthread_t tid;
-	char *ipAddress;
 	NetStats *packetStats;
 } DataProcessingArgs;
 
@@ -74,9 +73,10 @@ typedef struct
 } TestingArgs;
 
 
+/*
 typedef struct
 {
-	char oneByte;
+	char one_byte;
 	char two_bytes[2];
 	char four_bytes[4];
 	char eight_bytes[8];
@@ -93,6 +93,15 @@ typedef struct
 	char sixteen_kb[16384];
 	char thirty_two_kb[32768];
 	char max_size_udp[65507];
+} Packets;
+*/
+
+
+typedef struct
+{
+	unsigned int packetSizes[NUM_PACKET_SIZES];
+	char *sentPackets[NUM_PACKET_SIZES];
+	char *receivedPackets[NUM_PACKET_SIZES];
 } Packets;
 
 

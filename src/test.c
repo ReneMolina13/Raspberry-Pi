@@ -12,7 +12,6 @@ void *dataProcessingThread(void *param)
 	// Extract parameters from argument structure
 	DataProcessingArgs *parameter = (DataProcessingArgs *) param;
 	pthread_t tid = parameter->tid;
-	char *ipAddress = parameter->ipAddress;
 	NetStats *packetStats = parameter->packetStats;
 	// Temp variables for file output
 	unsigned int bytesPerPacket[NUM_PACKET_SIZES];

@@ -12,12 +12,10 @@ void *networkThreads(void *param)
 	// Unpack thread arguments structure
 	ThreadArgs *parameter = (ThreadArgs *) param;
 	pthread_t tid = parameter->tid;
-	unsigned int packetIndex = parameter->packetIndex;
 	NetInfo *sockData = parameter->sockData;
 	NetStats *stats = parameter->stats;
-	Packets *sentPackets = parameter->packets;
-	// Packets received from server to compare for errors
-	Packets receivedPackets;
+	char *sentPacket = parameter->sentPacket;
+	char *receivedPacket = parameter->receivedPacket;
 	// Used to measure round-trip time each iteration
 	double duration;
 	struct timespec start, end;
@@ -26,152 +24,22 @@ void *networkThreads(void *param)
 	// True if no transmission errors have occured
 	bool retVal = true;
 	
-	// Determine packet size for this thread
-	if (packetIndex != MAX_SIZE_UDP)
-		stats->bytesPerPacket = (unsigned int) pow(2, (packetIndex));
-	else
-		stats->bytesPerPacket = MAX_PACKET_SIZE_UDP;
-		
+	// Send and receive assigned packet to/from server
 	for (stats->iteration = 1; retVal == true && stats->iteration <= MAX_ITERATIONS; stats->iteration++, numErrors = 0) {
 		// Start clock
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start);
-		
-		switch (packetIndex) {
-		case ONE_BYTE:
-			retVal *= sendPacket(sockData, &sentPackets->oneByte, sizeof(sentPackets->oneByte));
-			retVal *= receivePacket(sockData, &receivedPackets.oneByte, sizeof(receivedPackets.oneByte));
-			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
-			if (receivedPackets.oneByte != sentPackets->oneByte)
+		retVal *= sendPacket(sockData, sentPacket, sizeof(sentPacket));
+		retVal *= receivePacket(sockData, receivedPacket, sizeof(receivedPacket));
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
+
+// TESTING
+//********************************************************************************************
+			printf("Packet Sent: %s\nPacket Received: %s\n\n", sentPacket, receivedPacket);
+//********************************************************************************************
+
+		for (int i = 0; i < stats->bytesPerPacket; i++)
+			if (receivedPacket[i] != sentPacket[i])
 				numErrors++;
-			break;
-		case TWO_BYTES:
-			retVal *= sendPacket(sockData, sentPackets->two_bytes, sizeof(sentPackets->two_bytes));
-			retVal *= receivePacket(sockData, receivedPackets.two_bytes, sizeof(receivedPackets.two_bytes));
-			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
-			for (int i = 0; i < stats->bytesPerPacket; i++)
-				if (receivedPackets.two_bytes[i] != sentPackets->two_bytes[i])
-					numErrors++;
-			break;
-		case FOUR_BYTES:
-			retVal *= sendPacket(sockData, sentPackets->four_bytes, sizeof(sentPackets->four_bytes));
-			retVal *= receivePacket(sockData, receivedPackets.four_bytes, sizeof(receivedPackets.four_bytes));
-			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
-			for (int i = 0; i < stats->bytesPerPacket; i++)
-				if (receivedPackets.four_bytes[i] != sentPackets->four_bytes[i])
-					numErrors++;
-			break;
-		case EIGHT_BYTES:
-			retVal *= sendPacket(sockData, sentPackets->eight_bytes, sizeof(sentPackets->eight_bytes));
-			retVal *= receivePacket(sockData, receivedPackets.eight_bytes, sizeof(receivedPackets.eight_bytes));
-			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
-			for (int i = 0; i < stats->bytesPerPacket; i++)
-				if (receivedPackets.eight_bytes[i] != sentPackets->eight_bytes[i])
-					numErrors++;
-			break;
-		case SIXTEEN_BYTES:
-			retVal *= sendPacket(sockData, sentPackets->sixteen_bytes, sizeof(sentPackets->sixteen_bytes));
-			retVal *= receivePacket(sockData, receivedPackets.sixteen_bytes, sizeof(receivedPackets.sixteen_bytes));
-			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
-			for (int i = 0; i < stats->bytesPerPacket; i++)
-				if (receivedPackets.sixteen_bytes[i] != sentPackets->sixteen_bytes[i])
-					numErrors++;
-			break;
-		case THIRTY_TWO_BYTES:
-			retVal *= sendPacket(sockData, sentPackets->thirty_two_bytes, sizeof(sentPackets->thirty_two_bytes));
-			retVal *= receivePacket(sockData, receivedPackets.thirty_two_bytes, sizeof(receivedPackets.thirty_two_bytes));
-			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
-			for (int i = 0; i < stats->bytesPerPacket; i++)
-				if (receivedPackets.thirty_two_bytes[i] != sentPackets->thirty_two_bytes[i])
-					numErrors++;
-			break;
-		case SIXTY_FOUR_BYTES:
-			retVal *= sendPacket(sockData, sentPackets->sixty_four_bytes, sizeof(sentPackets->sixty_four_bytes));
-			retVal *= receivePacket(sockData, receivedPackets.sixty_four_bytes, sizeof(receivedPackets.sixty_four_bytes));
-			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
-			for (int i = 0; i < stats->bytesPerPacket; i++)
-				if (receivedPackets.sixty_four_bytes[i] != sentPackets->sixty_four_bytes[i])
-					numErrors++;
-			break;
-		case ONE_EIGTH_KB:
-			retVal *= sendPacket(sockData, sentPackets->one_eigth_kb, sizeof(sentPackets->one_eigth_kb));
-			retVal *= receivePacket(sockData, receivedPackets.one_eigth_kb, sizeof(receivedPackets.one_eigth_kb));
-			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
-			for (int i = 0; i < stats->bytesPerPacket; i++)
-				if (receivedPackets.one_eigth_kb[i] != sentPackets->one_eigth_kb[i])
-					numErrors++;
-			break;
-		case ONE_FOURTH_KB:
-			retVal *= sendPacket(sockData, sentPackets->one_fourth_kb, sizeof(sentPackets->one_fourth_kb));
-			retVal *= receivePacket(sockData, receivedPackets.one_fourth_kb, sizeof(receivedPackets.one_fourth_kb));
-			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
-			for (int i = 0; i < stats->bytesPerPacket; i++)
-				if (receivedPackets.one_fourth_kb[i] != sentPackets->one_fourth_kb[i])
-					numErrors++;
-			break;
-		case ONE_HALF_KB:
-			retVal *= sendPacket(sockData, sentPackets->one_half_kb, sizeof(sentPackets->one_half_kb));
-			retVal *= receivePacket(sockData, receivedPackets.one_half_kb, sizeof(receivedPackets.one_half_kb));
-			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
-			for (int i = 0; i < stats->bytesPerPacket; i++)
-				if (receivedPackets.one_half_kb[i] != sentPackets->one_half_kb[i])
-					numErrors++;
-			break;
-		case ONE_KB:
-			retVal *= sendPacket(sockData, sentPackets->one_kb, sizeof(sentPackets->one_kb));
-			retVal *= receivePacket(sockData, receivedPackets.one_kb, sizeof(receivedPackets.one_kb));
-			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
-			for (int i = 0; i < stats->bytesPerPacket; i++)
-				if (receivedPackets.one_kb[i] != sentPackets->one_kb[i])
-					numErrors++;
-			break;
-		case TWO_KB:
-			retVal *= sendPacket(sockData, sentPackets->two_kb, sizeof(sentPackets->two_kb));
-			retVal *= receivePacket(sockData, receivedPackets.two_kb, sizeof(receivedPackets.two_kb));
-			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
-			for (int i = 0; i < stats->bytesPerPacket; i++)
-				if (receivedPackets.two_kb[i] != sentPackets->two_kb[i])
-					numErrors++;
-			break;
-		case FOUR_KB:
-			retVal *= sendPacket(sockData, sentPackets->four_kb, sizeof(sentPackets->four_kb));
-			retVal *= receivePacket(sockData, receivedPackets.four_kb, sizeof(receivedPackets.four_kb));
-			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
-			for (int i = 0; i < stats->bytesPerPacket; i++)
-				if (receivedPackets.four_kb[i] != sentPackets->four_kb[i])
-					numErrors++;
-			break;
-		case EIGHT_KB:
-			retVal *= sendPacket(sockData, sentPackets->eight_kb, sizeof(sentPackets->eight_kb));
-			retVal *= receivePacket(sockData, receivedPackets.eight_kb, sizeof(receivedPackets.eight_kb));
-			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
-			for (int i = 0; i < stats->bytesPerPacket; i++)
-				if (receivedPackets.eight_kb[i] != sentPackets->eight_kb[i])
-					numErrors++;
-			break;
-		case SIXTEEN_KB:
-			retVal *= sendPacket(sockData, sentPackets->sixteen_kb, sizeof(sentPackets->sixteen_kb));
-			retVal *= receivePacket(sockData, receivedPackets.sixteen_kb, sizeof(receivedPackets.sixteen_kb));
-			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
-			for (int i = 0; i < stats->bytesPerPacket; i++)
-				if (receivedPackets.sixteen_kb[i] != sentPackets->sixteen_kb[i])
-					numErrors++;
-			break;
-		case THIRTY_TWO_KB:
-			retVal *= sendPacket(sockData, sentPackets->thirty_two_kb, sizeof(sentPackets->thirty_two_kb));
-			retVal *= receivePacket(sockData, receivedPackets.thirty_two_kb, sizeof(receivedPackets.thirty_two_kb));
-			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
-			for (int i = 0; i < stats->bytesPerPacket; i++)
-				if (receivedPackets.thirty_two_kb[i] != sentPackets->thirty_two_kb[i])
-					numErrors++;
-			break;
-		case MAX_SIZE_UDP:
-			retVal *= sendPacket(sockData, sentPackets->max_size_udp, sizeof(sentPackets->max_size_udp));
-			retVal *= receivePacket(sockData, receivedPackets.max_size_udp, sizeof(receivedPackets.max_size_udp));
-			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
-			for (int i = 0; i < stats->bytesPerPacket; i++)
-				if (receivedPackets.max_size_udp[i] != sentPackets->max_size_udp[i])
-					numErrors++;
-		}
 		
 		// Calculate time taken to send & receive data
 		duration = (1000.0*end.tv_sec + 1e-6*end.tv_nsec) - (1000.0*start.tv_sec + 1e-6*start.tv_nsec);
@@ -181,16 +49,15 @@ void *networkThreads(void *param)
 		stats->errorsPerPacket = (((stats->iteration-1) * stats->errorsPerPacket) + numErrors) / stats->iteration;
 	}
 	
-	// Check for errors
-	if (retVal == false) {
+	// Check if error occured or if max iterations were reached
+	if (retVal == false)
 		fputs("Transmission error occured: ", stderr);
-	}
-	else {
+	else
 		fputs("Maximum iterations reached: ", stderr);
-	}
-	printf("Thread for %u byte packets returning\n", stats->bytesPerPacket);
 	
+	// Save status and exit
 	parameter->status = retVal;
+	printf("Thread for %u byte packets returning\n", stats->bytesPerPacket);
 	pthread_exit(0);
 }
 
@@ -209,9 +76,10 @@ bool clientSetup(int argc, char **argv ,NetInfo *sockData, Packets *packets)
 	sockData->cmdIP = *(argv + 1);
 	sockData->cmdPort = *(argv + 2);
 	
+	/*
 	// Initialize data packets (First byte holds index for packet size - defined in test.h)
 	srand(time(NULL));
-	packets->oneByte = ONE_BYTE;
+	packets->one_byte = ONE_BYTE;
 	packets->two_bytes[0] = TWO_BYTES;
 	for (int i = 0; i < 2; i++)
 		packets->two_bytes[i] = rand() % 128;
@@ -260,6 +128,23 @@ bool clientSetup(int argc, char **argv ,NetInfo *sockData, Packets *packets)
 	packets->max_size_udp[0] = MAX_SIZE_UDP;
 	for (int i = 0; i < 65507; i++)
 		packets->max_size_udp[i] = rand() % 128;
+	*/
+	
+	// Initialize data packet sizes
+	for (int i = 0; i < INDEX_MAX_SIZE_UDP; i++) {
+		packets->packetSizes[i] = (int) pow(2, i);
+		packets->sentPackets[i] = (char *) malloc(packetSizes[i] * sizeof(char));
+		packets->receivedPackets[i] = (char *) calloc(packetSizes[i], sizeof(char));
+	}
+	packets->packetSizes[INDEX_MAX_SIZE_UDP] = MAX_PACKET_SIZE_UDP;
+	packets->sentPackets[INDEX_MAX_SIZE_UDP] = (char *) malloc(MAX_PACKET_SIZE_UDP * sizeof(char));
+	packets->receivedPackets[INDEX_MAX_SIZE_UDP] = (char *) calloc(MAX_PACKET_SIZE_UDP, sizeof(char));
+	
+	// Initialize data packets to be sent out
+	srand(time(NULL));
+	for (int i = 0; i < NUM_PACKET_SIZES; i++)
+		for (int j = 0; j < packets->packetSizes[i]; j++)
+			packets->sentPackets[i][j] = rand() % 128;
 	
 	return true;
 }
@@ -301,6 +186,298 @@ bool createSocket(NetInfo *sockData)
 	
 	return true;
 }
+
+
+/*packetIndex
+void makeStats(void *param)
+{
+	// Unpack thread arguments structure
+	ThreadArgs *parameter = (ThreadArgs *) param;
+	pthread_t tid = parameter->tid;
+	unsigned int packetIndex = parameter->packetIndex;
+	NetInfo *sockData = parameter->sockData;
+	NetStats *stats = parameter->stats;
+	Packets *sentPackets = parameter->packets;
+	// Packets received from server to compare for errors
+	Packets receivedPackets;
+	// Used to measure round-trip time each iteration
+	double duration;
+	struct timespec start, end;
+	// Holds number of errors each iteration
+	unsigned int numErrors;
+	// True if no transmission errors have occured
+	bool retVal = true;
+	
+	// Determine packet size for this thread
+	if (packetIndex != MAX_SIZE_UDP)
+		stats->bytesPerPacket = (unsigned int) pow(2, (packetIndex));
+	else
+		stats->bytesPerPacket = MAX_PACKET_SIZE_UDP;
+		
+	for (stats->iteration = 1; retVal == true && stats->iteration <= MAX_ITERATIONS; stats->iteration++, numErrors = 0) {
+		// Start clock
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start);
+		
+		switch (packetIndex) {
+		case ONE_BYTE:
+			retVal *= sendPacket(sockData, &sentPackets->one_byte, sizeof(sentPackets->one_byte));
+			retVal *= receivePacket(sockData, &receivedPackets.one_byte, sizeof(receivedPackets.one_byte));
+			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
+
+// TESTING
+//********************************************************************************************
+			printf("Packet Sent: %c\nPacket Received: %c\n\n", sentPackets->one_byte, receivedPackets->one_byte);
+//********************************************************************************************
+			
+			if (receivedPackets.one_byte != sentPackets->one_byte)
+				numErrors++;
+			break;
+		case TWO_BYTES:
+			retVal *= sendPacket(sockData, sentPackets->two_bytes, sizeof(sentPackets->two_bytes));
+			retVal *= receivePacket(sockData, receivedPackets.two_bytes, sizeof(receivedPackets.two_bytes));
+			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
+			
+// TESTING
+//********************************************************************************************
+			printf("Packet Sent: %s\nPacket Received: %s\n\n", sentPackets->two_bytes, receivedPackets->two_bytes);
+//********************************************************************************************
+			
+			for (int i = 0; i < stats->bytesPerPacket; i++)
+				if (receivedPackets.two_bytes[i] != sentPackets->two_bytes[i])
+					numErrors++;
+			break;
+		case FOUR_BYTES:
+			retVal *= sendPacket(sockData, sentPackets->four_bytes, sizeof(sentPackets->four_bytes));
+			retVal *= receivePacket(sockData, receivedPackets.four_bytes, sizeof(receivedPackets.four_bytes));
+			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
+
+// TESTING
+//********************************************************************************************
+			printf("Packet Sent: %s\nPacket Received: %s\n\n", sentPackets->four_bytes, receivedPackets->four_bytes);
+//********************************************************************************************
+
+			for (int i = 0; i < stats->bytesPerPacket; i++)
+				if (receivedPackets.four_bytes[i] != sentPackets->four_bytes[i])
+					numErrors++;
+			break;
+		case EIGHT_BYTES:
+			retVal *= sendPacket(sockData, sentPackets->eight_bytes, sizeof(sentPackets->eight_bytes));
+			retVal *= receivePacket(sockData, receivedPackets.eight_bytes, sizeof(receivedPackets.eight_bytes));
+			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
+
+// TESTING
+//********************************************************************************************
+			printf("Packet Sent: %s\nPacket Received: %s\n\n", sentPackets->eight_bytes, receivedPackets->eight_bytes);
+//********************************************************************************************
+
+			for (int i = 0; i < stats->bytesPerPacket; i++)
+				if (receivedPackets.eight_bytes[i] != sentPackets->eight_bytes[i])
+					numErrors++;
+			break;
+		case SIXTEEN_BYTES:
+			retVal *= sendPacket(sockData, sentPackets->sixteen_bytes, sizeof(sentPackets->sixteen_bytes));
+			retVal *= receivePacket(sockData, receivedPackets.sixteen_bytes, sizeof(receivedPackets.sixteen_bytes));
+			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
+
+// TESTING
+//********************************************************************************************
+			printf("Packet Sent: %s\nPacket Received: %s\n\n", sentPackets->sixteen_bytes, receivedPackets->sixteen_bytes);
+//********************************************************************************************
+
+			for (int i = 0; i < stats->bytesPerPacket; i++)
+				if (receivedPackets.sixteen_bytes[i] != sentPackets->sixteen_bytes[i])
+					numErrors++;
+			break;
+		case THIRTY_TWO_BYTES:
+			retVal *= sendPacket(sockData, sentPackets->thirty_two_bytes, sizeof(sentPackets->thirty_two_bytes));
+			retVal *= receivePacket(sockData, receivedPackets.thirty_two_bytes, sizeof(receivedPackets.thirty_two_bytes));
+			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
+
+// TESTING
+//********************************************************************************************
+			printf("Packet Sent: %s\nPacket Received: %s\n\n", sentPackets->thirty_two_bytes, receivedPackets->thirty_two_bytes);
+//********************************************************************************************
+
+			for (int i = 0; i < stats->bytesPerPacket; i++)
+				if (receivedPackets.thirty_two_bytes[i] != sentPackets->thirty_two_bytes[i])
+					numErrors++;
+			break;
+		case SIXTY_FOUR_BYTES:
+			retVal *= sendPacket(sockData, sentPackets->sixty_four_bytes, sizeof(sentPackets->sixty_four_bytes));
+			retVal *= receivePacket(sockData, receivedPackets.sixty_four_bytes, sizeof(receivedPackets.sixty_four_bytes));
+			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
+
+// TESTING
+//********************************************************************************************
+			printf("Packet Sent: %s\nPacket Received: %s\n\n", sentPackets->sixty_four_bytes, receivedPackets->sixty_four_bytes);
+//********************************************************************************************
+
+			for (int i = 0; i < stats->bytesPerPacket; i++)
+				if (receivedPackets.sixty_four_bytes[i] != sentPackets->sixty_four_bytes[i])
+					numErrors++;
+			break;
+		case ONE_EIGTH_KB:
+			retVal *= sendPacket(sockData, sentPackets->one_eigth_kb, sizeof(sentPackets->one_eigth_kb));
+			retVal *= receivePacket(sockData, receivedPackets.one_eigth_kb, sizeof(receivedPackets.one_eigth_kb));
+			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
+
+// TESTING
+//********************************************************************************************
+			printf("Packet Sent: %s\nPacket Received: %s\n\n", sentPackets->one_eigth_kb, receivedPackets->one_eigth_kb);
+//********************************************************************************************
+
+			for (int i = 0; i < stats->bytesPerPacket; i++)
+				if (receivedPackets.one_eigth_kb[i] != sentPackets->one_eigth_kb[i])
+					numErrors++;
+			break;
+		case ONE_FOURTH_KB:
+			retVal *= sendPacket(sockData, sentPackets->one_fourth_kb, sizeof(sentPackets->one_fourth_kb));
+			retVal *= receivePacket(sockData, receivedPackets.one_fourth_kb, sizeof(receivedPackets.one_fourth_kb));
+			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
+
+// TESTING
+//********************************************************************************************
+			printf("Packet Sent: %s\nPacket Received: %s\n\n", sentPackets->one_fourth_kb, receivedPackets->one_fourth_kb);
+//********************************************************************************************
+
+			for (int i = 0; i < stats->bytesPerPacket; i++)
+				if (receivedPackets.one_fourth_kb[i] != sentPackets->one_fourth_kb[i])
+					numErrors++;
+			break;
+		case ONE_HALF_KB:
+			retVal *= sendPacket(sockData, sentPackets->one_half_kb, sizeof(sentPackets->one_half_kb));
+			retVal *= receivePacket(sockData, receivedPackets.one_half_kb, sizeof(receivedPackets.one_half_kb));
+			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
+
+// TESTING
+//********************************************************************************************
+			printf("Packet Sent: %s\nPacket Received: %s\n\n", sentPackets->one_half_kb, receivedPackets->one_half_kb);
+//********************************************************************************************
+
+			for (int i = 0; i < stats->bytesPerPacket; i++)
+				if (receivedPackets.one_half_kb[i] != sentPackets->one_half_kb[i])
+					numErrors++;
+			break;
+		case ONE_KB:
+			retVal *= sendPacket(sockData, sentPackets->one_kb, sizeof(sentPackets->one_kb));
+			retVal *= receivePacket(sockData, receivedPackets.one_kb, sizeof(receivedPackets.one_kb));
+			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
+
+// TESTING
+//********************************************************************************************
+			printf("Packet Sent: %s\nPacket Received: %s\n\n", sentPackets->one_kb, receivedPackets->one_kb);
+//********************************************************************************************
+
+			for (int i = 0; i < stats->bytesPerPacket; i++)
+				if (receivedPackets.one_kb[i] != sentPackets->one_kb[i])
+					numErrors++;
+			break;
+		case TWO_KB:
+			retVal *= sendPacket(sockData, sentPackets->two_kb, sizeof(sentPackets->two_kb));
+			retVal *= receivePacket(sockData, receivedPackets.two_kb, sizeof(receivedPackets.two_kb));
+			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
+
+// TESTING
+//********************************************************************************************
+			printf("Packet Sent: %s\nPacket Received: %s\n\n", sentPackets->two_kb, receivedPackets->two_kb);
+//********************************************************************************************
+
+			for (int i = 0; i < stats->bytesPerPacket; i++)
+				if (receivedPackets.two_kb[i] != sentPackets->two_kb[i])
+					numErrors++;
+			break;
+		case FOUR_KB:
+			retVal *= sendPacket(sockData, sentPackets->four_kb, sizeof(sentPackets->four_kb));
+			retVal *= receivePacket(sockData, receivedPackets.four_kb, sizeof(receivedPackets.four_kb));
+			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
+
+// TESTING
+//********************************************************************************************
+			printf("Packet Sent: %s\nPacket Received: %s\n\n", sentPackets->four_kb, receivedPackets->four_kb);
+//********************************************************************************************
+
+			for (int i = 0; i < stats->bytesPerPacket; i++)
+				if (receivedPackets.four_kb[i] != sentPackets->four_kb[i])
+					numErrors++;
+			break;
+		case EIGHT_KB:
+			retVal *= sendPacket(sockData, sentPackets->eight_kb, sizeof(sentPackets->eight_kb));
+			retVal *= receivePacket(sockData, receivedPackets.eight_kb, sizeof(receivedPackets.eight_kb));
+			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
+
+// TESTING
+//********************************************************************************************
+			printf("Packet Sent: %s\nPacket Received: %s\n\n", sentPackets->eight_kb, receivedPackets->eight_kb);
+//********************************************************************************************
+
+			for (int i = 0; i < stats->bytesPerPacket; i++)
+				if (receivedPackets.eight_kb[i] != sentPackets->eight_kb[i])
+					numErrors++;
+			break;
+		case SIXTEEN_KB:
+			retVal *= sendPacket(sockData, sentPackets->sixteen_kb, sizeof(sentPackets->sixteen_kb));
+			retVal *= receivePacket(sockData, receivedPackets.sixteen_kb, sizeof(receivedPackets.sixteen_kb));
+			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
+
+// TESTING
+//********************************************************************************************
+			printf("Packet Sent: %s\nPacket Received: %s\n\n", sentPackets->sixteen_kb, receivedPackets->sixteen_kb);
+//********************************************************************************************
+
+			for (int i = 0; i < stats->bytesPerPacket; i++)
+				if (receivedPackets.sixteen_kb[i] != sentPackets->sixteen_kb[i])
+					numErrors++;
+			break;
+		case THIRTY_TWO_KB:
+			retVal *= sendPacket(sockData, sentPackets->thirty_two_kb, sizeof(sentPackets->thirty_two_kb));
+			retVal *= receivePacket(sockData, receivedPackets.thirty_two_kb, sizeof(receivedPackets.thirty_two_kb));
+			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
+
+// TESTING
+//********************************************************************************************
+			printf("Packet Sent: %s\nPacket Received: %s\n\n", sentPackets->thirty_two_kb, receivedPackets->thirty_two_kb);
+//********************************************************************************************
+
+			for (int i = 0; i < stats->bytesPerPacket; i++)
+				if (receivedPackets.thirty_two_kb[i] != sentPackets->thirty_two_kb[i])
+					numErrors++;
+			break;
+		case MAX_SIZE_UDP:
+			retVal *= sendPacket(sockData, sentPackets->max_size_udp, sizeof(sentPackets->max_size_udp));
+			retVal *= receivePacket(sockData, receivedPackets.max_size_udp, sizeof(receivedPackets.max_size_udp));
+			clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &end);
+
+// TESTING
+//********************************************************************************************
+			printf("Packet Sent: %s\nPacket Received: %s\n\n", sentPackets->max_size_udp, receivedPackets->max_size_udp);
+//********************************************************************************************
+
+			for (int i = 0; i < stats->bytesPerPacket; i++)
+				if (receivedPackets.max_size_udp[i] != sentPackets->max_size_udp[i])
+					numErrors++;
+		}
+		
+		// Calculate time taken to send & receive data
+		duration = (1000.0*end.tv_sec + 1e-6*end.tv_nsec) - (1000.0*start.tv_sec + 1e-6*start.tv_nsec);
+		
+		// Adjust averages (new_avg = ((i-1)(old_avg) + new_value) / i)
+		stats->avgRoundTripTime = (((stats->iteration-1) * stats->avgRoundTripTime) + duration) / stats->iteration;
+		stats->errorsPerPacket = (((stats->iteration-1) * stats->errorsPerPacket) + numErrors) / stats->iteration;
+	}
+	
+	// Check for errors
+	if (retVal == false) {
+		fputs("Transmission error occured: ", stderr);
+	}
+	else {
+		fputs("Maximum iterations reached: ", stderr);
+	}
+	printf("Thread for %u byte packets returning\n", stats->bytesPerPacket);
+	
+	parameter->status = retVal;
+	return;
+}
+*/
 
 
 bool sendPacket(const NetInfo *sockData, const char *packet, unsigned int packetSize)
@@ -375,17 +552,17 @@ int main(int argc, char **argv)
 	NetStats *packetStats = (NetStats *) calloc(NUM_PACKET_SIZES, sizeof(NetStats));
 	ThreadArgs *thArgs = (ThreadArgs *) malloc(NUM_PACKET_SIZES * sizeof(ThreadArgs));
 	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
-		thArgs[i].packetIndex = i;
 		thArgs[i].sockData = &sockData;
-		thArgs[i].stats =	&packetStats[i]; 
-		thArgs[i].packets = &packets;
+		thArgs[i].stats = &packetStats[i];
+		thArgs[i].stats->bytesPerPacket = packets.packetSizes[i];
+		thArgs[i].sentPacket = packets.sentPackets[i];
+		thArgs[i].receivedPacket = packets.receivedPackets[i];
 		thArgs[i].status = true;
 		pthread_create(&thArgs[i].tid, &attr, networkThreads, (void *) &thArgs[i]);
 	}
 	
 	// Create data processing thread
 	DataProcessingArgs dpArgs;
-	dpArgs.ipAddress = sockData.cmdIP;
 	dpArgs.packetStats = packetStats;
 	pthread_create(&dpArgs.tid, &attr, dataProcessingThread, (void *) &dpArgs);
 	
@@ -408,6 +585,10 @@ int main(int argc, char **argv)
 	freeaddrinfo(sockData.serverAddr);
 	free(packetStats);
 	free(thArgs);
+	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
+		free(packets.sentPackets[i]);
+		free(packets.receivedPackets[i]);
+	}
 
 	// Close client socket
 	if (close(sockData.clientSocket) < 0) {
