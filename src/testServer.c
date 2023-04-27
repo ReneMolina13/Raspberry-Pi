@@ -84,6 +84,8 @@ bool handleClient(int serverSocket)
 		return false;
 	}
 	
+	printf("Bytes sent: %u\n", bytesSent);
+	
 	return true;
 }
 
