@@ -52,7 +52,7 @@ void *networkThreads(void *param)
 //********************************************************************************************
 		pthread_mutex_lock(&mutex);
 		printf("Packet Sent:     %.10s\n", sentPacket);
-		printf("Packet Received: %.10s\n", receivedPacket);
+		printf("Packet Received: %.10s\n\n", receivedPacket);
 		pthread_mutex_unlock(&mutex);
 //********************************************************************************************
 	}
