@@ -32,9 +32,13 @@ void *dataProcessingThread(void *param)
 	// Detach thread (makes it not joinable)
 	pthread_detach(tid);
 	
+	// Sleep to allow threads to initialize packet sizes
+	sleep(sleepSeconds);
+	
 	// Obtain all packet sizes
-	for (int i = 0; i < NUM_PACKET_SIZES; i++)
+	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
 		bytesPerPacket[i] = packetStats[i].bytesPerPacket;
+	}
 	
 	while (1) {
 		// Sleep for 10 seconds
@@ -68,10 +72,10 @@ void *dataProcessingThread(void *param)
 			
 // TESTING
 //********************************************************************************************
-			// printf("Packet Size: %u:\n", bytesPerPacket[i]);
-			// printf("Errors Per Packet: %.2f", errorsPerPacket[i]);
-			// printf("Errors Per KB: %.2f", errorsPerKB[i]);
-			// fputs("\n", stdout);
+			printf("Packet Size: %u:\n", bytesPerPacket[i]);
+			printf("Errors Per Packet: %.2f", errorsPerPacket[i]);
+			printf("Errors Per KB: %.2f", errorsPerKB[i]);
+			fputs("\n", stdout);
 //********************************************************************************************
 			
 			fprintf(outFile, "%.2f,", errorsPerKB[i]);
