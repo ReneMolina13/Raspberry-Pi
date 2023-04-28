@@ -136,10 +136,10 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval, bool
 {	
 	char **args;
 	unsigned int numArgs;
-	unsigned int buffSize = 20;
+	unsigned int buffSize = 20;	
 	
+	// Check for invalid arguments
 	if (flood == false) {
-		// Check for invalid arguments
 		if (numPackets < 0 || numBytes < 0) {
 			fputs("Invalid parameter value\n", stderr);
 			return false;
@@ -165,14 +165,14 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval, bool
 		strncpy(args[4], "-s", buffSize);
 		snprintf(args[5], buffSize, "%i", numBytes);
 		// Time interval between packets (seconds)
-		args[6] = "-i";
+		strncpy(args[6], "-i", buffSize);
 		if (interval < 0.2)
 			interval = 0.2;
 		snprintf(args[7], buffSize, "%f", interval);
 		// Hostname / IP Address
 		strncpy(args[8], hostname, buffSize);
 		// Null-terminate argument array
-		args[9] = NULL;
+		snprintf(args[9], buffSize, "%p", NULL);
 	}
 	
 	else {
@@ -185,7 +185,7 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval, bool
 		strncpy(args[1], hostname, buffSize);
 		args[2] = NULL;
 	}
-	
+
 	// Fork process
 	int childExitStatus;
 	int pid = fork();
@@ -197,6 +197,7 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval, bool
 	// Child process runs ping program
 	else if (pid == 0)
 		execvp(args[0], args);
+
 	// Parent process frees argument array & waits for program to finish
 	else {
 		for (int i = 0; i < numArgs; i++)
