@@ -1,11 +1,6 @@
 #! /bin/bash
 clear
-# ./testClient raspberrypi 26207
-# ./testClient EQCHK-F7ZQZZ2 26207
-# ./testClient WRVS4400N 26207
-# ./testClient 192.168.1.102 26207
-# ./testClient 192.168.1.1 26207
-# ./testClient 192.168.1.2 26207
-# ./testClient SEEDVM2-rmolina 26207
+./testClient raspberrypi 26207
+# ./testClient 192.168.1.103 26207
 # ./testClient ReneDanielPC 26207
-./testClient 192.168.1.104 26207
+# ./testClient 192.168.1.104 26207
