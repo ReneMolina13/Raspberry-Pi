@@ -13,7 +13,6 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <errno.h>
-#include <locale.h>
 #include <math.h>
 #include <time.h>
 #include <string.h>
