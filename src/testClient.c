@@ -237,8 +237,8 @@ int main(int argc, char **argv)
 	
 	// Wait for network threads to terminate (only happens in case of error or overflow)
 	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
-		pthread_join(thArgs[i].tid, NULL);
-		if (thArgs[i].status == false) {
+		pthread_join(thread_args[i].tid, NULL);
+		if (thread_args[i].status == false) {
 			fputs("Error creating network traffic - ", stderr);
 			return -1;
 		}
