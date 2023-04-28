@@ -249,13 +249,23 @@ bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int
 
 //TESTING
 //********************************************************************************************
-	unsigned int numArgs = 8;
+	unsigned int numArgs = 4;
 //********************************************************************************************
 	unsigned int buffSize = 20;
 	char **args = (char **) malloc(numArgs * sizeof(char *));
 	for (int i = 0; i < numArgs; i++)
 		args[i] = (char *) malloc(buffSize * sizeof(char));
 	
+	
+//TESTING
+//********************************************************************************************
+	strncpy(args[0], "../data/Iperf_Test", buffSize);
+	strncpy(args[1], "-c", buffSize);
+	strncpy(args[2], hostname, buffSize);
+	snprintf(args[3], buffSize, "%p", NULL);
+//********************************************************************************************
+	
+	/*
 	// Run iPerf using UDP, verbose mode, and formatted in KBytes/sec
 	strncpy(args[0], "../data/Iperf_Test", buffSize);
 	strncpy(args[1], "-u", buffSize);
@@ -265,13 +275,6 @@ bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int
 	// Hostname / IP address
 	strncpy(args[5], "-c", buffSize);
 	strncpy(args[6], hostname, buffSize);
-	
-//TESTING
-//********************************************************************************************
-	snprintf(args[7], buffSize, "%p", NULL);
-//********************************************************************************************
-	
-	/*
 	// Service / Port Number
 	strncpy(args[7], "-p", buffSize);
 	strncpy(args[8], service, buffSize);
