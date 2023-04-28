@@ -152,7 +152,7 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval, bool
 		// Initialize argument array
 		numArgs = 10;
 		args = (char **) (char **) malloc(numArgs * sizeof(char *));
-		for (int i = 0; i < numArgs-1; i++)
+		for (int i = 0; i < numArgs; i++)
 			args[i] = (char *) malloc(buffSize * sizeof(char));
 	
 		// Run ping with quiet output
@@ -179,7 +179,7 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval, bool
 		// Flood testing only requires hostname
 		numArgs = 3;
 		args = (char **) malloc(numArgs * sizeof(char *));
-		for (int i = 0; i < numArgs-1; i++)
+		for (int i = 0; i < numArgs; i++)
 			args[i] = (char *) malloc(buffSize * sizeof(char));
 		strncpy(args[0], "../data/Flood_Test", buffSize);
 		strncpy(args[1], hostname, buffSize);
@@ -199,7 +199,7 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval, bool
 		execvp(args[0], args);
 	// Parent process frees argument array & waits for program to finish
 	else {
-		for (int i = 0; i < numArgs-1; i++)
+		for (int i = 0; i < numArgs; i++)
 			free(args[i]);
 		free(args);
 		wait(&childExitStatus);
@@ -289,6 +289,9 @@ bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int
 		execvp(args[0], args);
 	// Parent process
 	else {
+		for (int i = 0; i < numArgs; i++)
+			free(args[i]);
+		free(args);
 		wait(&childExitStatus);
 		return true;
 	}
