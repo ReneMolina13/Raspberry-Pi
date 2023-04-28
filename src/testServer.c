@@ -75,7 +75,7 @@ bool handleClient(int serverSocket)
 		return false;
 	}
 	
-	printf("Bytes received: %u\n", bytesReceived);
+	printf("Bytes received: %li\n", bytesReceived);
 		
 	// Send packet to client (bytes not used get quietly discarded at client socket)
 	ssize_t bytesSent = sendto(serverSocket, &buffer, MAX_PACKET_SIZE_UDP, 0, (struct sockaddr *) &clientAddr, sizeof(clientAddr));
@@ -84,7 +84,7 @@ bool handleClient(int serverSocket)
 		return false;
 	}
 	
-	printf("Bytes sent: %u\n\n", bytesSent);
+	printf("Bytes sent: %li\n\n", bytesSent);
 	
 	return true;
 }
