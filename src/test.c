@@ -253,7 +253,7 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int interval, bool se
 	// Running iPerf in client mode
 	if (serverMode == false) {
 		
-		if (bandwidth < 0 || numBytes < 0 || interval < 0 || totalTime < 0) {
+		if (bandwidth < 0 || numBytes < 0 || interval < 0) {
 			fputs("Invalid parameter value\n", stderr);
 			return false;
 		}
