@@ -332,7 +332,9 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int interval, bool se
 				puts("7");
 			default:
 				printf("Error number: %i\n", errno);
-				perror(errno);
+				char error[100];
+				perror(error);
+				fputs(perror, stderr);
 			}
 			return false;
 		 }
