@@ -298,7 +298,7 @@ bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int
 	// Null-terminate argument array
 	args[17] = NULL;
 	*/
-	
+	int childExitStatus;
 	int pid = fork();
 	// Fork error
 	if (pid < 0) {
@@ -306,14 +306,16 @@ bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int
 		return false;
 	}
 	// Child process
-	else if (pid == 0)
+	else if (pid == 0) {
 		execvp(args[0], args);
+		return true;
+	}
 	// Parent process
 	else {
 		for (int i = 0; i < numArgs; i++)
 			free(args[i]);
 		free(args);
-		waitpid(pid, NULL, 0);
+		waitpid(&childExitStatus);
 		
 	}
 	
