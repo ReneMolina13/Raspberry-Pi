@@ -256,7 +256,7 @@ bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int
 
 //TESTING
 //********************************************************************************************
-	unsigned int numArgs = 5;
+	unsigned int numArgs = 6;
 //********************************************************************************************
 	unsigned int buffSize = 20;
 	char **args = (char **) malloc(numArgs * sizeof(char *));
@@ -268,9 +268,10 @@ bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int
 //********************************************************************************************
 	strncpy(args[0], "../data/Iperf_Test", buffSize);
 	strncpy(args[1], "-u", buffSize);
-	strncpy(args[2], "-c", buffSize);
-	strncpy(args[3], hostname, buffSize);
-	snprintf(args[4], buffSize, "%p", NULL);
+	strncpy(args[2], "-V", buffSize);
+	strncpy(args[3], "-c", buffSize);
+	strncpy(args[4], hostname, buffSize);
+	snprintf(args[5], buffSize, "%p", NULL);
 //********************************************************************************************
 	
 	/*
