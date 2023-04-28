@@ -118,10 +118,10 @@ void *testingThread(void *param)
 	char *hostname = parameter->hostname;
 	char *service = parameter->service;
 	
-	puts("Running Ping");
-	runPing(hostname, 10, 1000, 0.5, false);
-	puts("Running Traceroute");
-	runTraceroute(hostname);
+	// puts("Running Ping");
+	// runPing(hostname, 10, 1000, 0.5, false);
+	// puts("Running Traceroute");
+	// runTraceroute(hostname);
 	puts("Running iPerf");
 	runIperf(hostname, service, 500, 8000, 1, 10);
 	
@@ -327,8 +327,7 @@ bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int
 		
 	}
 	
-	// puts("Results have been saved to iperfData.txt", pid);
-	printf("Results have been saved to iperfData.txt - PID: %i\n", pid);
+	puts("Results have been saved to iperfData.txt", pid);
 	
 	return true;
 }
