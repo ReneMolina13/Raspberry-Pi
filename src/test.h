@@ -71,7 +71,7 @@ void *dataProcessingThread(void *);
 void *testingThread(void *);
 bool runPing(char *, int, int, double, bool);
 bool runTraceroute(char *);
-bool runIperf(char *, int, int, int, int, bool);
+bool runIperf(char *, int, int, int, bool);
 void printSocketAddress(const struct sockaddr *);
 
 #endif
