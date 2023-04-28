@@ -295,7 +295,7 @@ bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int
 	strncpy(args[14], "-t", buffSize);
 	snprintf(args[15], buffSize, "%i", totalTime);
 	// Null-terminate argument array
-	snprintf(args[16], buffSize, "%p", NULL);
+	snprintf(args[numArgs-1], buffSize, "%p", NULL);
 
 	int childExitStatus;
 	int pid = fork();
