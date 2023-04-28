@@ -118,10 +118,10 @@ void *testingThread(void *param)
 	char *hostname = parameter->hostname;
 	char *service = parameter->service;
 	
-	puts("Running Ping");
-	runPing(hostname, 10, 1000, 0.5, false);
-	puts("Running Traceroute");
-	runTraceroute(hostname);
+	// puts("Running Ping");
+	// runPing(hostname, 10, 1000, 0.5, false);
+	// puts("Running Traceroute");
+	// runTraceroute(hostname);
 	puts("Running iPerf");
 	runIperf(hostname, 500, 1000, 1, false);
 	
@@ -259,7 +259,7 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int interval, bool se
 		}
 		
 		// Initialize arguments array
-		numArgs = 9;
+		numArgs = 11;
 		args = (char **) malloc(numArgs * sizeof(char *));
 		for (int i = 0; i < numArgs; i++)
 			args[i] = (char *) malloc(buffSize * sizeof(char));
@@ -277,10 +277,10 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int interval, bool se
 		strncpy(args[6], "-l", buffSize);
 		snprintf(args[7], buffSize, "%i", numBytes);
 		// Interval for bandwidth, jitter, & loss reports (seconds)
-		// strncpy(args[8], "-i", buffSize);
-		// snprintf(args[9], buffSize, "%i", interval);
+		strncpy(args[8], "-i", buffSize);
+		snprintf(args[9], buffSize, "%i", interval);
 		// Null-terminate argument array
-		snprintf(args[8], buffSize, "%p", NULL);
+		snprintf(args[10], buffSize, "%p", NULL);
 	}
 		
 	// Running iPerf in server mode
@@ -306,6 +306,31 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int interval, bool se
 	else if (pid == 0) {
 		if (execv(args[0], args) < 0) {
 			fputs("Error calling iPerf\n", stderr);
+			switch (errno) {
+			case E2BIG:
+				puts("0");
+				break;
+			case EACCES:
+				puts("1");
+				break;
+			case EINVAL:
+				puts("2");
+				break;
+			case ELOOP:
+				puts("3");
+				break;
+			case ENAMETOOLONG:
+				puts("4");
+				break;
+			case ENOENT:
+				puts("5");
+				break;
+			case ENOEXEC:
+				puts("6");
+				break;
+			case ENOTDIR:
+				puts("7");
+			}
 			return false;
 		 }
 	}
