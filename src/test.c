@@ -288,6 +288,13 @@ bool runIperf(char *hostname, double bandwidth, int numBytes, int interval, int 
 		snprintf(args[14], buffSize, "%p", NULL);
 	}
 	
+// TESTING
+//********************************************************************************************
+		fputs("iperf3 ", stdout);
+		for (int i = 0; i < numArgs-1; i++)
+			printf("%s ", args[i]);
+//********************************************************************************************
+	
 	// Running iPerf in server mode
 	else {
 		numArgs = 3;
