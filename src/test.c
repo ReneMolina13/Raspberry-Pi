@@ -244,7 +244,7 @@ bool runTraceroute(char *hostname)
 }
 
 
-bool runIperf(char *hostname, double bandwidth, int numBytes, int interval, int totalTime, bool serverMode)
+bool runIperf(char *hostname, int bandwidth, int numBytes, int interval, int totalTime, bool serverMode)
 {	
 	unsigned int buffSize = 30;
 	unsigned int numArgs;
@@ -274,7 +274,7 @@ bool runIperf(char *hostname, double bandwidth, int numBytes, int interval, int 
 		strncpy(args[5], "K", buffSize);
 		// Target bandwidth (bits/sec)
 		strncpy(args[6], "-b", buffSize);
-		snprintf(args[7], buffSize, "%f", bandwidth);
+		snprintf(args[7], buffSize, "%i", bandwidth);
 		// Buffer length (bytes)
 		strncpy(args[8], "-l", buffSize);
 		snprintf(args[9], buffSize, "%i", numBytes);
