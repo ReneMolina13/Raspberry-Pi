@@ -337,7 +337,7 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int interval, bool se
 				printf("%s\n", perror);
 				for (int i = 0; i < numArgs-1; i++)
 					printf("%s ", args[i]);
-				fputs("\n");
+				fputs("\n", stdout);
 			}
 			return false;
 		 }
