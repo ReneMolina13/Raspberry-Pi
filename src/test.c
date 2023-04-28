@@ -237,7 +237,9 @@ bool runIperf(char *hostname, int service, double bandwidth, int numBytes, int i
 	// Initialize arguments array
 	unsigned int numArgs = 18;
 	unsigned int buffSize = 20;
-	char args[numArgs][buffSize];
+	char **args = (char **) malloc(numArgs * sizeof(char *));
+	for (int i = 0; i < numArgs; i++)
+		args[i] = (char *) malloc(buffSize * sizeof(char));
 	
 	// Run iPerf using UDP, verbose mode, and formatted in KBytes/sec
 	strncpy(args[0], "../data/Iperf_Test", buffSize);
