@@ -303,7 +303,7 @@ bool runIperf(char *hostname, double bandwidth, int numBytes, int interval, int 
 // TESTING
 //********************************************************************************************
 	fputs("iperf3 ", stdout);
-	for (int i = 0; i < numArgs-1; i++)
+	for (int i = 1; i < numArgs-1; i++)
 		printf("%s ", args[i]);
 	fputs("\n", stdout);
 //********************************************************************************************
