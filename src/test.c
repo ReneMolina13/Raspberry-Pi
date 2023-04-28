@@ -330,6 +330,8 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int interval, bool se
 				break;
 			case ENOTDIR:
 				puts("7");
+			default:
+				printf("Error number: %i", errno);
 			}
 			return false;
 		 }
