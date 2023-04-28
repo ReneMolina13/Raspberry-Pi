@@ -198,7 +198,8 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval, bool
 	else if (pid == 0)
 		 if (execv(args[0], args) < 0) {
 			fputs("Error calling ping\n", stderr);
-			return -1;
+			childExitStatus = -1;
+			return false;
 		 }
 
 	// Parent process frees argument array & waits for program to finish
@@ -206,7 +207,7 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval, bool
 		for (int i = 0; i < numArgs; i++)
 			free(args[i]);
 		free(args);
-		wait(&childExitStatus);
+		wait(NULL);
 		if (childExitStatus < 0)
 			return false;
 		else
@@ -237,11 +238,12 @@ bool runTraceroute(char *hostname)
 	else if (pid == 0)
 		if (execv(args[0], args) < 0) {
 			fputs("Error calling traceroute\n", stderr);
-			return -1;
+			childExitStatus = -1;
+			return false;
 		 }
 	// Parent process waits for child to finish executing
 	else {
-		wait(&childExitStatus);
+		wait(NULL);
 		if (childExitStatus < 0)
 			return false;
 		else
@@ -320,7 +322,8 @@ bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int
 	else if (pid == 0) {
 		if (execv(args[0], args) < 0) {
 			fputs("Error calling iPerf\n", stderr);
-			return -1;
+			childExitStatus = -1;
+			return false;
 		 }
 	}
 	// Parent process
@@ -328,7 +331,7 @@ bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int
 		for (int i = 0; i < numArgs; i++)
 			free(args[i]);
 		free(args);
-		wait(&childExitStatus);
+		wait(NULL);
 		if (childExitStatus < 0)
 			return false;
 		else
