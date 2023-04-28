@@ -229,7 +229,7 @@ bool runTraceroute(char *hostname)
 
 bool runIperf(char *hostname, int service, double bandwidth, int numBytes, int interval, int totalTime)
 {
-	if (service < 0 || bandwidth < 0 || buffLen < 0 || interval < 0 || totalTime < 0) {
+	if (service < 0 || bandwidth < 0 || numBytes < 0 || interval < 0 || totalTime < 0) {
 		fputs("Invalid parameter value\n", stderr);
 		return false;
 	}
