@@ -256,14 +256,14 @@ bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int
 
 //TESTING
 //********************************************************************************************
-	unsigned int numArgs = 7;
+	unsigned int numArgs = 17;
 //********************************************************************************************
 	unsigned int buffSize = 20;
 	char **args = (char **) malloc(numArgs * sizeof(char *));
 	for (int i = 0; i < numArgs; i++)
 		args[i] = (char *) malloc(buffSize * sizeof(char));
 	
-	
+/*	
 //TESTING
 //********************************************************************************************
 	strncpy(args[0], "../data/Iperf_Test", buffSize);
@@ -274,35 +274,34 @@ bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int
 	strncpy(args[5], hostname, buffSize);
 	snprintf(args[6], buffSize, "%p", NULL);
 //********************************************************************************************
+*/	
 	
-	/*
 	// Run iPerf using UDP, verbose mode, and formatted in KBytes/sec
 	strncpy(args[0], "../data/Iperf_Test", buffSize);
 	strncpy(args[1], "-u", buffSize);
-	strncpy(args[2], "-V", buffSize);
-	strncpy(args[3], "-f", buffSize);
-	strncpy(args[4], "K", buffSize);
+	strncpy(args[2], "-f", buffSize);
+	strncpy(args[3], "K", buffSize);
 	// Hostname / IP address
-	strncpy(args[5], "-c", buffSize);
-	strncpy(args[6], hostname, buffSize);
+	strncpy(args[4], "-c", buffSize);
+	strncpy(args[5], hostname, buffSize);
 	// Service / Port Number
-	strncpy(args[7], "-p", buffSize);
-	strncpy(args[8], service, buffSize);
+	strncpy(args[6], "-p", buffSize);
+	strncpy(args[7], service, buffSize);
 	// Target bandwidth (bits/sec)
-	strncpy(args[9], "-b", buffSize);
-	snprintf(args[10], buffSize, "%f", bandwidth);
+	strncpy(args[8], "-b", buffSize);
+	snprintf(args[9], buffSize, "%f", bandwidth);
 	// Buffer length (bytes)
-	strncpy(args[11], "-l", buffSize);
-	snprintf(args[12], buffSize, "%i", numBytes);
+	strncpy(args[10], "-l", buffSize);
+	snprintf(args[11], buffSize, "%i", numBytes);
 	// Interval for bandwidth, jitter, & loss reports (seconds)
-	strncpy(args[13], "-i", buffSize);
-	snprintf(args[14], buffSize, "%i", interval);
+	strncpy(args[12], "-i", buffSize);
+	snprintf(args[13], buffSize, "%i", interval);
 	// Total time alloted to iPerf test
-	strncpy(args[15], "-t", buffSize);
-	snprintf(args[16], buffSize, "%i", totalTime);
+	strncpy(args[14], "-t", buffSize);
+	snprintf(args[15], buffSize, "%i", totalTime);
 	// Null-terminate argument array
-	args[17] = NULL;
-	*/
+	snprintf(args[16], buffSize, "%p", NULL);
+
 	int childExitStatus;
 	int pid = fork();
 	// Fork error
