@@ -298,7 +298,7 @@ bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int
 	// Null-terminate argument array
 	args[17] = NULL;
 	*/
-	int childExitStatus;
+	
 	int pid = fork();
 	// Fork error
 	if (pid < 0) {
@@ -313,7 +313,7 @@ bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int
 		for (int i = 0; i < numArgs; i++)
 			free(args[i]);
 		free(args);
-		wait(&childExitStatus);
+		waitpid(pid, NULL, 0);
 		
 	}
 	
