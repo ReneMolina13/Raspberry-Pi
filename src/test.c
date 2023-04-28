@@ -126,7 +126,7 @@ void *testingThread(void *param)
 bool runPing(char *hostname, int numPackets, int numBytes, double interval, bool flood)
 {	
 	char **args;
-	unsigned int numArgs
+	unsigned int numArgs;
 	unsigned int buffSize = 20;
 	
 	if (flood == false) {
