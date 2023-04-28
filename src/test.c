@@ -259,7 +259,7 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int interval, bool se
 		}
 		
 		// Initialize arguments array
-		numArgs = 11;
+		numArgs = 9;
 		args = (char **) malloc(numArgs * sizeof(char *));
 		for (int i = 0; i < numArgs; i++)
 			args[i] = (char *) malloc(buffSize * sizeof(char));
@@ -277,10 +277,10 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int interval, bool se
 		strncpy(args[6], "-l", buffSize);
 		snprintf(args[7], buffSize, "%i", numBytes);
 		// Interval for bandwidth, jitter, & loss reports (seconds)
-		strncpy(args[8], "-i", buffSize);
-		snprintf(args[9], buffSize, "%i", interval);
+		// strncpy(args[8], "-i", buffSize);
+		// snprintf(args[9], buffSize, "%i", interval);
 		// Null-terminate argument array
-		snprintf(args[10], buffSize, "%p", NULL);
+		snprintf(args[8], buffSize, "%p", NULL);
 	}
 		
 	// Running iPerf in server mode
