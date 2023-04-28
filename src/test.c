@@ -198,7 +198,7 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval, bool
 	else if (pid == 0)
 		 if (execv(args[0], args) < 0) {
 			fputs("Error calling ping\n", stderr);
-			return false;
+			return -1;
 		 }
 
 	// Parent process frees argument array & waits for program to finish
@@ -208,7 +208,7 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval, bool
 		free(args);
 		wait(&childExitStatus);
 		if (childExitStatus < 0)
-			return -1;
+			return false;
 		else
 			puts("Results have been saved to pingData.txt");
 	}
@@ -237,13 +237,13 @@ bool runTraceroute(char *hostname)
 	else if (pid == 0)
 		if (execv(args[0], args) < 0) {
 			fputs("Error calling traceroute\n", stderr);
-			return false;
+			return -1;
 		 }
 	// Parent process waits for child to finish executing
 	else {
 		wait(&childExitStatus);
 		if (childExitStatus < 0)
-			return -1;
+			return false;
 		else
 			puts("Results have been saved to tracerouteData.txt");
 	}
