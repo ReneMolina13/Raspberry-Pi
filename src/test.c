@@ -259,7 +259,7 @@ bool runIperf(char *hostname, double bandwidth, int numBytes, int interval, int 
 		}
 		
 		// Initialize arguments array
-		numArgs = 17;
+		numArgs = 15;
 		args = (char **) malloc(numArgs * sizeof(char *));
 		for (int i = 0; i < numArgs; i++)
 			args[i] = (char *) malloc(buffSize * sizeof(char));
@@ -270,22 +270,22 @@ bool runIperf(char *hostname, double bandwidth, int numBytes, int interval, int 
 		strncpy(args[2], hostname, buffSize);
 		// UDP connection formatted in KBytes/sec
 		strncpy(args[3], "-u", buffSize);
-		strncpy(args[2], "-f", buffSize);
-		strncpy(args[3], "K", buffSize);
+		strncpy(args[4], "-f", buffSize);
+		strncpy(args[5], "K", buffSize);
 		// Target bandwidth (bits/sec)
-		strncpy(args[8], "-b", buffSize);
-		snprintf(args[9], buffSize, "%f", bandwidth);
+		strncpy(args[6], "-b", buffSize);
+		snprintf(args[7], buffSize, "%f", bandwidth);
 		// Buffer length (bytes)
-		strncpy(args[10], "-l", buffSize);
-		snprintf(args[11], buffSize, "%i", numBytes);
+		strncpy(args[8], "-l", buffSize);
+		snprintf(args[9], buffSize, "%i", numBytes);
 		// Interval for bandwidth, jitter, & loss reports (seconds)
-		strncpy(args[12], "-i", buffSize);
-		snprintf(args[13], buffSize, "%i", interval);
+		strncpy(args[10], "-i", buffSize);
+		snprintf(args[11], buffSize, "%i", interval);
 		// Total time alloted to iPerf test
-		strncpy(args[14], "-t", buffSize);
-		snprintf(args[15], buffSize, "%i", totalTime);
+		strncpy(args[12], "-t", buffSize);
+		snprintf(args[13], buffSize, "%i", totalTime);
 		// Null-terminate argument array
-		snprintf(args[16], buffSize, "%p", NULL);
+		snprintf(args[14], buffSize, "%p", NULL);
 	}
 	
 	// Running iPerf in server mode
