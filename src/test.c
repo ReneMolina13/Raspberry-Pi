@@ -118,10 +118,10 @@ void *testingThread(void *param)
 	char *hostname = parameter->hostname;
 	char *service = parameter->service;
 	
-	puts("Running Ping");
-	runPing(hostname, 10, 1000, 0.5, false);
-	puts("Running Traceroute");
-	runTraceroute(hostname);
+	// puts("Running Ping");
+	// runPing(hostname, 10, 1000, 0.5, false);
+	// puts("Running Traceroute");
+	// runTraceroute(hostname);
 	puts("Running iPerf");
 	runIperf(hostname, service, 500, 8000, 1, 10);
 	
