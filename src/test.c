@@ -123,7 +123,7 @@ void *testingThread(void *param)
 	// puts("Running Traceroute");
 	// runTraceroute(hostname);
 	puts("Running iPerf");
-	runIperf(hostname, 500, 8000, 1000, 10, false);
+	runIperf(hostname, 500, 1000, 1, false);
 	
 	// Detach thread (makes it not joinable)
 	pthread_detach(tid);
