@@ -245,7 +245,12 @@ bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int
 	}
 	
 	// Initialize arguments array
-	unsigned int numArgs = 18;
+	// unsigned int numArgs = 18;
+
+//TESTING
+//********************************************************************************************
+	unsigned int numArgs = 8;
+//********************************************************************************************
 	unsigned int buffSize = 20;
 	char **args = (char **) malloc(numArgs * sizeof(char *));
 	for (int i = 0; i < numArgs; i++)
@@ -260,6 +265,13 @@ bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int
 	// Hostname / IP address
 	strncpy(args[5], "-c", buffSize);
 	strncpy(args[6], hostname, buffSize);
+	
+//TESTING
+//********************************************************************************************
+	snprintf(args[7], buffSize, "%p", NULL);
+//********************************************************************************************
+	
+	/*
 	// Service / Port Number
 	strncpy(args[7], "-p", buffSize);
 	strncpy(args[8], service, buffSize);
@@ -277,7 +289,7 @@ bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int
 	snprintf(args[16], buffSize, "%i", totalTime);
 	// Null-terminate argument array
 	args[17] = NULL;
-	
+	*/
 	int childExitStatus;
 	int pid = fork();
 	// Fork error
