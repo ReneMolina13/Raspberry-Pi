@@ -207,9 +207,8 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval, bool
 			free(args[i]);
 		free(args);
 		wait(&childExitStatus);
+		puts("Results have been saved to pingData.txt");
 	}
-	
-	puts("Results have been saved to pingData.txt");
 	
 	return true;
 }
@@ -238,11 +237,11 @@ bool runTraceroute(char *hostname)
 			return false;
 		 }
 	// Parent process waits for child to finish executing
-	else
+	else {
 		wait(&childExitStatus);
-		
-	puts("Results have been saved to tracerouteData.txt");
-		
+		puts("Results have been saved to tracerouteData.txt");
+	}
+	
 	return true;
 }
 
@@ -324,12 +323,12 @@ bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int
 			free(args[i]);
 		free(args);
 		wait(&childExitStatus);
-		
+		if (childExitStatus < 0)
+			return false;
+		else
+			puts("Results have been saved to iperfData.txt");
+		return true;
 	}
-	
-	puts("Results have been saved to iperfData.txt");
-	
-	return true;
 }
 
 
