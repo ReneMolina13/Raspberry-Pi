@@ -61,16 +61,17 @@ typedef struct
 typedef struct
 {
 	pthread_t tid;
+	char *hostname;
 } TestingArgs;
 
 
 // Function prototypes
 void *dataProcessingThread(void *);
 void *testingThread(void *);
-void printSocketAddress(const struct sockaddr *);
-bool runPing(char *, unsigned int, unsigned int, double);
+bool runPing(char *, unsigned int, unsigned int, double, bool);
 bool runTraceroute(char *);
 bool runIperf(char *);
-
+void printSocketAddress(const struct sockaddr *);
+unsigned int numDigits(int);
 
 #endif

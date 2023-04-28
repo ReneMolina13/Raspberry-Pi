@@ -136,10 +136,10 @@ bool createSocket(NetInfo *sockData)
 	}
 	
 	// Print out hostname and service name of server
-	char hostName[NI_MAXHOST];
+	char hostname[NI_MAXHOST];
 	char service[NI_MAXSERV];
-	getnameinfo(sockData->serverAddr->ai_addr, sockData->serverAddr->ai_addrlen, hostName, NI_MAXHOST, service, NI_MAXSERV, 0);
-	printf("Hostname: %s\n", hostName);
+	getnameinfo(sockData->serverAddr->ai_addr, sockData->serverAddr->ai_addrlen, hostname, NI_MAXHOST, service, NI_MAXSERV, 0);
+	printf("Hostname: %s\n", hostname);
 	printf("Service: %s\n\n", service);
 
 	return true;
@@ -214,25 +214,26 @@ int main(int argc, char **argv)
 	// Initialize thread argument structures and create network threads
 	pthread_attr_init(&attr);
 	NetStats *packetStats = (NetStats *) calloc(NUM_PACKET_SIZES, sizeof(NetStats));
-	ThreadArgs *thArgs = (ThreadArgs *) malloc(NUM_PACKET_SIZES * sizeof(ThreadArgs));
+	ThreadArgs *thread_args = (ThreadArgs *) malloc(NUM_PACKET_SIZES * sizeof(ThreadArgs));
 	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
-		thArgs[i].sockData = &sockData;
-		thArgs[i].stats = &packetStats[i];
-		thArgs[i].stats->bytesPerPacket = packets.packetSizes[i];
-		thArgs[i].sentPacket = packets.sentPackets[i];
-		thArgs[i].receivedPacket = packets.receivedPackets[i];
-		thArgs[i].status = true;
-		pthread_create(&thArgs[i].tid, &attr, networkThreads, (void *) &thArgs[i]);
+		thread_args[i].sockData = &sockData;
+		thread_args[i].stats = &packetStats[i];
+		thread_args[i].stats->bytesPerPacket = packets.packetSizes[i];
+		thread_args[i].sentPacket = packets.sentPackets[i];
+		thread_args[i].receivedPacket = packets.receivedPackets[i];
+		thread_args[i].status = true;
+		pthread_create(&thread_args[i].tid, &attr, networkThreads, (void *) &thread_args[i]);
 	}
 	
 	// Create data processing thread
-	DataProcessingArgs dpArgs;
-	dpArgs.packetStats = packetStats;
-	pthread_create(&dpArgs.tid, &attr, dataProcessingThread, (void *) &dpArgs);
+	DataProcessingArgs data_processing_args;
+	data_processing_args.packetStats = packetStats;
+	pthread_create(&data_processing_args.tid, &attr, dataProcessingThread, (void *) &data_processing_args);
 	
 	// Create testing thread
-	TestingArgs teArgs;
-	pthread_create(&teArgs.tid, &attr, testingThread, (void *) &teArgs);
+	TestingArgs testing_args;
+	testing_args.hostname = sockData.cmdIP;
+	pthread_create(&testing_args.tid, &attr, testingThread, (void *) &testing_args);
 	
 	// Wait for network threads to terminate (only happens in case of error or overflow)
 	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
@@ -248,7 +249,7 @@ int main(int argc, char **argv)
 	// Free memory allocated to server address and thread argument structures
 	freeaddrinfo(sockData.serverAddr);
 	free(packetStats);
-	free(thArgs);
+	free(thread_args);
 	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
 		free(packets.sentPackets[i]);
 		free(packets.receivedPackets[i]);

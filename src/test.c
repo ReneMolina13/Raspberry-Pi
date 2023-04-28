@@ -123,6 +123,167 @@ void *testingThread(void *param)
 }
 
 
+bool runPing(char *hostname, int numPackets, int numBytes, double interval, bool flood)
+{	
+	char **args;
+	unsigned int numArgs
+	unsigned int buffSize = 20;
+	
+	if (flood == false) {
+		// Check for invalid arguments
+		if (numPackets < 0 || numBytes < 0) {
+			fputs("Invalid parameter value\n", stderr);
+			return false;
+		}
+		else if (interval < 0.2) {
+			fputs("Interval below 0.2 seconds detected... setting to 0.2\n", stderr);
+			interval = 0.2;
+		}
+		
+		// Initialize argument array
+		numArgs = 10;
+		args = (char **) (char **) malloc(numArgs * sizeof(char *));
+		for (int i = 0; i < numArgs-1; i++)
+			args[i] = (char *) malloc(buffSize * sizeof(char));
+	
+		// Run ping with quiet output
+		strncpy(args[0], "../data/Ping_Test", buffSize);
+		strncpy(args[1], "-q", buffSize);
+		// Number of ping requests
+		strncpy(args[2], "-c", buffSize);
+		snprintf(args[3], buffSize, "%i", numPackets);
+		// Size of ping packet (bytes)
+		strncpy(args[4], "-s", buffSize);
+		snprintf(args[5], buffSize, "%i", numBytes);
+		// Time interval between packets (seconds)
+		args[6] = "-i";
+		if (interval < 0.2)
+			interval = 0.2;
+		snprintf(args[7], buffSize, "%f", interval);
+		// Hostname / IP Address
+		strncpy(args[8], hostname, buffSize);
+		// Null-terminate argument array
+		args[9] = NULL;
+	}
+	
+	else {
+		// Flood testing only requires hostname
+		numArgs = 3;
+		args = (char **) malloc(numArgs * sizeof(char *));
+		for (int i = 0; i < numArgs-1; i++)
+			args[i] = (char *) malloc(buffSize * sizeof(char));
+		strncpy(args[0], "../data/Flood_Test", buffSize);
+		strncpy(args[1], hostname, buffSize);
+		args[2] = NULL;
+	}
+	
+	// Fork process
+	int childExitStatus;
+	int pid = fork();
+	// Indicates Fork error
+	if (pid < 0) {
+		fputs("Unable to fork process\n", stderr);
+		return false;
+	}
+	// Child process runs ping program
+	else if (pid == 0)
+		execvp(args[0], args);
+	// Parent process frees argument array & waits for program to finish
+	else {
+		for (int i = 0; i < numArgs-1; i++)
+			free(args[i]);
+		free(args);
+		wait(&childExitStatus);
+	}
+	
+	return true;
+}
+
+
+bool runTraceroute(char *hostname)
+{	
+	// Initialize argument array
+	char *args[3];
+	args[0] = "../data/Traceroute_Test";
+	args[1] = hostname;
+	args[2] = NULL;
+
+	// Fork process
+	int childExitStatus;
+	int pid = fork();
+	// Indicates fork error
+	if (pid < 0) {
+		fputs("Unable to fork process\n", stderr);
+		return false;
+	}
+	// Child process runs traceroute
+	else if (pid == 0)
+		execvp(args[0], args);
+	// Parent process waits for child to finish executing
+	else
+		wait(&childExitStatus);
+		
+	return true;
+}
+
+
+bool runIperf(char *hostname, int service, double bandwidth, int numBytes, int interval, int totalTime)
+{
+	if (service < 0 || bandwidth < 0 || buffLen < 0 || interval < 0 || totalTime < 0) {
+		fputs("Invalid parameter value\n", stderr);
+		return false;
+	}
+	
+	// Initialize arguments array
+	unsigned int numArgs = 18;
+	unsigned int buffSize = 20;
+	char args[numArgs][buffSize];
+	
+	// Run iPerf using UDP, verbose mode, and formatted in KBytes/sec
+	strncpy(args[0], "../data/Iperf_Test", buffSize);
+	strncpy(args[1], "-u", buffSize);
+	strncpy(args[2], "-V", buffSize);
+	strncpy(args[3], "-f", buffSize);
+	strncpy(args[4], "K", buffSize);
+	// Hostname / IP address
+	strncpy(args[5], "-c", buffSize);
+	strncpy(args[6], hostname, buffSize);
+	// Service / Port Number
+	strncpy(args[7], "-p", buffSize);
+	snprintf(args[8], buffSize, "%i", service);
+	// Target bandwidth (bits/sec)
+	strncpy(args[9], "-b", buffSize);
+	snprintf(args[10], buffSize, "%f", bandwidth);
+	// Buffer length (bytes)
+	strncpy(args[11], "-l", buffSize);
+	snprintf(args[12], buffSize, "%i", numBytes);
+	// Interval for bandwidth, jitter, & loss reports (seconds)
+	strncpy(args[13], "-i", buffSize);
+	snprintf(args[14], buffSize, "%i", interval);
+	// Total time alloted to iPerf test
+	strncpy(args[15], "-t", buffSize);
+	snprintf(args[16], buffSize, "%i", totalTime);
+	// Null-terminate argument array
+	args[17] = NULL;
+	
+	int childExitStatus;
+	int pid = fork();
+	// Fork error
+	if (pid < 0) {
+		fputs("Unable to fork process\n", stderr);
+		return false;
+	}
+	// Child process
+	else if (pid == 0)
+		execvp(args[0], args);
+	// Parent process
+	else {
+		wait(&childExitStatus);
+		return true;
+	}
+}
+
+
 void printSocketAddress(const struct sockaddr *addr)
 {
 	// Make sure address isn't null
@@ -151,90 +312,12 @@ void printSocketAddress(const struct sockaddr *addr)
 }
 
 
-bool runPing(char *ipAddr, unsigned int numPackets, unsigned int numBytes, double interval)
+unsigned int numDigits(int value)
 {
-	char **args;
-
-	args = (char **) malloc(5 * sizeof(char *));
-	args[0] = "../data/Ping_Test";
-	args[1] = "-c";
-	args[2] = "10";
-	args[3] = ipAddr;
-	args[4] = NULL;
+	unsigned int digits;
 	
-	int childExitStatus;
-	int pid = fork();
-	// Fork error
-	if (pid < 0) {
-		fputs("Unable to fork process\n", stderr);
-		return false;
-	}
-	// Child process
-	else if (pid == 0)
-		execvp(args[0], args);
-	// Parent process
-	else {
-		free(args);
-		wait(&childExitStatus);
-		return true;
-	}
-}
-
-
-bool runTraceroute(char *ipAddr)
-{
-	char **args;
+	for (digits = 0; value > 0; digits++)
+		value /= 10;
 	
-	args = (char **) malloc(3 * sizeof(char *));
-	args[0] = "../data/Traceroute_Test";
-	args[1] = ipAddr;
-	args[2] = NULL;
-
-	int childExitStatus;
-	int pid = fork();
-	// Fork error
-	if (pid < 0) {
-		fputs("Unable to fork process\n", stderr);
-		return false;
-	}
-	// Child process
-	else if (pid == 0)
-		execvp(args[0], args);
-	// Parent process
-	else {
-		free(args);
-		wait(&childExitStatus);
-		return true;
-	}	
-}
-
-
-bool runIperf(char *ipAddr)
-{
-	char **args;
-
-	args = (char **) malloc(6 * sizeof(char *));
-	args[0] = "../data/Iperf_Test";
-	args[1] = "-c";
-	args[2] = ipAddr;
-	args[3] = "-u";
-	args[4] = "100";
-	args[5] = NULL;
-	
-	int childExitStatus;
-	int pid = fork();
-	// Fork error
-	if (pid < 0) {
-		fputs("Unable to fork process\n", stderr);
-		return false;
-	}
-	// Child process
-	else if (pid == 0)
-		execvp(args[0], args);
-	// Parent process
-	else {
-		free(args);
-		wait(&childExitStatus);
-		return true;
-	}
+	return digits;
 }
