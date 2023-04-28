@@ -118,10 +118,10 @@ void *testingThread(void *param)
 	char *hostname = parameter->hostname;
 	char *service = parameter->service;
 	
-	// puts("Running Ping");
-	// runPing(hostname, 10, 1000, 0.5, false);
-	// puts("Running Traceroute");
-	// runTraceroute(hostname);
+	puts("Running Ping");
+	runPing(hostname, 10, 1000, 0.5, false);
+	puts("Running Traceroute");
+	runTraceroute(hostname);
 	puts("Running iPerf");
 	runIperf(hostname, 500, 1000, 1, false);
 	
@@ -294,14 +294,6 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int interval, bool se
 		strncpy(args[1], "-s", buffSize);
 		snprintf(args[2], buffSize, "%p", NULL);
 	}
-
-// TESTING
-//********************************************************************************************
-	for (int i = 0; i < numArgs-1; i++)
-		printf("%s ", args[i]);
-	fputs("\n", stdout);
-//********************************************************************************************
-
 	
 	int childExitStatus;
 	int pid = fork();
