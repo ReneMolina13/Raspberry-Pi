@@ -62,6 +62,7 @@ typedef struct
 {
 	pthread_t tid;
 	char *hostname;
+	char *service;
 } TestingArgs;
 
 
