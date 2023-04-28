@@ -136,7 +136,7 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval, bool
 {	
 	char **args;
 	unsigned int numArgs;
-	unsigned int buffSize = 20;	
+	unsigned int buffSize = 30;	
 	
 	// Check for invalid arguments
 	if (flood == false) {
@@ -246,7 +246,7 @@ bool runTraceroute(char *hostname)
 
 bool runIperf(char *hostname, double bandwidth, int numBytes, int interval, int totalTime, bool serverMode)
 {	
-	unsigned int buffSize = 20;
+	unsigned int buffSize = 30;
 	unsigned int numArgs;
 	char **args;
 	
