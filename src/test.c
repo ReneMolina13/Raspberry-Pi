@@ -287,14 +287,7 @@ bool runIperf(char *hostname, double bandwidth, int numBytes, int interval, int 
 		// Null-terminate argument array
 		snprintf(args[14], buffSize, "%p", NULL);
 	}
-	
-// TESTING
-//********************************************************************************************
-		fputs("iperf3 ", stdout);
-		for (int i = 0; i < numArgs-1; i++)
-			printf("%s ", args[i]);
-//********************************************************************************************
-	
+		
 	// Running iPerf in server mode
 	else {
 		numArgs = 3;
@@ -307,6 +300,14 @@ bool runIperf(char *hostname, double bandwidth, int numBytes, int interval, int 
 		snprintf(args[2], buffSize, "%p", NULL);
 	}
 
+// TESTING
+//********************************************************************************************
+	fputs("iperf3 ", stdout);
+	for (int i = 0; i < numArgs-1; i++)
+		printf("%s ", args[i]);
+//********************************************************************************************
+
+	
 	int childExitStatus;
 	int pid = fork();
 	// Fork error
