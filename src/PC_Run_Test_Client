@@ -1,3 +1,3 @@
 #! /bin/bash
 clear
-./testClient 172.19.29.228 26207
+./testClient EQCHK-F7ZQZZ2 26207
