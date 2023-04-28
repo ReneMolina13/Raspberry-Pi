@@ -125,6 +125,15 @@ bool createSocket(NetInfo *sockData)
 			puts("UDP socket successfully created:");
 			printSocketAddress(addr->ai_addr);
 			fputs("\n", stdout);
+			
+// TESTING
+//********************************************************************************************
+			char hostName[NI_MAXHOST];
+			// char service[NI_MAXSERV];
+			gethostname(hostName, NI_MAXHOST);
+			printf("Hostname: %s\n", hostName);
+//********************************************************************************************
+			
 			break;
 		}
 	}
