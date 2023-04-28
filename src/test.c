@@ -236,7 +236,7 @@ bool runTraceroute(char *hostname)
 }
 
 
-bool runIperf(char *hostname, int service, double bandwidth, int numBytes, int interval, int totalTime)
+bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int interval, int totalTime)
 {
 	if (service < 0 || bandwidth < 0 || numBytes < 0 || interval < 0 || totalTime < 0) {
 		fputs("Invalid parameter value\n", stderr);
@@ -261,7 +261,7 @@ bool runIperf(char *hostname, int service, double bandwidth, int numBytes, int i
 	strncpy(args[6], hostname, buffSize);
 	// Service / Port Number
 	strncpy(args[7], "-p", buffSize);
-	snprintf(args[8], buffSize, "%i", service);
+	strncpy(args[8], service, buffSize);
 	// Target bandwidth (bits/sec)
 	strncpy(args[9], "-b", buffSize);
 	snprintf(args[10], buffSize, "%f", bandwidth);
