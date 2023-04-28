@@ -233,6 +233,7 @@ int main(int argc, char **argv)
 	// Create testing thread
 	TestingArgs testing_args;
 	testing_args.hostname = sockData.cmdIP;
+	testing_args.service = sockData.cmdPort;
 	pthread_create(&testing_args.tid, &attr, testingThread, (void *) &testing_args);
 	
 	// Wait for network threads to terminate (only happens in case of error or overflow)

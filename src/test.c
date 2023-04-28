@@ -115,6 +115,15 @@ void *testingThread(void *param)
 	// Extract parameters from argument structure
 	TestingArgs *parameter = (TestingArgs *) param;
 	pthread_t tid = parameter->tid;
+	char *hostname = parameter->hostname;
+	char *service = parameter->service;
+	
+	puts("Running Ping");
+	runPing(hostname, 10, 1000, 0.5, false);
+	puts("Running Traceroute");
+	runTraceroute(hostname);
+	puts("Running iPerf");
+	runIperf(hostname, service, 500, 8000, 1, 10);
 	
 	// Detach thread (makes it not joinable)
 	pthread_detach(tid);
