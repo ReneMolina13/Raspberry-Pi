@@ -317,7 +317,8 @@ bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int
 		
 	}
 	
-	puts("Results have been saved to iperfData.txt - PID: %i\n", pid);
+	// puts("Results have been saved to iperfData.txt", pid);
+	printf("Results have been saved to iperfData.txt - PID: %i\n", pid);
 	
 	return true;
 }
