@@ -118,10 +118,10 @@ void *testingThread(void *param)
 	char *hostname = parameter->hostname;
 	char *service = parameter->service;
 	
-	// puts("Running Ping");
-	// runPing(hostname, 10, 1000, 0.5, false);
-	// puts("Running Traceroute");
-	// runTraceroute(hostname);
+	puts("Running Ping");
+	runPing(hostname, 10, 1000, 0.5, false);
+	puts("Running Traceroute");
+	runTraceroute(hostname);
 	puts("Running iPerf");
 	runIperf(hostname, service, 500, 8000, 1, 10);
 	
@@ -197,7 +197,7 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval, bool
 	// Child process runs ping program
 	else if (pid == 0)
 		 if (execv(args[0], args) < 0) {
-			fputs("Error calling Ping program\n", stderr);
+			fputs("Error calling ping\n", stderr);
 			return false;
 		 }
 
@@ -234,7 +234,7 @@ bool runTraceroute(char *hostname)
 	// Child process runs traceroute
 	else if (pid == 0)
 		if (execv(args[0], args) < 0) {
-			fputs("Error calling Ping program\n", stderr);
+			fputs("Error calling traceroute\n", stderr);
 			return false;
 		 }
 	// Parent process waits for child to finish executing
@@ -314,7 +314,7 @@ bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int
 	// Child process
 	else if (pid == 0) {
 		if (execv(args[0], args) < 0) {
-			fputs("Error calling Ping program\n", stderr);
+			fputs("Error calling iPerf\n", stderr);
 			return false;
 		 }
 	}
