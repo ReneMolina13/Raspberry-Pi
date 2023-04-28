@@ -135,14 +135,12 @@ bool createSocket(NetInfo *sockData)
 		return false;
 	}
 	
-// TESTING
-//********************************************************************************************
+	// Print out hostname and service name of server
 	char hostName[NI_MAXHOST];
 	char service[NI_MAXSERV];
 	getnameinfo(sockData->serverAddr->ai_addr, sockData->serverAddr->ai_addrlen, hostName, NI_MAXHOST, service, NI_MAXSERV, 0);
 	printf("Hostname: %s\n", hostName);
 	printf("Service: %s\n\n", service);
-//********************************************************************************************			
 
 	return true;
 }
