@@ -151,7 +151,7 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval, bool
 		
 		// Initialize argument array
 		numArgs = 10;
-		args = (char **) (char **) malloc(numArgs * sizeof(char *));
+		args = (char **) malloc(numArgs * sizeof(char *));
 		for (int i = 0; i < numArgs; i++)
 			args[i] = (char *) malloc(buffSize * sizeof(char));
 	
