@@ -264,9 +264,10 @@ bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int
 //TESTING
 //********************************************************************************************
 	strncpy(args[0], "../data/Iperf_Test", buffSize);
-	strncpy(args[1], "-c", buffSize);
-	strncpy(args[2], hostname, buffSize);
-	snprintf(args[3], buffSize, "%p", NULL);
+	strncpy(args[1], "-u", buffSize);
+	strncpy(args[2], "-c", buffSize);
+	strncpy(args[3], hostname, buffSize);
+	snprintf(args[4], buffSize, "%p", NULL);
 //********************************************************************************************
 	
 	/*
