@@ -1,0 +1,2 @@
+traceroute to raspberrypi (127.0.1.1), 30 hops max, 60 byte packets
+ 1  raspberrypi (127.0.1.1)  0.037 ms  0.018 ms  0.019 ms
