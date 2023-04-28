@@ -196,7 +196,10 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval, bool
 	}
 	// Child process runs ping program
 	else if (pid == 0)
-		execv(args[0], args);
+		 if (execv(args[0], args) < 0) {
+			fputs("Error calling Ping program\n", stderr);
+			return false;
+		 }
 
 	// Parent process frees argument array & waits for program to finish
 	else {
@@ -230,7 +233,10 @@ bool runTraceroute(char *hostname)
 	}
 	// Child process runs traceroute
 	else if (pid == 0)
-		execv(args[0], args);
+		if (execv(args[0], args) < 0) {
+			fputs("Error calling Ping program\n", stderr);
+			return false;
+		 }
 	// Parent process waits for child to finish executing
 	else
 		wait(&childExitStatus);
@@ -307,8 +313,10 @@ bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int
 	}
 	// Child process
 	else if (pid == 0) {
-		execv(args[0], args);
-		return true;
+		if (execv(args[0], args) < 0) {
+			fputs("Error calling Ping program\n", stderr);
+			return false;
+		 }
 	}
 	// Parent process
 	else {
