@@ -252,12 +252,7 @@ bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int
 	}
 	
 	// Initialize arguments array
-	// unsigned int numArgs = 18;
-
-//TESTING
-//********************************************************************************************
 	unsigned int numArgs = 17;
-//********************************************************************************************
 	unsigned int buffSize = 20;
 	char **args = (char **) malloc(numArgs * sizeof(char *));
 	for (int i = 0; i < numArgs; i++)
