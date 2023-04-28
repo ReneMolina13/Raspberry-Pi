@@ -68,10 +68,9 @@ typedef struct
 // Function prototypes
 void *dataProcessingThread(void *);
 void *testingThread(void *);
-bool runPing(char *, unsigned int, unsigned int, double, bool);
+bool runPing(char *, int, int, double, bool);
 bool runTraceroute(char *);
-bool runIperf(char *);
+bool runIperf(char *, int, double, int, int, int);
 void printSocketAddress(const struct sockaddr *);
-unsigned int numDigits(int);
 
 #endif

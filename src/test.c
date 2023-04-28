@@ -310,14 +310,3 @@ void printSocketAddress(const struct sockaddr *addr)
 		puts("Unknown address family");
 	}
 }
-
-
-unsigned int numDigits(int value)
-{
-	unsigned int digits;
-	
-	for (digits = 0; value > 0; digits++)
-		value /= 10;
-	
-	return digits;
-}
