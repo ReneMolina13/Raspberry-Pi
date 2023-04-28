@@ -84,10 +84,11 @@ void *dataProcessingThread(void *param)
 		// Find averages
 		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
 			totalAvgRTT += (avgRoundTripTime[i] * iteration[i]) / totalIterations;
-			avgKBpS += (kiloBytesPerSecond[i] * iteration[i]) / totalIterations;
+			avgKBpS += bytesPerPacket[i] * (iteration[i] / (1000 * NUM_PACKET_SIZES));
 			avgEpPk += (errorsPerPacket[i] * iteration[i]) / totalIterations;
 			avgEpKB += (errorsPerKB[i] * iteration[i]) / totalIterations;
 		}
+		avgKBpS /= totalAvgRTT;
 		avgIterations = ((double) totalIterations) / NUM_PACKET_SIZES;
 		
 		// Write averages to spreadsheet
@@ -96,6 +97,7 @@ void *dataProcessingThread(void *param)
 		// Reset averages to zero
 		totalIterations = 0;
 		totalAvgRTT = 0;
+		avgKBpS = 0;
 		avgEpPk = 0;
 		avgEpKB = 0;
 		

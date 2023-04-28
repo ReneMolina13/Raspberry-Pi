@@ -30,7 +30,7 @@ enum packetConstants
 	// Number of different packet sizes in packets array
 	NUM_PACKET_SIZES = 17,
 	// Max number of iterations before calculations begin to overflow
-	MAX_ITERATIONS = 250000000
+	MAX_ITERATIONS = 65000000
 };
 
 
