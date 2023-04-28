@@ -315,7 +315,7 @@ bool runIperf(char *hostname, char *service, double bandwidth, int numBytes, int
 		for (int i = 0; i < numArgs; i++)
 			free(args[i]);
 		free(args);
-		waitpid(&childExitStatus);
+		wait(&childExitStatus);
 		
 	}
 	
