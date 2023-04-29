@@ -117,13 +117,21 @@ void *testingThread(void *param)
 	pthread_t tid = parameter->tid;
 	char *hostname = parameter->hostname;
 	char *service = parameter->service;
+	// Ensures that each testing program runs successfully
+	bool retVal = true;
 	
 	puts("Running Ping");
-	runPing(hostname, 10, 1000, 0.5, false);
+	retVal *= runPing(hostname, 10, 1000, 0.5, false);
+	if (retVal == false)
+		fputs("Ping program unsuccessful");
 	puts("Running Traceroute");
-	runTraceroute(hostname);
+	retVal *= runTraceroute(hostname);
+	if (retVal == false)
+		fputs("Traceroute program unsuccessful");
 	puts("Running iPerf");
-	runIperf(hostname, 500, 1000, 1, false);
+	retVal *= runIperf(hostname, 500, 1000, 1, false);
+	if (retVal == false)
+		fputs("iPerf program unsuccessful");
 	
 	// Detach thread (makes it not joinable)
 	pthread_detach(tid);
