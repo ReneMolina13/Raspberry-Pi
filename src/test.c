@@ -183,7 +183,7 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval, bool
 			args[i] = (char *) malloc(buffSize * sizeof(char));
 		strncpy(args[0], "../data/Flood_Test", buffSize);
 		strncpy(args[1], hostname, buffSize);
-		args[2] = NULL;
+		snprintf(args[2], buffSize, "%p", NULL);
 	}
 
 	// Fork process
@@ -203,10 +203,10 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval, bool
 
 	// Parent process frees argument array & waits for program to finish
 	else {
+		wait(&childExitStatus);
 		for (int i = 0; i < numArgs; i++)
 			free(args[i]);
 		free(args);
-		wait(&childExitStatus);
 		puts("Results have been saved to pingData.txt / floodData.txt");
 		return true;
 	}
@@ -307,39 +307,8 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int interval, bool se
 	else if (pid == 0) {		
 		if (execv(args[0], args) < 0) {
 			fputs("Error calling iPerf\n", stderr);
-			switch (errno) {
-			case E2BIG:
-				puts("E2BIG");
-				break;
-			case EACCES:
-				puts("EACCES");
-				break;
-			case EFAULT:
-				puts("EFAULT");
-				break;
-			case EINVAL:
-				puts("EINVAL");
-				break;
-			case ELOOP:
-				puts("ELOOP");
-				break;
-			case ENAMETOOLONG:
-				puts("ENAMETOOLONG");
-				break;
-			case ENOENT:
-				puts("ENOENT");
-				break;
-			case ENOEXEC:
-				puts("ENOEXEC");
-				break;
-			case ENOMEM:
-				puts("ENOMEM");
-				break;
-			case ENOTDIR:
-				puts("ENOTDIR");
-			}
 			return false;
-		 }
+		}
 	}
 	// Parent process
 	else {
