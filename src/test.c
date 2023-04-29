@@ -344,6 +344,8 @@ void printSocketAddress(const struct sockaddr *addr)
 
 void testTest(char *hostname)
 {
+	bool retVal = true;
+	
 	puts("Running Ping");
 	retVal = runPing(hostname, 10, 1000, 0.5, false);
 	if (retVal == false)
