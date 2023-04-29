@@ -259,11 +259,13 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int interval, bool se
 		}
 		
 		// Initialize arguments array
-		numArgs = 11;
+		numArgs = 12;
 		args = (char **) malloc(numArgs * sizeof(char *));
 		for (int i = 0; i < numArgs; i++)
 			args[i] = (char *) malloc(buffSize * sizeof(char));
 		
+		// strncpy(args[0], "../data/Traceroute_Test", buffSize);
+		// strncpy(args[0], "../data/Ping_Test", buffSize);
 		strncpy(args[0], "../data/Iperf_Test_Client", buffSize);
 		// Client mode at specified IP address
 		strncpy(args[1], "-c", buffSize);
@@ -281,6 +283,7 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int interval, bool se
 		snprintf(args[9], buffSize, "%i", interval);
 		// Null-terminate argument array
 		snprintf(args[10], buffSize, "%p", NULL);
+		snprintf(args[11], buffSize, "%p", NULL);
 	}
 		
 	// Running iPerf in server mode
@@ -303,51 +306,57 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int interval, bool se
 		return false;
 	}
 	// Child process
-	else if (pid == 0) {
+	else if (pid == 0) {		
 		if (execv(args[0], args) < 0) {
 			fputs("Error calling iPerf\n", stderr);
 			switch (errno) {
 			case E2BIG:
-				puts("0");
+				puts("E2BIG");
 				break;
 			case EACCES:
-				puts("1");
+				puts("EACCES");
+				break;
+			case EFAULT:
+				puts("EFAULT");
 				break;
 			case EINVAL:
-				puts("2");
+				puts("EINVAL");
 				break;
 			case ELOOP:
-				puts("3");
+				puts("ELOOP");
 				break;
+			/*
+			case ELEMULTITHREAD:
+				puts("ELEMULTITHREAD");
+				break;
+			case EMVSSAF2ERR:
+				puts("EMVSSAF2ERR");
+				break;
+			*/
 			case ENAMETOOLONG:
-				puts("4");
+				puts("ENAMETOOLONG");
 				break;
 			case ENOENT:
-				puts("5");
+				puts("ENOENT");
 				break;
 			case ENOEXEC:
-				puts("6");
+				puts("ENOEXEC");
+				break;
+			case ENOMEM:
+				puts("ENOMEM");
 				break;
 			case ENOTDIR:
-				puts("7");
-			default:
-				printf("Error number: %i\n", errno);
-				char error[100];
-				perror(error);
-				printf("%s\n", perror);
-				for (int i = 0; i < numArgs-1; i++)
-					printf("%s ", args[i]);
-				fputs("\n", stdout);
+				puts("ENOTDIR");
 			}
 			return false;
 		 }
 	}
 	// Parent process
 	else {
+		wait(&childExitStatus);
 		for (int i = 0; i < numArgs; i++)
 			free(args[i]);
 		free(args);
-		wait(&childExitStatus);
 		puts("Results have been saved to iperfDataClient.txt / iperfDataServer.txt");
 		return true;
 	}

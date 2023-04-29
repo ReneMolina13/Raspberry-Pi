@@ -1,5 +1,0 @@
-PING raspberrypi (127.0.1.1) 1000(1028) bytes of data.
-
---- raspberrypi ping statistics ---
-10 packets transmitted, 10 received, 0% packet loss, time 4594ms
-rtt min/avg/max/mdev = 0.032/0.042/0.065/0.010 ms
