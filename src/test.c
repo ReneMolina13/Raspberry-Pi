@@ -195,8 +195,7 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval, bool
 	}
 
 	// Fork process
-	int childExitStatus;
-	int pid = fork();
+	pid_t pid = fork();
 	// Indicates Fork error
 	if (pid < 0) {
 		fputs("Unable to fork process\n", stderr);
@@ -211,7 +210,7 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval, bool
 
 	// Parent process frees argument array & waits for program to finish
 	else {
-		wait(&childExitStatus);
+		waitpid(pid, NULL, 0);
 		for (int i = 0; i < numArgs; i++)
 			free(args[i]);
 		free(args);
@@ -230,8 +229,7 @@ bool runTraceroute(char *hostname)
 	args[2] = NULL;
 
 	// Fork process
-	int childExitStatus;
-	int pid = fork();
+	pid_t pid = fork();
 	// Indicates fork error
 	if (pid < 0) {
 		fputs("Unable to fork process\n", stderr);
@@ -245,7 +243,7 @@ bool runTraceroute(char *hostname)
 		 }
 	// Parent process waits for child to finish executing
 	else {
-		wait(&childExitStatus);
+		waitpid(pid, NULL, 0);
 		puts("Results have been saved to tracerouteData.txt");
 		return true;
 	}
@@ -304,8 +302,7 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int interval, bool se
 		snprintf(args[2], buffSize, "%p", NULL);
 	}
 	
-	int childExitStatus;
-	int pid = fork();
+	pid_t pid = fork();
 	// Fork error
 	if (pid < 0) {
 		fputs("Unable to fork process\n", stderr);
@@ -320,7 +317,7 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int interval, bool se
 	}
 	// Parent process
 	else {
-		wait(&childExitStatus);
+		waitpid(pid, NULL, 0);
 		for (int i = 0; i < numArgs; i++)
 			free(args[i]);
 		free(args);
