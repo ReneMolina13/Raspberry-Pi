@@ -264,8 +264,6 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int interval, bool se
 		for (int i = 0; i < numArgs; i++)
 			args[i] = (char *) malloc(buffSize * sizeof(char));
 		
-		// strncpy(args[0], "../data/Traceroute_Test", buffSize);
-		// strncpy(args[0], "../data/Ping_Test", buffSize);
 		strncpy(args[0], "../data/Iperf_Test_Client", buffSize);
 		// Client mode at specified IP address
 		strncpy(args[1], "-c", buffSize);
@@ -325,14 +323,6 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int interval, bool se
 			case ELOOP:
 				puts("ELOOP");
 				break;
-			/*
-			case ELEMULTITHREAD:
-				puts("ELEMULTITHREAD");
-				break;
-			case EMVSSAF2ERR:
-				puts("EMVSSAF2ERR");
-				break;
-			*/
 			case ENAMETOOLONG:
 				puts("ENAMETOOLONG");
 				break;
