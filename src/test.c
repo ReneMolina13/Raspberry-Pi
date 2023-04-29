@@ -121,15 +121,15 @@ void *testingThread(void *param)
 	bool retVal = true;
 	
 	puts("Running Ping");
-	retVal *= runPing(hostname, 10, 1000, 0.5, false);
+	retVal = runPing(hostname, 10, 1000, 0.5, false);
 	if (retVal == false)
 		fputs("Ping program unsuccessful", stderr);
 	puts("Running Traceroute");
-	retVal *= runTraceroute(hostname);
+	retVal = runTraceroute(hostname);
 	if (retVal == false)
 		fputs("Traceroute program unsuccessful", stderr);
 	puts("Running iPerf");
-	retVal *= runIperf(hostname, 500, 1000, 1, false);
+	retVal = runIperf(hostname, 500, 1000, 1, false);
 	if (retVal == false)
 		fputs("iPerf program unsuccessful", stderr);
 	
