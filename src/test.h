@@ -74,6 +74,6 @@ bool runPing(char *, int, int, double, bool);
 bool runTraceroute(char *);
 bool runIperf(char *, int, int, int, bool);
 void printSocketAddress(const struct sockaddr *);
-void testTest(char *)
+void testTest(char *);
 
 #endif
