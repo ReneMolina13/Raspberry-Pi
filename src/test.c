@@ -43,7 +43,7 @@ void *dataProcessingThread(void *param)
 		sleep(sleepSeconds);
 		
 		// Open file to store data produced by network threads
-		FILE *outFile = fopen("../data/testingData.csv", "w");
+		FILE *outFile = fopen("../data/customTestData.csv", "w");
 		
 		if (outFile == NULL) {
 			fputs("Could not open testing file\n", stderr);
@@ -51,7 +51,7 @@ void *dataProcessingThread(void *param)
 		}
 		
 		// Write 1st line of file (contains labels for spreadsheet)
-		fprintf(outFile, "Packet Size,Packets Sent,Average Round-Trip Time (ms) Average Latency (KB/s),Errors/Packet,Errors/KB,\n");
+		fprintf(outFile, "Packet Size,Packets Sent,Average Round-Trip Time (ms),Average Latency (KB/s),Errors/Packet,Errors/KB,\n");
 		
 		// Iterate through one packet size at a time
 		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
@@ -122,6 +122,13 @@ void *testingThread(void *param)
 	
 	// Detach thread (makes it not joinable)
 	pthread_detach(tid);
+	
+	// Perform ping tests
+	
+	// Perform traceroute tests
+	
+	// Perform iPerf tests
+	
 	
 	return 0;
 }

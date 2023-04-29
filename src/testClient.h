@@ -37,6 +37,7 @@ bool clientSetup(int, char **, NetInfo *, Packets *);
 bool createSocket(NetInfo *);
 bool sendPacket(const NetInfo *, const char *, unsigned int);
 bool receivePacket(const NetInfo *, char *, unsigned int);
+bool formatOutput();
 
 
 // Global Variables

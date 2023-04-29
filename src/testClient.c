@@ -189,6 +189,29 @@ bool receivePacket(const NetInfo *sockData, char *packet, unsigned int packetSiz
 }
 
 
+bool formatOutput()
+{
+	// Open all six data files for reading
+	FILE *customFile = fopen("../data/customTestData.csv", "r");
+	FILE *pingFile = fopen("../data/pingData.txt", "r");
+	FILE *floodFile = fopen("../data/floodData.txt", "r");
+	FILE *tracerouteFile = fopen("../data/tracerouteData.txt", "r");
+	FILE *iperfClientFile = fopen("../data/iperfDataClient.txt", "r");
+	FILE *iperfServerFile = fopen("../data/iperfDataServer.txt", "r");
+	// Open output file where final network test results will be written to
+	FILE *outFile = fopen("../networkTestResults.csv", "w");
+	// Check to see if there was an error opening any of the files
+	if (customFile == NULL || pingFile == NULL || floodFile == NULL || tracerouteFile == NULL || iperfClientFile == NULL || iperfServerFile == NULL || outFile == NULL) {
+		fputs("Could not open one of the files\n", stderr);
+		return false;
+	}
+	
+	// Extract data from each file into a structure
+	
+	// Put data from structure into output file
+}
+
+
 int main(int argc, char **argv)
 {	
 	puts("\n************************************************\n");
