@@ -120,18 +120,22 @@ void *testingThread(void *param)
 	// Ensures that each testing program runs successfully
 	bool retVal = true;
 	
+	/*
 	puts("Running Ping");
 	retVal = runPing(hostname, 10, 1000, 0.5, false);
 	if (retVal == false)
 		fputs("Ping program unsuccessful\n", stderr);
+	*/
 	puts("Running Traceroute");
 	retVal = runTraceroute(hostname);
 	if (retVal == false)
 		fputs("Traceroute program unsuccessful\n", stderr);
+	/*
 	puts("Running iPerf");
 	retVal = runIperf(hostname, 500, 1000, 1, false);
 	if (retVal == false)
 		fputs("iPerf program unsuccessful\n", stderr);
+	*/
 	
 	// Detach thread (makes it not joinable)
 	pthread_detach(tid);
