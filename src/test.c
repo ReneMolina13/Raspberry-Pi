@@ -122,13 +122,8 @@ void *testingThread(void *param)
 	
 	// Detach thread (makes it not joinable)
 	pthread_detach(tid);
-	
-	// Perform ping tests
-	
-	// Perform traceroute tests
-	
-	// Perform iPerf tests
-	
+
+	retVal = testTest(hostname);
 	
 	return 0;
 }
