@@ -123,7 +123,7 @@ void *testingThread(void *param)
 	// Detach thread (makes it not joinable)
 	pthread_detach(tid);
 
-	retVal = testTest(hostname);
+	testTest(hostname);
 	
 	return 0;
 }
