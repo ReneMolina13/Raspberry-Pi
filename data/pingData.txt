@@ -1,5 +1,5 @@
 PING 192.168.1.103 (192.168.1.103) 1000(1028) bytes of data.
 
 --- 192.168.1.103 ping statistics ---
-10 packets transmitted, 10 received, 0% packet loss, time 4634ms
-rtt min/avg/max/mdev = 0.035/0.058/0.141/0.029 ms
+10 packets transmitted, 10 received, 0% packet loss, time 4598ms
+rtt min/avg/max/mdev = 0.033/0.058/0.166/0.036 ms

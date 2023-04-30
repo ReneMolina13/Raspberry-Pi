@@ -1,2 +1,3 @@
 #! /bin/bash
+rm ../data/iperfDataServer.txt
 iperf3 $1 > ../data/iperfDataServer.txt

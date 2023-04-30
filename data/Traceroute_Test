@@ -1,2 +1,3 @@
 #! /bin/bash
+rm ../data/tracerouteData.txt
 traceroute $1 > ../data/tracerouteData.txt

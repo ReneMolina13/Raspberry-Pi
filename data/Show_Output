@@ -1,0 +1,7 @@
+#! /bin/bash
+clear
+cat pingData.txt
+cat floodData.txt
+cat tracerouteData.txt
+cat iperfDataClient.txt
+cat iperfDataServer.txt

@@ -1,2 +1,3 @@
 #! /bin/bash
+rm ../data/floodData.txt
 sudo ping -f $1 > ../data/floodData.txt
