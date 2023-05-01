@@ -58,59 +58,13 @@ typedef struct
 {
 	pthread_t tid;
 	NetStats *packetStats;
+	bool status;
 } DataProcessingArgs;
-
-
-typedef struct
-{
-	pthread_t tid;
-	char *hostname;
-	char *service;
-} TestingArgs;
-
-
-typedef struct
-{
-	unsigned int avgIterations;
-	double avgRTT;
-	double avgThroughput;
-	double avgErrorsPerPacket;
-	double avgErrorsPerKB;
-} CustomResults;
-
-
-typedef struct
-{
-	unsigned int packetSize;
-	unsigned int packetsTransmitted;
-	double packetLoss;
-	double minRTT;
-	double avgRTT;
-	double maxRTT;
-	double stdDevRTT;
-} PingResults;
-
-
-typedef struct
-{
-	int numHops;
-	int bytesPerPacket;
-	double **hopLatency;
-} TracerouteResults;
-
-
-typedef struct
-{
-	int numBursts;
-	double interval;
-	double *totalBytesSent;
-	double *avgThroughput;
-} IperfResults;
 
 
 // Function prototypes
 void *dataProcessingThread(void *);
-void *testingThread(void *);
+bool runTests(char *hostname);
 bool runPing(char *, int, int, double);
 bool runFlood(char *hostname);
 bool runTraceroute(char *);

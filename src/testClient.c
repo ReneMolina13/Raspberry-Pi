@@ -197,28 +197,213 @@ bool formatOutput()
 	FILE *floodFile = fopen("../data/floodData.txt", "r");
 	FILE *tracerouteFile = fopen("../data/tracerouteData.txt", "r");
 	FILE *iperfClientFile = fopen("../data/iperfDataClient.txt", "r");
-	// Open output file where final network test results will be written to
-	FILE *outFile = fopen("../networkTestResults.csv", "w");
-	// Check to see if there was an error opening any of the files
-	if (customFile == NULL || pingFile == NULL || floodFile == NULL || tracerouteFile == NULL || iperfClientFile == NULL || outFile == NULL) {
+	// Check to see if there was an error opening any of the input files
+	if (customFile == NULL || pingFile == NULL || floodFile == NULL || tracerouteFile == NULL || iperfClientFile == NULL) {
 		fputs("Could not open one of the files\n", stderr);
 		return false;
 	}
 	
+	
 	// Extract data from custom test restults file into CustomResults structure
 	CustomResults customResults;
+	unsigned int customTemp;
+	// Extract total packets sent over the course of the network test
+	for (int i = 0; i <= NUM_PACKET_SIZES; i++) {
+		while (fgetc(customFile) != ',');	// Skip past packet size column
+		fscanf(customFile, "%u", customTemp);
+		customResults.totalIterations += customTemp;
+		while (fgetc(customFile) != '\n');	// Skip to next row
+	}
+	// Extract averages from final row of customFile
+	while (fgetc(customFile) != ',');		// Skip past packet size column
+	while (fgetc(customFile) != ',');		// Skip past packets sent column
+	fscanf(customFile, ".3f", customResults.avgRTT);
+	fscanf(customFile, ".3f", customResults.avgThroughput);	
+	fscanf(customFile, ".3f", customResults.avgErrorsPerPacket);	
+	fscanf(customFile, ".3f", customResults.avgErrorsPerKB);	
+	
 	
 	// Extract data from ping and flood files into the PingResults structure
 	PingResults pingResults;
+	// Determine how many ping tests were executed (5 rows each)
+	while (fgetc(pingFile) != EOF)
+		for (pingResults.numTests = 0; fgetc(pingFile) != '\n'; pingResults.numTests++);
+	pingResults.numTests /= 5;
+	rewind(pingFile);
+	// Allocate memory for each pingResults member
+	pingResults.packetSize = (unsigned int *) malloc(pingResults.numTests * sizeof(unsigned int));
+	pingResults.packetsTransmitted = (unsigned int *) malloc(pingResults.numTests * sizeof(unsigned int));
+	pingResults.packetLoss = (double *) malloc(pingResults.numTests * sizeof(double);
+	pingResults.minRTT = (double *) malloc(pingResults.numTests * sizeof(double);
+	pingResults.avgRTT = (double *) malloc(pingResults.numTests * sizeof(double);
+	pingResults.maxRTT = (double *) malloc(pingResults.numTests * sizeof(double);
+	pingResults.stdDevRTT = (double *) malloc(pingResults.numTests * sizeof(double);
+	// Extract data from ping test outputs
+	for (int i = 0; i < pingResults.numTests; i++) {
+		// Extract packet size for this iteration
+		while (fgetc(pingFile) != '(');
+		while (fgetc(pingFile) != '(');
+		fscanf(pingFile, "%u", pingResults.packetSize[i]);
+		// Extract packets transmitted
+		for (int i = 0; i < 3; i++)
+			while (fgetc(pingFile) != '\n');
+		fscanf(pingFile, "%u", pingResults.packetsTransmitted[i]);
+		// Extract packet loss percentage
+		for (int i = 0; i < 4; i++)
+			while (fgetc(pingFile) != ' ');
+		fscanf(pingFile, "%.3f", pingResults.packetLoss[i]);
+		// Extract min, max, avg, and std deviation for round-trip-times
+		for (i = 0; i < 7; i++)
+			while (fgetc(pingFile) != ' ');
+		fscanf(pingFile, "%.3f", pingResults.minRTT[i]);
+		fgetc(pingFile);
+		fscanf(pingFile, "%.3f", pingResults.avgRTT[i]);
+		fgetc(pingFile);
+		fscanf(pingFile, "%.3f", pingResults.maxRTT[i]);
+		fgetc(pingFile);
+		fscanf(pingFile, "%.3f", pingResults.stdDevRTT[i]);
+		while (fgetc(pingFile) != '\n');
+	}
+	
 	
 	// Extract data from traceroute file into TracerouteResults structure
 	TracerouteResults tracerouteResults;
+	// Determine number of rows and number of hops
+	while (fgetc(tracerouteFile) != EOF) {
+		for (int i = 0; i < 3; i++)
+			fgetc(tracerouteFile);
+		if (fgetc(tracerouteFile) != '*')
+			tracerouteResults.numHops++;
+		while (fgetc(tracerouteFile) != '\n');
+	}
+	rewind(tracerouteFile);
+	// Allocate memory for hop latency member variable
+	tracerouteResults.hopLatency = (double **) malloc(tracerouteResults.numHops * sizeof(double *));
+	for (int i = 0; i < numHops; i++)
+		tracerouteResults.hopLatency[i] = (double *) malloc(3 * sizeof(double));
+	// Extract bytes per packet
+	for (int i = 0; i < 7; i++)
+		while (fgetc(tracerouteFile) != ' ');
+	fscanf(tracerouteFile, "%u", tracerouteResults.bytesPerPacket);
+	while (fgetc(tracerouteFile) != '\n');
+	// Extract hop latencies
+	bool hopLine = false;
+	for (int i = 0; i < tracerouteResults.numHops; i++) {
+		// While '*' is present in this line, skip to next line
+		while (hopLine == false) {
+			for (int j = 0; i < 4; i++)
+				fgetc(tracerouteFile);
+			if (fgetc(tracerouteFile) == '*')
+				while (fgetc(tracerouteFile) != '\n');
+			else
+				hopLine = true;
+		}
+		// Extract latencies for this hop
+		for (int j = 0; j < 3; j++) {
+			for (int k = 0; k < 3; k++)
+				while (fgetc(tracerouteFile) != ' ');
+			fscanf(tracerotueFile, ".3f", tracerouteResults.hopLatency[i][j]);
+		}
+		while (fgetc(tracerouteFile) != '\n');
+	}
+	
 	
 	// Extract data from iperf client file into IperfResults structure
 	IperfResults iperfResults;
+	// Determine how many seconds each test is
+	while (fgetc(iperfClientFile) != '-');
+	fscanf(iperfClientFile, "%.3f", iperfResults.secondsPerTest);
+	rewind(iperfClientFile);
+	// Determine how many tests there are (10 rows per test)
+	while (fgetc(iperfClientFile) != EOF)
+		for (iperfResults.numTests = 0; fgetc(iperfClientFile) != '\n'; iperfResults.numTests++);
+	iperfResults.numTests /= 10;
+	rewind(iperfClientFile);
+	// Allocate memory for each iperfResults member
+	iperfResults.packetsSent = (unsigned int *) malloc(iperfResults.numTests * sizeof(unsigned int));
+	iperfResults.megaBytesSent = (double *) malloc(iperfResults.numTests * sizeof(double));
+	iperfResults.megaBytesReceived = (double *) malloc(iperfResults.numTests * sizeof(double));
+	iperfResults.avgThroughputSent = (double *) malloc(iperfResults.numTests * sizeof(double));
+	iperfResults.avgThroughputReceived = (double *) malloc(iperfResults.numTests * sizeof(double));
+	iperfResults.jitterSent = (double *) malloc(iperfResults.numTests * sizeof(double));
+	iperfResults.jitterReceived = (double *) malloc(iperfResults.numTests * sizeof(double));
+	iperfResults.packetLossSent = (double *) malloc(iperfResults.numTests * sizeof(double));
+	iperfResults.packetLossReceived = (double *) malloc(iperfResults.numTests * sizeof(double));
+	// Extract results from each test
+	for (int i = 0; i < iperfResults.numTests; i++) {
+		// Extract packets sent
+		for (int j = 0; j < 3; j++)
+			while (fgetc(iperfClientFile) != '\n');
+		for (int j = 0; j < 16; j++)
+			while (fgetc(iperfClientFile) != ' ');
+		fscanf(iperfClientFile, '%u', iperfResults.packetsSent[i]);
+		// Extract MBytes sent
+		for (int j = 0; j < 3; j++)
+			while (fgetc(iperfClientFile) != '\n');
+		for (int j = 0; j < 9; j++)
+			while (fgetc(iperfClientFile) != ' ');
+		fscanf(iperfClientFile, "%.3f", iperfResults.megaBytesSent[i]);
+		// Extract average throughput of packets sent
+		for (int j = 0; j < 4; j++)
+			while (fgetc(iperfClientFile) != ' ');
+		fscanf(iperfClientFile, "%.3f", iperfResults.avgThroughputSent[i]);
+		// Extract jitter of packets sent
+		for (int j = 0; j < 3; j++)
+			while (fgetc(iperfClientFile) != ' ');
+		fscanf(iperfClientFile, "%.3f", iperfResults.jitterSent[i]);
+		// Extract packet loss percent of sent packets
+		while (fgetc(iperfClientFile) != '(');
+		fscanf(iperfClientFile, "%.3f", iperfResults.packetLossSent[i]);
+		// Extract MBytes received
+		while (fgetc(iperfClientFile) != '\n');
+		for (int j = 0; j < 9; j++)
+			while (fgetc(iperfClientFile) != ' ');
+		fscanf(iperfClientFile, "%.3f", iperfResults.megaBytesReceived[i]);
+		// Extract average throughput of packets received
+		for (int j = 0; j < 4; j++)
+			while (fgetc(iperfClientFile) != ' ');
+		fscanf(iperfClientFile, "%.3f", iperfResults.avgThroughputReceived[i]);
+		// Extract jitter of packets received
+		for (int j = 0; j < 3; j++)
+			while (fgetc(iperfClientFile) != ' ');
+		fscanf(iperfClientFile, "%.3f", iperfResults.jitterReceived[i]);
+		// Extract packet loss percent of received packets
+		while (fgetc(iperfClientFile) != '(');
+		fscanf(iperfClientFile, "%.3f", iperfResults.packetLossSent[i]);
+	}
+	
+	
+	// Close all input files
+	fclose(customFile);
+	fclose(pingFile);
+	fclose(floodFile);
+	fclose(tracerouteFile);
+	fclose(iperfClientFile);
 	
 	// Write data from structures holding test results to networkTestResults.csv
-
+	FILE *outFile = fopen("../networkTestResults.csv", "w");
+	
+	
+	// Free dynamic memory
+	free(pingResults.packetSize);
+	free(pingResults.packetsTransmitted);
+	free(pingResults.packetLoss);
+	free(pingResults.minRTT);
+	free(pingResults.avgRTT);
+	free(pingResults.maxRTT);
+	free(pingResults.stdDevRTT);
+	for (int i = 0; i < tracerouteResults.numHops; i++)
+		free(tracerouteResults.hopLatency[i]);
+	free(tracerouteResults.hopLatency);
+	free(iperfResults.packetsSent);
+	free(iperfResults.megaBytesSent);
+	free(iperfResults.megaBytesReceived);
+	free(iperfResults.avgThroughputSent);
+	free(iperfResults.avgThroughputReceived);
+	free(iperfResults.jitterSent);
+	free(iperfResults.jitterReceived);
+	free(iperfResults.packetLossSent);
+	free(iperfResults.packetLossReceived);
 }
 
 
@@ -228,7 +413,7 @@ int main(int argc, char **argv)
 
 	// Input structures
 	NetInfo sockData;	// Holds TCP Connection information
-	Packets packets;	// Holds different size data packets (1KB - 1MB)
+	Packets packets;	// Holds different size data packets (1B - Max size for UDP packets)
 	
 	// Parse command line arguments
 	if (clientSetup(argc, argv, &sockData, &packets) == false) {
@@ -263,22 +448,51 @@ int main(int argc, char **argv)
 	data_processing_args.packetStats = packetStats;
 	pthread_create(&data_processing_args.tid, &attr, dataProcessingThread, (void *) &data_processing_args);
 	
-	// Create testing thread
-	TestingArgs testing_args;
-	testing_args.hostname = sockData.cmdIP;
-	testing_args.service = sockData.cmdPort;
-	pthread_create(&testing_args.tid, &attr, testingThread, (void *) &testing_args);
+	// Wait for data processing thread to complete (~60 seconds)
+	pthread_join(data_processing_args.tid, NULL);
+	if (data_processing_args.status == false) {
+		fputs("Error processing network data - ", stderr);
+		return -1;
+	}
 	
-	// Wait for network threads to terminate (only happens in case of error or overflow)
+	// Custom network test complete, kill all network threads
 	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
-		pthread_join(thread_args[i].tid, NULL);
+		pthread_kill(thread_args[i].tid, SIGKILL);
 		if (thread_args[i].status == false) {
 			fputs("Error creating network traffic - ", stderr);
 			return -1;
 		}
 	}
 	
+	puts("Custom network test completed");
 	puts("************************************************\n");
+	
+	// Run ping, traceroute, and iPerf tests on the network
+	if (runTests(sockData.cmdIP) == false) {
+		fputs("Error running extra network tests - ", stderr);
+		return -1;
+	}
+	
+	puts("ping, traceroute, and iPerf tests completed");
+	puts("\n************************************************\n");
+	
+	// Close client socket
+	if (close(sockData.clientSocket) < 0) {
+		fputs("Failed to properly close socket - ", stderr);
+		return -1;
+	}
+	
+	puts("Successfully closed socket");
+	puts("\n************************************************\n");
+	
+	// Output all test results into a single file
+	if (formatOutput() == false) {
+		fputs("Error outputting test results - ", stderr);
+		return -1;
+	}
+	
+	puts("Network test results successfully outputted");
+	puts("\n************************************************\n");
 	
 	// Free memory allocated to server address and thread argument structures
 	freeaddrinfo(sockData.serverAddr);
@@ -288,15 +502,6 @@ int main(int argc, char **argv)
 		free(packets.sentPackets[i]);
 		free(packets.receivedPackets[i]);
 	}
-
-	// Close client socket
-	if (close(sockData.clientSocket) < 0) {
-		fputs("Failed to properly close socket - ", stderr);
-		return -1;
-	}
-	
-	puts("Successfully closed socket");
-	puts("\n************************************************\n");
 
 	return 0;
 }

@@ -27,18 +27,17 @@ void *dataProcessingThread(void *param)
 	double avgKBpS = 0;
 	double avgEpPk = 0;
 	double avgEpKB = 0;
+	// True if no transmission errors have occured
+	bool retVal = true;
 	// Amount of time for thread to sleep before writing to spreadsheet each time
 	unsigned int sleepSeconds = 15;
-	
-	// Detach thread (makes it not joinable)
-	pthread_detach(tid);
 	
 	// Obtain all packet sizes
 	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
 		bytesPerPacket[i] = packetStats[i].bytesPerPacket;
 	}
 	
-	while (1) {
+	for (int i = 0; i < 60; i+= sleepSeconds) {
 		// Sleep for an arbitrary amount of time (to let statistics get updated)
 		sleep(sleepSeconds);
 		
@@ -47,7 +46,7 @@ void *dataProcessingThread(void *param)
 		
 		if (outFile == NULL) {
 			fputs("Could not open testing file\n", stderr);
-			break;
+			retVal = false;
 		}
 		
 		// Write 1st line of file (contains labels for spreadsheet)
@@ -106,22 +105,15 @@ void *dataProcessingThread(void *param)
 		printf("File is written, will be updated in %i seconds\n\n", sleepSeconds);
 	}
 	
-	return 0;
+	parameter->status = retVal;
+	pthread_exit(0);
 }
 
 
-void *testingThread(void *param)
+bool runTests(char *hostname)
 {
-	// Extract parameters from argument structure
-	TestingArgs *parameter = (TestingArgs *) param;
-	pthread_t tid = parameter->tid;
-	char *hostname = parameter->hostname;
-	char *service = parameter->service;
 	// Ensures that each testing program runs successfully
 	bool retVal = true;
-	
-	// Detach thread (makes it not joinable)
-	pthread_detach(tid);
 	
 // TESTING
 //********************************************************************************************
@@ -161,7 +153,7 @@ void *testingThread(void *param)
 	}
 	*/
 	
-	return 0;
+	return true;
 }
 
 
@@ -287,7 +279,7 @@ bool runTraceroute(char *hostname)
 }
 
 
-bool runIperf(char *hostname, int bandwidth, int numBytes, int interval)
+bool runIperf(char *hostname, int bandwidth, int numBytes, int testTime)
 {	
 	// Check for valid arguments
 	if (bandwidth < 0 || numBytes < 0 || interval < 0) {
@@ -310,13 +302,13 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int interval)
 	strncpy(args[3], "-u", buffSize);
 	// Target bandwidth (bits/sec)
 	strncpy(args[4], "-b", buffSize);
-	snprintf(args[5], buffSize, "%i", bandwidth);
+	snprintf(args[5], buffSize, "%im", bandwidth);
 	// Buffer length (bytes)
 	strncpy(args[6], "-l", buffSize);
 	snprintf(args[7], buffSize, "%i", numBytes);
 	// Interval for bandwidth, jitter, & loss reports (seconds)
-	strncpy(args[8], "-i", buffSize);
-	snprintf(args[9], buffSize, "%i", interval);
+	strncpy(args[8], "-t", buffSize);
+	snprintf(args[9], buffSize, "%i", testTime);
 	// Null-terminate argument array
 	snprintf(args[10], buffSize, "%p", NULL);
 	snprintf(args[11], buffSize, "%p", NULL);

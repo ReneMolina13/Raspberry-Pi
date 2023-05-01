@@ -31,6 +31,53 @@ typedef struct
 } ThreadArgs;
 
 
+typedef struct
+{
+	unsigned int totalIterations;
+	double avgRTT;
+	double avgThroughput;
+	double avgErrorsPerPacket;
+	double avgErrorsPerKB;
+} CustomResults;
+
+
+typedef struct
+{
+	unsigned int numTests
+	unsigned int *packetSize;
+	unsigned int *packetsTransmitted;
+	double *packetLoss;
+	double *minRTT;
+	double *avgRTT;
+	double *maxRTT;
+	double *stdDevRTT;
+} PingResults;
+
+
+typedef struct
+{
+	unsigned int numHops;
+	unsigned int bytesPerPacket;
+	double **hopLatency;
+} TracerouteResults;
+
+
+typedef struct
+{
+	unsigned int numTests;
+	double secondsPerTest;
+	unsigned int *packetsSent;
+	double *megaBytesSent;
+	double *megaBytesReceived;
+	double *avgThroughputSent;
+	double *avgThroughputReceived;
+	double *jitterSent;
+	double *jitterReceived;
+	double *packetLossSent;
+	double *packetLossReceived;
+} IperfResults;
+
+
 // Function prototypes
 void *networkThreads(void *param);
 bool clientSetup(int, char **, NetInfo *, Packets *);
