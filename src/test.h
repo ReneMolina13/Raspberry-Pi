@@ -31,7 +31,9 @@ enum packetConstants
 	// Number of different packet sizes in packets array
 	NUM_PACKET_SIZES = 17,
 	// Max number of iterations before calculations begin to overflow
-	MAX_ITERATIONS = 65000000
+	MAX_ITERATIONS = 65000000,
+	// Max bandwidth of network
+	MAX_BANDWIDTH = 1000
 };
 
 
@@ -101,20 +103,18 @@ typedef struct
 {
 	int numBursts;
 	double interval;
-	unsigned int *bytesSent;
-	double *bandwidth;
-	double totalBytesSent;
-	double avgThroughput;
+	double *totalBytesSent;
+	double *avgThroughput;
 } IperfResults;
 
 
 // Function prototypes
 void *dataProcessingThread(void *);
 void *testingThread(void *);
-bool runPing(char *, int, int, double, bool);
+bool runPing(char *, int, int, double);
+bool runFlood(char *hostname);
 bool runTraceroute(char *);
 bool runIperf(char *, int, int, int);
 void printSocketAddress(const struct sockaddr *);
-void testTest(char *);
 
 #endif

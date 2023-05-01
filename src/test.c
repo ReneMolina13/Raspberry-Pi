@@ -122,67 +122,118 @@ void *testingThread(void *param)
 	
 	// Detach thread (makes it not joinable)
 	pthread_detach(tid);
-
-	testTest(hostname);
+	
+// TESTING
+//********************************************************************************************
+	puts("Running Ping");
+	retVal = runPing(hostname, 10, 1000, 0.5, false);
+	if (retVal == false)
+		fputs("Ping program unsuccessful\n", stderr);
+	puts("Running Traceroute");
+	retVal = runTraceroute(hostname);
+	if (retVal == false)
+		fputs("Traceroute program unsuccessful\n", stderr);
+	puts("Running iPerf");
+	retVal = runIperf(hostname, 500, 1000, 1);
+	if (retVal == false)
+		fputs("iPerf program unsuccessful\n", stderr);
+//********************************************************************************************
+	
+	/*
+	// Run ping tests
+	int pingBytes;
+	for (int i = 10; i < 20; i++) {
+		pingBytes = (int) pow(2, i);
+		runPing(hostname, 10, numBytes, 0.5);
+	}
+	
+	// Run flood test and traceroute tests
+	runFlood(hostname);
+	runTraceroute(hostname);
+	
+	// Run iPerf tests
+	int iperfBytes;
+	int bandwidth;
+	for (int i = 0; i < NUM_PACKET_SIZES-1; i++) {
+		iperfBytes = (int) pow(2, i);
+		for (bandwidth = 100; bandwidth < MAX_BANDWIDTH; bandwidth+= 100)
+			runIperf(hostname, bandwidth, iperfBytes, 1);
+	}
+	*/
 	
 	return 0;
 }
 
 
-bool runPing(char *hostname, int numPackets, int numBytes, double interval, bool flood)
+bool runPing(char *hostname, int numPackets, int numBytes, double interval)
 {	
-	char **args;
-	unsigned int numArgs;
-	unsigned int buffSize = 30;	
-	
 	// Check for invalid arguments
-	if (flood == false) {
-		if (numPackets < 0 || numBytes < 0) {
-			fputs("Invalid parameter value\n", stderr);
-			return false;
-		}
-		else if (interval < 0.2) {
-			fputs("Interval below 0.2 seconds detected... setting to 0.2\n", stderr);
-			interval = 0.2;
-		}
-		
-		// Initialize argument array
-		numArgs = 10;
-		args = (char **) malloc(numArgs * sizeof(char *));
-		for (int i = 0; i < numArgs; i++)
-			args[i] = (char *) malloc(buffSize * sizeof(char));
-	
-		// Run ping with quiet output
-		strncpy(args[0], "../data/Ping_Test", buffSize);
-		strncpy(args[1], "-q", buffSize);
-		// Number of ping requests
-		strncpy(args[2], "-c", buffSize);
-		snprintf(args[3], buffSize, "%i", numPackets);
-		// Size of ping packet (bytes)
-		strncpy(args[4], "-s", buffSize);
-		snprintf(args[5], buffSize, "%i", numBytes);
-		// Time interval between packets (seconds)
-		strncpy(args[6], "-i", buffSize);
-		if (interval < 0.2)
-			interval = 0.2;
-		snprintf(args[7], buffSize, "%f", interval);
-		// Hostname / IP Address
-		strncpy(args[8], hostname, buffSize);
-		// Null-terminate argument array
-		snprintf(args[9], buffSize, "%p", NULL);
+	if (numPackets < 0 || numBytes < 0) {
+		fputs("Invalid parameter value\n", stderr);
+		return false;
+	}
+	else if (interval < 0.2) {
+		fputs("Interval below 0.2 seconds detected... setting to 0.2\n", stderr);
+		interval = 0.2;
 	}
 	
-	else {
-		// Flood testing only requires hostname
-		numArgs = 3;
-		args = (char **) malloc(numArgs * sizeof(char *));
-		for (int i = 0; i < numArgs; i++)
-			args[i] = (char *) malloc(buffSize * sizeof(char));
-		strncpy(args[0], "../data/Flood_Test", buffSize);
-		strncpy(args[1], hostname, buffSize);
-		snprintf(args[2], buffSize, "%p", NULL);
-	}
+	// Initialize argument array
+	unsigned int buffSize = 30;	
+	char **args = (char **) malloc(numArgs * sizeof(char *));
+	for (int i = 0; i < numArgs; i++)
+		args[i] = (char *) malloc(buffSize * sizeof(char));
 
+	// Run ping with quiet output
+	strncpy(args[0], "../data/Ping_Test", buffSize);
+	strncpy(args[1], "-q", buffSize);
+	// Number of ping requests
+	strncpy(args[2], "-c", buffSize);
+	snprintf(args[3], buffSize, "%i", numPackets);
+	// Size of ping packet (bytes)
+	strncpy(args[4], "-s", buffSize);
+	snprintf(args[5], buffSize, "%i", numBytes);
+	// Time interval between packets (seconds)
+	strncpy(args[6], "-i", buffSize);
+	if (interval < 0.2)
+		interval = 0.2;
+	snprintf(args[7], buffSize, "%f", interval);
+	// Hostname / IP Address
+	strncpy(args[8], hostname, buffSize);
+	// Null-terminate argument array
+	snprintf(args[9], buffSize, "%p", NULL);
+
+	// Fork process
+	pid_t pid = fork();
+	// Indicates Fork error
+	if (pid < 0) {
+		fputs("Unable to fork process\n", stderr);
+		return false;
+	}
+	// Child process runs ping program
+	else if (pid == 0)
+		 if (execv(args[0], args) < 0) {
+			fputs("Error calling ping\n", stderr);
+			return false;
+		 }
+	// Parent process frees argument array & waits for program to finish
+	else {
+		waitpid(pid, NULL, 0);
+		for (int i = 0; i < numArgs; i++)
+			free(args[i]);
+		free(args);
+		puts("Results have been saved to pingData.txt / floodData.txt");
+		return true;
+	}
+}
+
+
+bool runFlood(char *hostname)
+{
+	char *args[3];
+	args[0] = "../data/Flood_Test";
+	args[1] = hostname;
+	args[2] = NULL;
+	
 	// Fork process
 	pid_t pid = fork();
 	// Indicates Fork error
@@ -200,9 +251,6 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval, bool
 	// Parent process frees argument array & waits for program to finish
 	else {
 		waitpid(pid, NULL, 0);
-		for (int i = 0; i < numArgs; i++)
-			free(args[i]);
-		free(args);
 		puts("Results have been saved to pingData.txt / floodData.txt");
 		return true;
 	}
@@ -323,25 +371,4 @@ void printSocketAddress(const struct sockaddr *addr)
 	default:
 		puts("Unknown address family");
 	}
-}
-
-
-void testTest(char *hostname)
-{
-	bool retVal = true;
-	
-	puts("Running Ping");
-	retVal = runPing(hostname, 10, 1000, 0.5, false);
-	if (retVal == false)
-		fputs("Ping program unsuccessful\n", stderr);
-	puts("Running Traceroute");
-	retVal = runTraceroute(hostname);
-	if (retVal == false)
-		fputs("Traceroute program unsuccessful\n", stderr);
-	puts("Running iPerf");
-	retVal = runIperf(hostname, 500, 1000, 1);
-	if (retVal == false)
-		fputs("iPerf program unsuccessful\n", stderr);
-	
-	return;
 }
