@@ -199,75 +199,90 @@ bool formatOutput()
 	FILE *iperfClientFile = fopen("../data/iperfDataClient.txt", "r");
 	// Check to see if there was an error opening any of the input files
 	if (customFile == NULL || pingFile == NULL || floodFile == NULL || tracerouteFile == NULL || iperfClientFile == NULL) {
-		fputs("Could not open one of the files\n", stderr);
+		fputs("Could not open one of the input files\n", stderr);
 		return false;
 	}
-	
+	// Holds how many variables have been assigned for a particular result structure
+	unsigned int varsAssigned;
 	
 	// Extract data from custom test restults file into CustomResults structure
 	CustomResults customResults;
 	unsigned int customTemp;
+	varsAssigned = 0;
 	// Extract total packets sent over the course of the network test
 	for (int i = 0; i <= NUM_PACKET_SIZES; i++) {
 		while (fgetc(customFile) != ',');	// Skip past packet size column
-		fscanf(customFile, "%u", customTemp);
+		varsAssigned += fscanf(customFile, "%u", &customTemp);
 		customResults.totalIterations += customTemp;
 		while (fgetc(customFile) != '\n');	// Skip to next row
 	}
 	// Extract averages from final row of customFile
 	while (fgetc(customFile) != ',');		// Skip past packet size column
 	while (fgetc(customFile) != ',');		// Skip past packets sent column
-	fscanf(customFile, ".3f", customResults.avgRTT);
-	fscanf(customFile, ".3f", customResults.avgThroughput);	
-	fscanf(customFile, ".3f", customResults.avgErrorsPerPacket);	
-	fscanf(customFile, ".3f", customResults.avgErrorsPerKB);	
+	varsAssigned += fscanf(customFile, "%lf", &customResults.avgRTT);
+	varsAssigned += fscanf(customFile, "%lf", &customResults.avgThroughput);	
+	varsAssigned += fscanf(customFile, "%lf", &customResults.avgErrorsPerPacket);	
+	varsAssigned += fscanf(customFile, "%lf", &customResults.avgErrorsPerKB);
+	// Make sure all variables in customResults structure have been assigned
+	if (varsAssigned != 5) {
+		fputs("Incorrect number of variables assinged for customResults structure\n", stderr);
+		return false;
+	}
 	
 	
 	// Extract data from ping and flood files into the PingResults structure
 	PingResults pingResults;
+	varsAssigned = 0;
 	// Determine how many ping tests were executed (5 rows each)
 	while (fgetc(pingFile) != EOF)
 		for (pingResults.numTests = 0; fgetc(pingFile) != '\n'; pingResults.numTests++);
 	pingResults.numTests /= 5;
+	varsAssigned++;
 	rewind(pingFile);
 	// Allocate memory for each pingResults member
 	pingResults.packetSize = (unsigned int *) malloc(pingResults.numTests * sizeof(unsigned int));
 	pingResults.packetsTransmitted = (unsigned int *) malloc(pingResults.numTests * sizeof(unsigned int));
-	pingResults.packetLoss = (double *) malloc(pingResults.numTests * sizeof(double);
-	pingResults.minRTT = (double *) malloc(pingResults.numTests * sizeof(double);
-	pingResults.avgRTT = (double *) malloc(pingResults.numTests * sizeof(double);
-	pingResults.maxRTT = (double *) malloc(pingResults.numTests * sizeof(double);
-	pingResults.stdDevRTT = (double *) malloc(pingResults.numTests * sizeof(double);
+	pingResults.packetLoss = (double *) malloc(pingResults.numTests * sizeof(double));
+	pingResults.minRTT = (double *) malloc(pingResults.numTests * sizeof(double));
+	pingResults.avgRTT = (double *) malloc(pingResults.numTests * sizeof(double));
+	pingResults.maxRTT = (double *) malloc(pingResults.numTests * sizeof(double));
+	pingResults.stdDevRTT = (double *) malloc(pingResults.numTests * sizeof(double));
 	// Extract data from ping test outputs
 	for (int i = 0; i < pingResults.numTests; i++) {
 		// Extract packet size for this iteration
 		while (fgetc(pingFile) != '(');
 		while (fgetc(pingFile) != '(');
-		fscanf(pingFile, "%u", pingResults.packetSize[i]);
+		varsAssigned += fscanf(pingFile, "%u", &pingResults.packetSize[i]);
 		// Extract packets transmitted
 		for (int i = 0; i < 3; i++)
 			while (fgetc(pingFile) != '\n');
-		fscanf(pingFile, "%u", pingResults.packetsTransmitted[i]);
+		varsAssigned += fscanf(pingFile, "%u", &pingResults.packetsTransmitted[i]);
 		// Extract packet loss percentage
 		for (int i = 0; i < 4; i++)
 			while (fgetc(pingFile) != ' ');
-		fscanf(pingFile, "%.3f", pingResults.packetLoss[i]);
+		varsAssigned += fscanf(pingFile, "%lf", &pingResults.packetLoss[i]);
 		// Extract min, max, avg, and std deviation for round-trip-times
 		for (i = 0; i < 7; i++)
 			while (fgetc(pingFile) != ' ');
-		fscanf(pingFile, "%.3f", pingResults.minRTT[i]);
+		varsAssigned += fscanf(pingFile, "%lf", &pingResults.minRTT[i]);
 		fgetc(pingFile);
-		fscanf(pingFile, "%.3f", pingResults.avgRTT[i]);
+		varsAssigned += fscanf(pingFile, "%lf", &pingResults.avgRTT[i]);
 		fgetc(pingFile);
-		fscanf(pingFile, "%.3f", pingResults.maxRTT[i]);
+		varsAssigned += fscanf(pingFile, "%lf", &pingResults.maxRTT[i]);
 		fgetc(pingFile);
-		fscanf(pingFile, "%.3f", pingResults.stdDevRTT[i]);
+		varsAssigned += fscanf(pingFile, "%lf", &pingResults.stdDevRTT[i]);
 		while (fgetc(pingFile) != '\n');
+	}
+	// Make sure all variables from pingResults structure have been assigned
+	if (varsAssigned != (pingResults.numTests * 7) + 1) {
+		fputs("Incorrect number of variables assigned for pingResults structure\n", stderr);
+		return false;
 	}
 	
 	
 	// Extract data from traceroute file into TracerouteResults structure
 	TracerouteResults tracerouteResults;
+	varsAssigned = 0;
 	// Determine number of rows and number of hops
 	while (fgetc(tracerouteFile) != EOF) {
 		for (int i = 0; i < 3; i++)
@@ -276,15 +291,16 @@ bool formatOutput()
 			tracerouteResults.numHops++;
 		while (fgetc(tracerouteFile) != '\n');
 	}
+	varsAssigned++;
 	rewind(tracerouteFile);
 	// Allocate memory for hop latency member variable
 	tracerouteResults.hopLatency = (double **) malloc(tracerouteResults.numHops * sizeof(double *));
-	for (int i = 0; i < numHops; i++)
+	for (int i = 0; i < tracerouteResults.numHops; i++)
 		tracerouteResults.hopLatency[i] = (double *) malloc(3 * sizeof(double));
 	// Extract bytes per packet
 	for (int i = 0; i < 7; i++)
 		while (fgetc(tracerouteFile) != ' ');
-	fscanf(tracerouteFile, "%u", tracerouteResults.bytesPerPacket);
+	varsAssigned += fscanf(tracerouteFile, "%u", &tracerouteResults.bytesPerPacket);
 	while (fgetc(tracerouteFile) != '\n');
 	// Extract hop latencies
 	bool hopLine = false;
@@ -302,22 +318,29 @@ bool formatOutput()
 		for (int j = 0; j < 3; j++) {
 			for (int k = 0; k < 3; k++)
 				while (fgetc(tracerouteFile) != ' ');
-			fscanf(tracerotueFile, ".3f", tracerouteResults.hopLatency[i][j]);
+			varsAssigned += fscanf(tracerouteFile, "%lf", &tracerouteResults.hopLatency[i][j]);
 		}
 		while (fgetc(tracerouteFile) != '\n');
+	}
+	// Make sure all variables from tracerouteResults structure have been assigned
+	if (varsAssigned != (tracerouteResults.numHops * 3) + 2) {
+		fputs("Incorrect number of variables assigned for tracerouteResults structure\n", stderr);
+		return false;
 	}
 	
 	
 	// Extract data from iperf client file into IperfResults structure
 	IperfResults iperfResults;
+	varsAssigned = 0;
 	// Determine how many seconds each test is
 	while (fgetc(iperfClientFile) != '-');
-	fscanf(iperfClientFile, "%.3f", iperfResults.secondsPerTest);
+	varsAssigned += fscanf(iperfClientFile, "%lf", &iperfResults.secondsPerTest);
 	rewind(iperfClientFile);
 	// Determine how many tests there are (10 rows per test)
 	while (fgetc(iperfClientFile) != EOF)
 		for (iperfResults.numTests = 0; fgetc(iperfClientFile) != '\n'; iperfResults.numTests++);
 	iperfResults.numTests /= 10;
+	varsAssigned++;
 	rewind(iperfClientFile);
 	// Allocate memory for each iperfResults member
 	iperfResults.packetsSent = (unsigned int *) malloc(iperfResults.numTests * sizeof(unsigned int));
@@ -336,40 +359,45 @@ bool formatOutput()
 			while (fgetc(iperfClientFile) != '\n');
 		for (int j = 0; j < 16; j++)
 			while (fgetc(iperfClientFile) != ' ');
-		fscanf(iperfClientFile, '%u', iperfResults.packetsSent[i]);
+		varsAssigned += fscanf(iperfClientFile, "%u", &iperfResults.packetsSent[i]);
 		// Extract MBytes sent
 		for (int j = 0; j < 3; j++)
 			while (fgetc(iperfClientFile) != '\n');
 		for (int j = 0; j < 9; j++)
 			while (fgetc(iperfClientFile) != ' ');
-		fscanf(iperfClientFile, "%.3f", iperfResults.megaBytesSent[i]);
+		varsAssigned += fscanf(iperfClientFile, "%lf", &iperfResults.megaBytesSent[i]);
 		// Extract average throughput of packets sent
 		for (int j = 0; j < 4; j++)
 			while (fgetc(iperfClientFile) != ' ');
-		fscanf(iperfClientFile, "%.3f", iperfResults.avgThroughputSent[i]);
+		varsAssigned += fscanf(iperfClientFile, "%lf", &iperfResults.avgThroughputSent[i]);
 		// Extract jitter of packets sent
 		for (int j = 0; j < 3; j++)
 			while (fgetc(iperfClientFile) != ' ');
-		fscanf(iperfClientFile, "%.3f", iperfResults.jitterSent[i]);
+		varsAssigned += fscanf(iperfClientFile, "%lf", &iperfResults.jitterSent[i]);
 		// Extract packet loss percent of sent packets
 		while (fgetc(iperfClientFile) != '(');
-		fscanf(iperfClientFile, "%.3f", iperfResults.packetLossSent[i]);
+		varsAssigned += fscanf(iperfClientFile, "%lf", &iperfResults.packetLossSent[i]);
 		// Extract MBytes received
 		while (fgetc(iperfClientFile) != '\n');
 		for (int j = 0; j < 9; j++)
 			while (fgetc(iperfClientFile) != ' ');
-		fscanf(iperfClientFile, "%.3f", iperfResults.megaBytesReceived[i]);
+		varsAssigned += fscanf(iperfClientFile, "%lf", &iperfResults.megaBytesReceived[i]);
 		// Extract average throughput of packets received
 		for (int j = 0; j < 4; j++)
 			while (fgetc(iperfClientFile) != ' ');
-		fscanf(iperfClientFile, "%.3f", iperfResults.avgThroughputReceived[i]);
+		varsAssigned += fscanf(iperfClientFile, "%lf", &iperfResults.avgThroughputReceived[i]);
 		// Extract jitter of packets received
 		for (int j = 0; j < 3; j++)
 			while (fgetc(iperfClientFile) != ' ');
-		fscanf(iperfClientFile, "%.3f", iperfResults.jitterReceived[i]);
+		varsAssigned += fscanf(iperfClientFile, "%lf", &iperfResults.jitterReceived[i]);
 		// Extract packet loss percent of received packets
 		while (fgetc(iperfClientFile) != '(');
-		fscanf(iperfClientFile, "%.3f", iperfResults.packetLossSent[i]);
+		varsAssigned += fscanf(iperfClientFile, "%lf", &iperfResults.packetLossSent[i]);
+	}
+	// Make sure all variables from iperfResults structure have been assigned
+	if (varsAssigned != (iperfResults.numTests * 9) + 2) {
+		fputs("Incorrect number of variables assigned for iperfResults structure\n", stderr);
+		return false;
 	}
 	
 	
@@ -380,8 +408,14 @@ bool formatOutput()
 	fclose(tracerouteFile);
 	fclose(iperfClientFile);
 	
+	
 	// Write data from structures holding test results to networkTestResults.csv
 	FILE *outFile = fopen("../networkTestResults.csv", "w");
+	// Check to see if there was an error opening the output file
+	if (outFile == NULL) {
+		fputs("Could not open the output file\n", stderr);
+		return false;
+	}
 	
 	
 	// Free dynamic memory

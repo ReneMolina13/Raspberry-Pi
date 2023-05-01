@@ -43,7 +43,7 @@ typedef struct
 
 typedef struct
 {
-	unsigned int numTests
+	unsigned int numTests;
 	unsigned int *packetSize;
 	unsigned int *packetsTransmitted;
 	double *packetLoss;

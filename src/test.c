@@ -118,7 +118,7 @@ bool runTests(char *hostname)
 // TESTING
 //********************************************************************************************
 	puts("Running Ping");
-	retVal = runPing(hostname, 10, 1000, 0.5, false);
+	retVal = runPing(hostname, 10, 1000, 0.5);
 	if (retVal == false)
 		fputs("Ping program unsuccessful\n", stderr);
 	puts("Running Traceroute");
@@ -131,12 +131,11 @@ bool runTests(char *hostname)
 		fputs("iPerf program unsuccessful\n", stderr);
 //********************************************************************************************
 	
-	/*
 	// Run ping tests
 	int pingBytes;
 	for (int i = 10; i < 20; i++) {
 		pingBytes = (int) pow(2, i);
-		runPing(hostname, 10, numBytes, 0.5);
+		runPing(hostname, 10, pingBytes, 0.5);
 	}
 	
 	// Run flood test and traceroute tests
@@ -151,7 +150,6 @@ bool runTests(char *hostname)
 		for (bandwidth = 100; bandwidth < MAX_BANDWIDTH; bandwidth+= 100)
 			runIperf(hostname, bandwidth, iperfBytes, 1);
 	}
-	*/
 	
 	return true;
 }
@@ -170,6 +168,7 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval)
 	}
 	
 	// Initialize argument array
+	unsigned int numArgs = 10;
 	unsigned int buffSize = 30;	
 	char **args = (char **) malloc(numArgs * sizeof(char *));
 	for (int i = 0; i < numArgs; i++)
@@ -282,7 +281,7 @@ bool runTraceroute(char *hostname)
 bool runIperf(char *hostname, int bandwidth, int numBytes, int testTime)
 {	
 	// Check for valid arguments
-	if (bandwidth < 0 || numBytes < 0 || interval < 0) {
+	if (bandwidth < 0 || numBytes < 0 || testTime < 0) {
 		fputs("Invalid parameter value\n", stderr);
 		return false;
 	}
