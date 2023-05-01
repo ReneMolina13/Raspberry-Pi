@@ -13,6 +13,7 @@
 
 // Function prototypes
 int initServer(char *);
+bool iPerfServer();
 bool handleClient(int);
 
 

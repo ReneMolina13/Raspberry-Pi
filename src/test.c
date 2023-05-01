@@ -239,57 +239,39 @@ bool runTraceroute(char *hostname)
 }
 
 
-bool runIperf(char *hostname, int bandwidth, int numBytes, int interval, bool serverMode)
+bool runIperf(char *hostname, int bandwidth, int numBytes, int interval)
 {	
-	unsigned int buffSize = 30;
-	unsigned int numArgs;
-	char **args;
+	// Check for valid arguments
+	if (bandwidth < 0 || numBytes < 0 || interval < 0) {
+		fputs("Invalid parameter value\n", stderr);
+		return false;
+	}
 	
-	// Running iPerf in client mode
-	if (serverMode == false) {
-		
-		if (bandwidth < 0 || numBytes < 0 || interval < 0) {
-			fputs("Invalid parameter value\n", stderr);
-			return false;
-		}
-		
-		// Initialize arguments array
-		numArgs = 12;
-		args = (char **) malloc(numArgs * sizeof(char *));
-		for (int i = 0; i < numArgs; i++)
-			args[i] = (char *) malloc(buffSize * sizeof(char));
-		
-		strncpy(args[0], "../data/Iperf_Test_Client", buffSize);
-		// Client mode at specified IP address
-		strncpy(args[1], "-c", buffSize);
-		strncpy(args[2], hostname, buffSize);
-		// UDP connection formatted in KBytes/sec
-		strncpy(args[3], "-u", buffSize);
-		// Target bandwidth (bits/sec)
-		strncpy(args[4], "-b", buffSize);
-		snprintf(args[5], buffSize, "%i", bandwidth);
-		// Buffer length (bytes)
-		strncpy(args[6], "-l", buffSize);
-		snprintf(args[7], buffSize, "%i", numBytes);
-		// Interval for bandwidth, jitter, & loss reports (seconds)
-		strncpy(args[8], "-i", buffSize);
-		snprintf(args[9], buffSize, "%i", interval);
-		// Null-terminate argument array
-		snprintf(args[10], buffSize, "%p", NULL);
-		snprintf(args[11], buffSize, "%p", NULL);
-	}
-		
-	// Running iPerf in server mode
-	else {
-		numArgs = 3;
-		args = (char **) malloc(numArgs * sizeof(char *));
-		for (int i = 0; i < numArgs; i++)
-			args[i] = (char *) malloc(buffSize * sizeof(char));
-		
-		strncpy(args[0], "../data/Iperf_Test_Server", buffSize);
-		strncpy(args[1], "-s", buffSize);
-		snprintf(args[2], buffSize, "%p", NULL);
-	}
+	// Initialize arguments array
+	unsigned int buffSize = 30;
+	unsigned int numArgs = 12;
+	char **args = (char **) malloc(numArgs * sizeof(char *));
+	for (int i = 0; i < numArgs; i++)
+		args[i] = (char *) malloc(buffSize * sizeof(char));
+	
+	strncpy(args[0], "../data/Iperf_Test_Client", buffSize);
+	// Client mode at specified IP address
+	strncpy(args[1], "-c", buffSize);
+	strncpy(args[2], hostname, buffSize);
+	// UDP connection formatted in KBytes/sec
+	strncpy(args[3], "-u", buffSize);
+	// Target bandwidth (bits/sec)
+	strncpy(args[4], "-b", buffSize);
+	snprintf(args[5], buffSize, "%i", bandwidth);
+	// Buffer length (bytes)
+	strncpy(args[6], "-l", buffSize);
+	snprintf(args[7], buffSize, "%i", numBytes);
+	// Interval for bandwidth, jitter, & loss reports (seconds)
+	strncpy(args[8], "-i", buffSize);
+	snprintf(args[9], buffSize, "%i", interval);
+	// Null-terminate argument array
+	snprintf(args[10], buffSize, "%p", NULL);
+	snprintf(args[11], buffSize, "%p", NULL);
 	
 	pid_t pid = fork();
 	// Fork error
@@ -310,7 +292,7 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int interval, bool se
 		for (int i = 0; i < numArgs; i++)
 			free(args[i]);
 		free(args);
-		puts("Results have been saved to iperfDataClient.txt / iperfDataServer.txt");
+		puts("Results have been saved to iperfDataClient.txt");
 		return true;
 	}
 }
@@ -357,7 +339,7 @@ void testTest(char *hostname)
 	if (retVal == false)
 		fputs("Traceroute program unsuccessful\n", stderr);
 	puts("Running iPerf");
-	retVal = runIperf(hostname, 500, 1000, 1, false);
+	retVal = runIperf(hostname, 500, 1000, 1);
 	if (retVal == false)
 		fputs("iPerf program unsuccessful\n", stderr);
 	

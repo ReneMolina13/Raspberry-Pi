@@ -60,6 +60,30 @@ int initServer(char *service)
 }
 
 
+bool iPerfServer()
+{
+	// Fork process
+	pid_t pid = fork();
+	// Indicates fork error
+	if (pid < 0) {
+		fputs("Unable to fork process\n", stderr);
+		return false;
+	}
+	// Child process runs traceroute
+	else if (pid == 0)
+		if (execl("../data/Iperf_Test_Server", "Iperf_Test_Server", "-s", NULL) < 0) {
+			fputs("Error creating iperf server\n", stderr);
+			return false;
+		 }
+	// Parent process waits for child to finish executing
+	else {
+		waitpid(pid, NULL, 0);
+		puts("iPerf Server has been created");
+		return true;
+	}
+}
+
+
 bool handleClient(int serverSocket)
 {
 	// Buffer to store received packet (size of largest possible UDP packet)
@@ -101,10 +125,16 @@ int main(int argc, char **argv)
 		return -1;
 	}
 	
-	// Initialize bank server
+	// Initialize test server
 	int serverSocket = initServer(argv[1]);
 	if (serverSocket < 0) {
 		fputs("Failed to initialize server - ", stderr);
+		return -1;
+	}
+	
+	// Setup iPerf server
+	if (iPerfServer() == false) {
+		fputs("Failed to create iPerf server - ", stderr);
 		return -1;
 	}
 

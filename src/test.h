@@ -67,12 +67,53 @@ typedef struct
 } TestingArgs;
 
 
+typedef struct
+{
+	unsigned int avgIterations;
+	double avgRTT;
+	double avgThroughput;
+	double avgErrorsPerPacket;
+	double avgErrorsPerKB;
+} CustomResults;
+
+
+typedef struct
+{
+	unsigned int packetSize;
+	unsigned int packetsTransmitted;
+	double packetLoss;
+	double minRTT;
+	double avgRTT;
+	double maxRTT;
+	double stdDevRTT;
+} PingResults;
+
+
+typedef struct
+{
+	int numHops;
+	int bytesPerPacket;
+	double **hopLatency;
+} TracerouteResults;
+
+
+typedef struct
+{
+	int numBursts;
+	double interval;
+	unsigned int *bytesSent;
+	double *bandwidth;
+	double totalBytesSent;
+	double avgThroughput;
+} IperfResults;
+
+
 // Function prototypes
 void *dataProcessingThread(void *);
 void *testingThread(void *);
 bool runPing(char *, int, int, double, bool);
 bool runTraceroute(char *);
-bool runIperf(char *, int, int, int, bool);
+bool runIperf(char *, int, int, int);
 void printSocketAddress(const struct sockaddr *);
 void testTest(char *);
 
