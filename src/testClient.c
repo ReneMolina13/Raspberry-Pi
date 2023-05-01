@@ -436,26 +436,29 @@ bool formatOutput()
 	}
 	// Print out custom test results
 	fprintf(outFile, "Custom Test,\n");
-	fprintf(outFile, "Total Iterations,Average Round-Trip-Time,Average Errors Per Packet,Average Errors Per KB,\n");
+	fprintf(outFile, "Total Iterations,Average Round-Trip-Time,Average Throughput,Average Errors Per Packet,Average Errors Per KB,\n");
 	fprintf(outFile, "%u,%f,%f,%f,%f,", customResults.totalIterations, customResults.avgRTT, customResults.avgThroughput, customResults.avgErrorsPerPacket,customResults.avgErrorsPerKB);
 	fputs("\n", outFile);
 	// Print out ping test results
 	fprintf(outFile, "Ping Test,\n");
 	fprintf(outFile, "Test Number,Packet Size,Packets Transmitted,Packet Loss,Minimum Round-Trip-Time,Average Round-Trip-Time,Maximum Round-Trip-Time,Round-Trip-Time Standard Deviation,\n");
 	for (int i = 0; i < pingResults.numTests; i++)
-		fprintf(outFile, "%i,%u,%u,%f,%f,%f,%f,%f,\n", i, pingResults.packetSize[i], pingResults.packetsTransmitted[i], pingResults.packetLoss[i], pingResults.minRTT[i], pingResults.avgRTT[i], pingResults.maxRTT[i], pingResults.stdDevRTT[i]);
+		fprintf(outFile, "%i,%u,%u,%f,%f,%f,%f,%f,\n", i+1, pingResults.packetSize[i], pingResults.packetsTransmitted[i], pingResults.packetLoss[i], pingResults.minRTT[i], pingResults.avgRTT[i], pingResults.maxRTT[i], pingResults.stdDevRTT[i]);
 	fputs("\n", outFile);
 	// Print out traceroute test results
 	fprintf(outFile, "Traceroute Test,\n");
 	fprintf(outFile, "Hop Number,Packet Size,Packet 1 Latency,Packet 2 Latency,Packet 3 Latency,\n");
 	for (int i = 0; i < tracerouteResults.numHops; i++)
-		fprintf(outFile, "%i,%u,%f,%f,%f,\n", i, tracerouteResults.bytesPerPacket, tracerouteResults.hopLatency[i][0], tracerouteResults.hopLatency[i][1], tracerouteResults.hopLatency[i][2]);
+		fprintf(outFile, "%i,%u,%f,%f,%f,\n", i+1, tracerouteResults.bytesPerPacket, tracerouteResults.hopLatency[i][0], tracerouteResults.hopLatency[i][1], tracerouteResults.hopLatency[i][2]);
 	fputs("\n", outFile);
 	// Print out iPerf test results
+	double timeline = 0;
 	fprintf(outFile, "Iperf Test,\n");
 	fprintf(outFile, "Time (s),Packets Sent,MB Sent,MB Received,Average Throughput Sent,Average Throughput Received,Jitter Sent,Jitter Received,Packet Loss Sent,Packet Loss Received,\n");
-	for (int i = (int) iperfResults.secondsPerTest; i < (int) (iperfResults.secondsPerTest * iperfResults.numTests); i += (int) iperfResults.secondsPerTest)
-		fprintf("%i,%u,%f,%f,%f,%f,%f,%f,%f,%f,", i, iperfResults.packetsSent[i], iperfResults.megaBytesSent[i], iperfResults.megaBytesReceived[i], iperfResults.avgThroughputSent[i], iperfResults.avgThroughputReceived[i], iperfResults.jitterSent[i], iperfResults.jitterReceived[i], iperfResults.packetLossSent[i], iperfResults.packetLossReceived[i]);
+	for (int i = 0; i < iperfResults.numTests; i++) {
+		timeline += iperfResults.secondsPerTest;
+		fprintf(outFile, "%f,%u,%f,%f,%f,%f,%f,%f,%f,%f,", timeline, iperfResults.packetsSent[i], iperfResults.megaBytesSent[i], iperfResults.megaBytesReceived[i], iperfResults.avgThroughputSent[i], iperfResults.avgThroughputReceived[i], iperfResults.jitterSent[i], iperfResults.jitterReceived[i], iperfResults.packetLossSent[i], iperfResults.packetLossReceived[i]);
+	}
 	fputs("\n", outFile);
 	// Close output file
 	fclose(outFile);
