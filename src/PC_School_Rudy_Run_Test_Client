@@ -1,0 +1,4 @@
+#! /bin/bash
+clear
+# ./testClient EQCHK-F7ZQZZ2 26207
+./testClient 172.19.29.228 26207

@@ -257,6 +257,11 @@ bool formatOutput()
 // TESTING
 //**************************************************************************
 	printf("Vars Assigned: %u\n", varsAssigned);
+	printf("\nTotal Iterations: %u\n", customResults.totalIterations);
+	printf("Average RTT: %f\n", customResults.avgRTT);
+	printf("Average Throughput: %f\n", customResults.avgThroughput);
+	printf("Average Errors Per Packet: %f\n", customResults.avgErrorsPerPacket);
+	printf("Average Errors Per KB: %f\n\n", customResults.avgErrorsPerKB);
 //**************************************************************************
 
 	// Make sure all variables in customResults structure have been assigned
