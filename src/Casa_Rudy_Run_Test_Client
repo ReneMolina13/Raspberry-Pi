@@ -1,4 +1,10 @@
 #! /bin/bash
 clear
 # ./testClient raspberrypi 26207
+rm customTestData.csv
+rm floodData.txt
+rm iperfDataClient.txt
+rm iperfDataServer.txt
+rm pingData.txt
+rm tracerouteData.txt
 ./testClient 192.168.1.164 26207
