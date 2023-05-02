@@ -58,12 +58,12 @@ void *networkThreads(void *param)
 		parameter->status = -1;
 	}
 	else {
-		fputs("Maximum iterations or 60 seconds reached: ", stderr);
+		// fputs("Maximum iterations or 60 seconds reached: ", stdout);
 		parameter->status = 0;
 	}
 	
 	// Save status and exit
-	printf("Thread for %u byte packets returning\n", stats->bytesPerPacket);
+	// printf("Thread for %u byte packets returning\n", stats->bytesPerPacket);
 	pthread_exit(0);
 }
 
