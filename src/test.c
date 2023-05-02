@@ -206,7 +206,7 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval)
 	else if (pid == 0)
 		 if (execv(args[0], args) < 0) {
 			fputs("Error calling ping\n", stderr);
-			return false;
+			exit(0);
 		 }
 	// Parent process frees argument array & waits for program to finish
 	else {
@@ -239,7 +239,7 @@ bool runFlood(char *hostname)
 	else if (pid == 0)
 		 if (execv(args[0], args) < 0) {
 			fputs("Error calling ping\n", stderr);
-			return false;
+			exit(0);
 		 }
 
 	// Parent process frees argument array & waits for program to finish
@@ -270,7 +270,7 @@ bool runTraceroute(char *hostname)
 	else if (pid == 0)
 		if (execv(args[0], args) < 0) {
 			fputs("Error calling traceroute\n", stderr);
-			return false;
+			exit(0);
 		 }
 	// Parent process waits for child to finish executing
 	else {
@@ -326,7 +326,7 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int testTime)
 	else if (pid == 0) {		
 		if (execv(args[0], args) < 0) {
 			fputs("Error calling iPerf\n", stderr);
-			return false;
+			exit(0);
 		}
 	}
 	// Parent process
