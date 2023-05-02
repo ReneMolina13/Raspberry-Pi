@@ -590,7 +590,6 @@ int main(int argc, char **argv)
 	
 	puts("************************************************\n");
 	
-	/*
 	// Initialize thread argument structures and create network threads
 	pthread_attr_init(&attr);
 	NetStats *packetStats = (NetStats *) calloc(NUM_PACKET_SIZES, sizeof(NetStats));
@@ -637,7 +636,6 @@ int main(int argc, char **argv)
 	
 	puts("ping, traceroute, and iPerf tests completed");
 	puts("\n************************************************\n");
-	*/
 	
 	// Close client socket
 	if (close(sockData.clientSocket) < 0) {
@@ -659,8 +657,8 @@ int main(int argc, char **argv)
 	
 	// Free memory allocated to server address and thread argument structures
 	freeaddrinfo(sockData.serverAddr);
-	// free(packetStats);
-	// free(thread_args);
+	free(packetStats);
+	free(thread_args);
 	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
 		free(packets.sentPackets[i]);
 		free(packets.receivedPackets[i]);
