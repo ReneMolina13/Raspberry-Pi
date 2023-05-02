@@ -215,7 +215,7 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval)
 			free(args[i]);
 		free(args);
 		sleep((int) (numPackets * interval) + 1);
-		puts("Results have been saved to pingData.txt / floodData.txt");
+		// puts("Results have been saved to pingData.txt / floodData.txt");
 		return true;
 	}
 }
@@ -246,7 +246,7 @@ bool runFlood(char *hostname)
 	// Parent process frees argument array & waits for program to finish
 	else {
 		waitpid(pid, NULL, 0);
-		puts("Results have been saved to pingData.txt / floodData.txt");
+		// puts("Results have been saved to pingData.txt / floodData.txt");
 		return true;
 	}
 }
@@ -278,7 +278,7 @@ bool runTraceroute(char *hostname)
 	else {
 		waitpid(pid, NULL, 0);
 		sleep(3);
-		puts("Results have been saved to tracerouteData.txt");
+		// puts("Results have been saved to tracerouteData.txt");
 		return true;
 	}
 }
@@ -340,7 +340,7 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int testTime)
 			free(args[i]);
 		free(args);
 		sleep(testTime + 1);
-		puts("Results have been saved to iperfDataClient.txt");
+		// puts("Results have been saved to iperfDataClient.txt");
 		return true;
 	}
 }
