@@ -210,6 +210,8 @@ bool formatOutput()
 	}
 	// Holds how many variables have been assigned for a particular result structure
 	unsigned int varsAssigned;
+	char c;	// Temp character
+	unsigned int numRows = 0;	// Used to determine how many tests/hops depending on the file
 	
 	
 	// Extract data from custom test restults file into CustomResults structure
@@ -256,18 +258,10 @@ bool formatOutput()
 	varsAssigned = 0;
 	double pingTemp;
 	// Determine how many ping tests were executed (5 rows each)
-	char c;
-	unsigned int numRows = 0;
 	do {
 		c = fgetc(pingFile);
 		if (c == '\n')
 			numRows++;
-		
-// TESTING
-//*******************************************************************
-		printf("%c", c);
-//*******************************************************************
-		
 	} while (c >= 0 && c <= 127);
 	pingResults.numTests = numRows / 5;
 	varsAssigned++;
@@ -343,13 +337,13 @@ bool formatOutput()
 	tracerouteResults.numHops = 0;
 	varsAssigned = 0;
 	// Determine number of rows and number of hops
-	while (fgetc(tracerouteFile) != '\n');
-	while (fgetc(tracerouteFile) != EOF) {
-		for (int i = 0; i < 3; i++)
-			fgetc(tracerouteFile);
-		if (fgetc(tracerouteFile) != '*')
+	while (c = fgetc(tracerouteFile) != '\n');
+	while (c >= 0 && c <= 127) {
+		for (int i = 0; i < 4; i++)
+			c = fgetc(tracerouteFile);
+		if (c != '*')
 			tracerouteResults.numHops++;
-		while (fgetc(tracerouteFile) != '\n');
+		while (c = fgetc(tracerouteFile) != '\n');
 	}
 	varsAssigned++;
 	rewind(tracerouteFile);
@@ -406,9 +400,14 @@ bool formatOutput()
 	varsAssigned += fscanf(iperfClientFile, "%lf", &iperfResults.secondsPerTest);
 	rewind(iperfClientFile);
 	// Determine how many tests there are (10 rows per test)
-	while (fgetc(iperfClientFile) != EOF)
-		for (iperfResults.numTests = 0; fgetc(iperfClientFile) != '\n'; iperfResults.numTests++);
-	iperfResults.numTests /= 10;
+	iperfResults.numTests = 0
+	numRows = 0;
+	do { 
+		c = fgetc(iperfClientFile)
+		if (c == '\n')
+			numRows++;
+	} while (c >= 0 && c <= 127);
+	iperfResults.numTests = numRows / 10;
 	varsAssigned++;
 	rewind(iperfClientFile);
 	// Allocate memory for each iperfResults member
