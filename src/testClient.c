@@ -626,6 +626,7 @@ int main(int argc, char **argv)
 	puts("Custom network test completed");
 	puts("\n************************************************\n");
 	
+	/*
 	// Show output data
 	pid_t pid = fork();
 	// Indicates fork error
@@ -647,6 +648,7 @@ int main(int argc, char **argv)
 	}
 	
 	puts("\n************************************************\n");
+	*/
 	
 	// Run ping, traceroute, and iPerf tests on the network
 	if (runTests(sockData.cmdIP) == false) {

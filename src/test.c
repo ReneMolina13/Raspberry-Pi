@@ -118,9 +118,11 @@ bool runTests(char *hostname)
 
 // TESTING
 //********************************************************************************************
-	// Run ping and show output
+	// Run ping
 	puts("Running Ping");
 	retVal = runPing(hostname, 10, 1000, 0.5);
+	
+	/*
 	// Fork process
 	pid_t pidPing = fork();
 	// Indicates fork error
@@ -141,10 +143,13 @@ bool runTests(char *hostname)
 		sleep(3);
 		// return true;
 	}
+	*/
 	
-	// Run traceroute and show output
+	// Run traceroute
 	puts("Running Traceroute");
 	retVal = runTraceroute(hostname);
+	
+	/*
 	// Fork process
 	pid_t pidTraceroute = fork();
 	// Indicates fork error
@@ -165,10 +170,13 @@ bool runTests(char *hostname)
 		sleep(3);
 		// return true;
 	}
+	*/
 	
-	// Run iPerf and show output
+	// Run iPerf
 	puts("Running iPerf");
 	retVal = runIperf(hostname, MAX_BANDWIDTH, 8, 1);
+	
+	/*
 	// Fork process
 	pid_t pidIperf = fork();
 	// Indicates fork error
@@ -189,6 +197,8 @@ bool runTests(char *hostname)
 		sleep(3);
 		// return true;
 	}
+	*/
+	
 //********************************************************************************************
 
 /*
