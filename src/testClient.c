@@ -24,8 +24,11 @@ void *networkThreads(void *param)
 	// True if no transmission errors have occured
 	bool retVal = true;
 	
+	// Detach threads
+	pthread_detach(tid);
+	
 	// Generate network stats by sending packets to/from server
-	for (stats->iteration = 1; retVal == true && stats->iteration <= MAX_ITERATIONS; stats->iteration++, numErrors = 0) {
+	for (stats->iteration = 1; parameter->status == 1 && retVal == true && stats->iteration <= MAX_ITERATIONS; stats->iteration++, numErrors = 0) {
 		// Take semaphore and start clock
 		pthread_mutex_lock(&mutex);
 		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start);
@@ -50,13 +53,16 @@ void *networkThreads(void *param)
 	}
 	
 	// Check if error occured or if max iterations were reached
-	if (retVal == false)
+	if (retVal == false) {
 		fputs("Transmission error occured: ", stderr);
-	else
-		fputs("Maximum iterations reached: ", stderr);
+		parameter->status = -1;
+	}
+	else {
+		fputs("Maximum iterations or 60 seconds reached: ", stderr);
+		parameter->status = 0;
+	}
 	
 	// Save status and exit
-	parameter->status = retVal;
 	printf("Thread for %u byte packets returning\n", stats->bytesPerPacket);
 	pthread_exit(0);
 }
@@ -473,7 +479,7 @@ int main(int argc, char **argv)
 		thread_args[i].stats->bytesPerPacket = packets.packetSizes[i];
 		thread_args[i].sentPacket = packets.sentPackets[i];
 		thread_args[i].receivedPacket = packets.receivedPackets[i];
-		thread_args[i].status = true;
+		thread_args[i].status = 1;
 		pthread_create(&thread_args[i].tid, &attr, networkThreads, (void *) &thread_args[i]);
 	}
 	
@@ -491,8 +497,8 @@ int main(int argc, char **argv)
 	
 	// Custom network test complete, kill all network threads
 	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
-		pthread_kill(thread_args[i].tid, SIGKILL);
-		if (thread_args[i].status == false) {
+		thread_args[i].status = 0;
+		if (thread_args[i].status == -1) {
 			fputs("Error creating network traffic - ", stderr);
 			return -1;
 		}

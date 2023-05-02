@@ -27,7 +27,7 @@ typedef struct
 	NetStats *stats;
 	char *sentPacket;
 	char *receivedPacket;
-	bool status;
+	volatile int status; 
 } ThreadArgs;
 
 
