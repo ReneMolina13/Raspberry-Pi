@@ -307,7 +307,7 @@ bool formatOutput()
 		return false;
 	}
 
-/*
+
 // TESTING
 //*******************************************************************
 	puts("Ping test structure filled");
@@ -328,7 +328,7 @@ bool formatOutput()
 		printf("RTT Standard Deviation: %f\n", pingResults.stdDevRTT[i]);
 	fputs("\n", stdout);
 //*******************************************************************
-*/
+
 
 	// Extract data from traceroute file into TracerouteResults structure
 	TracerouteResults tracerouteResults;
