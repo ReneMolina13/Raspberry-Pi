@@ -144,7 +144,6 @@ bool runTests(char *hostname)
 	runFlood(hostname);
 	runTraceroute(hostname);
 	
-	/*
 	// Run iPerf tests
 	int iperfBytes;
 	int bandwidth;
@@ -153,7 +152,6 @@ bool runTests(char *hostname)
 		for (bandwidth = 100; bandwidth < MAX_BANDWIDTH; bandwidth+= 100)
 			runIperf(hostname, bandwidth, iperfBytes, 1);
 	}
-	*/
 	
 	return true;
 }
