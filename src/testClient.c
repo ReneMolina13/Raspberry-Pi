@@ -200,11 +200,10 @@ bool formatOutput()
 	// Open all five data files for reading
 	FILE *customFile = fopen("../data/customTestData.csv", "r");
 	FILE *pingFile = fopen("../data/pingData.txt", "r");
-	// FILE *floodFile = fopen("../data/floodData.txt", "r");
 	FILE *tracerouteFile = fopen("../data/tracerouteData.txt", "r");
 	FILE *iperfClientFile = fopen("../data/iperfDataClient.txt", "r");
 	// Check to see if there was an error opening any of the input files
-	if (customFile == NULL || pingFile == NULL || floodFile == NULL || tracerouteFile == NULL || iperfClientFile == NULL) {
+	if (customFile == NULL || pingFile == NULL || tracerouteFile == NULL || iperfClientFile == NULL) {
 		fputs("Could not open one of the input files\n", stderr);
 		return false;
 	}
