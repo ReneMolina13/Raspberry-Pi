@@ -462,6 +462,7 @@ int main(int argc, char **argv)
 	}
 	
 	puts("************************************************\n");
+	
 	/*
 	// Initialize thread argument structures and create network threads
 	pthread_attr_init(&attr);
@@ -500,7 +501,6 @@ int main(int argc, char **argv)
 	
 	puts("Custom network test completed");
 	puts("************************************************\n");
-	*/
 	
 	// Run ping, traceroute, and iPerf tests on the network
 	if (runTests(sockData.cmdIP) == false) {
@@ -510,6 +510,7 @@ int main(int argc, char **argv)
 	
 	puts("ping, traceroute, and iPerf tests completed");
 	puts("\n************************************************\n");
+	*/
 	
 	// Close client socket
 	if (close(sockData.clientSocket) < 0) {
@@ -520,7 +521,6 @@ int main(int argc, char **argv)
 	puts("Successfully closed socket");
 	puts("\n************************************************\n");
 	
-	/*
 	// Output all test results into a single file
 	if (formatOutput() == false) {
 		fputs("Error outputting test results - ", stderr);
@@ -529,7 +529,6 @@ int main(int argc, char **argv)
 	
 	puts("Network test results successfully outputted");
 	puts("\n************************************************\n");
-	*/
 	
 	// Free memory allocated to server address and thread argument structures
 	freeaddrinfo(sockData.serverAddr);

@@ -195,6 +195,12 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval)
 	strncpy(args[8], hostname, buffSize);
 	// Null-terminate argument array
 	snprintf(args[9], buffSize, "%p", NULL);
+	
+// TESTING
+//**************************************************************************
+	for (int i = 0; i < numArgs; i++)
+		printf("%s ", args[i]);
+//**************************************************************************
 
 	// Fork process
 	pid_t pid = fork();
