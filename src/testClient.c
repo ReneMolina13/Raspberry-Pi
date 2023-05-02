@@ -270,7 +270,7 @@ bool formatOutput()
 
 		if (c == '\n')
 			numRows++;
-	} while (c >= 0 && c <= 127);
+	} while (c != 255);
 	pingResults.numTests = numRows / 5;
 	varsAssigned++;
 	rewind(pingFile);
