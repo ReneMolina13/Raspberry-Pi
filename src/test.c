@@ -123,7 +123,7 @@ bool runTests(char *hostname)
 	puts("Running Traceroute");
 	retVal = runTraceroute(hostname);
 	puts("Running iPerf");
-	retVal = runIperf(hostname, 500, 1000, 1);
+	retVal = runIperf(hostname, MAX_BANDWIDTH, 8, 1);
 //********************************************************************************************
 
 /*
