@@ -590,7 +590,6 @@ int main(int argc, char **argv)
 	
 	puts("************************************************\n");
 	
-	/*
 	// Initialize thread argument structures and create network threads
 	pthread_attr_init(&attr);
 	NetStats *packetStats = (NetStats *) calloc(NUM_PACKET_SIZES, sizeof(NetStats));
@@ -628,7 +627,6 @@ int main(int argc, char **argv)
 	
 	puts("Custom network test completed");
 	puts("\n************************************************\n");
-	*/
 	
 	// Run ping, traceroute, and iPerf tests on the network
 	if (runTests(sockData.cmdIP) == false) {
