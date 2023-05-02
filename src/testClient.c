@@ -241,7 +241,7 @@ bool formatOutput()
 		return false;
 	}
 
-
+/*
 // TESTING
 //*******************************************************************
 	puts("Custom test structure filled");
@@ -252,7 +252,7 @@ bool formatOutput()
 	printf("Average Errors Per KB: %f\n", customResults.avgErrorsPerKB);
 	fputs("\n", stdout);
 //*******************************************************************
-
+*/
 
 	// Extract data from ping and flood files into the PingResults structure
 	PingResults pingResults;
@@ -307,7 +307,7 @@ bool formatOutput()
 		return false;
 	}
 
-
+/*
 // TESTING
 //*******************************************************************
 	puts("Ping test structure filled");
@@ -328,7 +328,7 @@ bool formatOutput()
 		printf("RTT Standard Deviation: %f\n", pingResults.stdDevRTT[i]);
 	fputs("\n", stdout);
 //*******************************************************************
-
+*/
 
 	// Extract data from traceroute file into TracerouteResults structure
 	TracerouteResults tracerouteResults;
@@ -380,7 +380,7 @@ bool formatOutput()
 		return false;
 	}
 
-
+/*
 // TESTING
 //*******************************************************************
 	puts("Traceroute test structure filled");
@@ -390,7 +390,7 @@ bool formatOutput()
 		printf("Hop Latency (Hop %i): %f %f %f\n", i, tracerouteResults.hopLatency[i][0], tracerouteResults.hopLatency[i][1], tracerouteResults.hopLatency[i][2]);
 	fputs("\n", stdout);
 //*******************************************************************
-
+*/
 
 	// Extract data from iperf client file into IperfResults structure
 	IperfResults iperfResults;
@@ -468,7 +468,7 @@ bool formatOutput()
 		return false;
 	}
 
-	
+/*
 // TESTING
 //*******************************************************************
 	puts("Iperf test structure filled");
@@ -494,7 +494,7 @@ bool formatOutput()
 	for (int i = 0; i < iperfResults.numTests; i++)
 		printf("Packet Loss Received: %f\n", iperfResults.packetLossReceived[i]);
 //*******************************************************************
-
+*/
 	
 	// Close all input files
 	fclose(customFile);
