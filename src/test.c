@@ -147,11 +147,14 @@ bool runTests(char *hostname)
 	// Run iPerf tests
 	int iperfBytes;
 	int bandwidth;
-	for (int i = 0; i < NUM_PACKET_SIZES-1; i++) {
+	for (int i = 0; i < NUM_PACKET_SIZES-2; i++) {
 		iperfBytes = (int) pow(2, i);
 		for (bandwidth = 100; bandwidth < MAX_BANDWIDTH; bandwidth+= 100)
 			runIperf(hostname, bandwidth, iperfBytes, 1);
 	}
+	iperfBytes = MAX_SIZE_UDP;
+	for (bandwidth = 100; bandwidth < MAX_BANDWIDTH; bandwidth+= 100)
+		runIperf(hostname, bandwidth, iperfBytes, 1);
 	
 	return true;
 }
