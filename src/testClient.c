@@ -243,6 +243,12 @@ bool formatOutput()
 // TESTING
 //*******************************************************************
 	puts("Custom test structure filled");
+	printf("Total Iterations: %u\n", customResults.totalIterations);
+	printf("Average RTT: %f\n", customResults.avgRTT);
+	printf("Average Throughput: %f\n", customResults.avgThroughput);
+	printf("Average Errors Per Packet: %f\n", customResults.avgErrorsPerPacket);
+	printf("Average Errors Per KB: %f\n", customResults.avgErrorsPerKB);
+	fputs("\n", stdout);
 //*******************************************************************
 	
 	// Extract data from ping and flood files into the PingResults structure
@@ -260,7 +266,13 @@ bool formatOutput()
 	} while (c != EOF);
 	pingResults.numTests = numRows / 5;
 	varsAssigned++;
-	rewind(pingFile);	
+	rewind(pingFile);
+		
+// TESTING
+//*******************************************************************
+	puts("Ping - numTests initialized");
+//*******************************************************************
+
 	// Allocate memory for each pingResults member
 	pingResults.packetSize = (unsigned int *) malloc(pingResults.numTests * sizeof(unsigned int));
 	pingResults.packetsTransmitted = (unsigned int *) malloc(pingResults.numTests * sizeof(unsigned int));
@@ -303,6 +315,22 @@ bool formatOutput()
 // TESTING
 //*******************************************************************
 	puts("Ping test structure filled");
+	printf("Num Tests: %u\n", pingResults.numTests);
+	for (int i = 0; i < pingResults.numTests; i++)
+		printf("Packet Size: %u\n", pingResults.packetSize[i]);
+	for (int i = 0; i < pingResults.numTests; i++)
+		printf("Packets Transmitted: %u\n", pingResults.packetsTransmitted[i]);
+	for (int i = 0; i < pingResults.numTests; i++)
+		printf("Packet Loss: %f\n", pingResults.packetLoss[i]);
+	for (int i = 0; i < pingResults.numTests; i++)
+		printf("Min RTT: %f\n", pingResults.minRTT[i]);
+	for (int i = 0; i < pingResults.numTests; i++)
+		printf("Average RTT: %f\n", pingResults.avgRTT[i]);
+	for (int i = 0; i < pingResults.numTests; i++)
+		printf("Max RTT: %f\n", pingResults.maxRTT[i]);
+	for (int i = 0; i < pingResults.numTests; i++)
+		printf("RTT Standard Deviation: %f\n", pingResults.stdDevRTT[i]);
+	fputs("\n", stdout);
 //*******************************************************************
 	
 	// Extract data from traceroute file into TracerouteResults structure
@@ -358,6 +386,11 @@ bool formatOutput()
 // TESTING
 //*******************************************************************
 	puts("Traceroute test structure filled");
+	printf("Num Hops: %u\n", tracerouteResults.numHops);
+	printf("Bytes Per Packet: %u\n", tracerouteResults.bytesPerPacket);
+	for (int i = 0; i < tracerouteResults.numHops; i++)
+		printf("Hop Latency (Hop %i): %f %f %f\n", i, tracerouteResults.hopLatency[i][0], tracerouteResults.hopLatency[i][1], tracerouteResults.hopLatency[i][2]);
+	fputs("\n", stdout);
 //*******************************************************************
 	
 	// Extract data from iperf client file into IperfResults structure
@@ -434,6 +467,27 @@ bool formatOutput()
 // TESTING
 //*******************************************************************
 	puts("Iperf test structure filled");
+	printf("Num Tests: %u\n", iperfResults.numTests);
+	for (int i = 0; i < iperfResults.numTests; i++)
+		printf("Seconds Per Test: %u\n", secondsPerTest);
+	for (int i = 0; i < iperfResults.numTests; i++)
+		printf("Packets Sent: %u\n", packetsSent[i]);
+	for (int i = 0; i < iperfResults.numTests; i++)
+		printf("MB Sent: %f\n", megaBytesSent[i]);
+	for (int i = 0; i < iperfResults.numTests; i++)
+		printf("MB Received: %f\n", megaBytesReceived[i]);
+	for (int i = 0; i < iperfResults.numTests; i++)
+		printf("Average Throughput Sent: %f\n", avgThroughputSent[i]);
+	for (int i = 0; i < iperfResults.numTests; i++)
+		printf("Average Throughput Received: %f\n", avgThroughputReceived[i]);
+	for (int i = 0; i < iperfResults.numTests; i++)
+		printf("Jitter Sent: %f\n", jitterSent[i]);
+	for (int i = 0; i < iperfResults.numTests; i++)
+		printf("Jitter Received: %f\n", jitterReceived[i]);
+	for (int i = 0; i < iperfResults.numTests; i++)
+		printf("Packet Loss Sent: %f\n", packetLossSent[i]);
+	for (int i = 0; i < iperfResults.numTests; i++)
+		printf("Packet Loss Received: %f\n", packetLossReceived[i]);
 //*******************************************************************
 	
 	// Close all input files
