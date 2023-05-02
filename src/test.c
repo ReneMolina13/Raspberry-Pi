@@ -121,7 +121,6 @@ bool runTests(char *hostname)
 	retVal = runPing(hostname, 10, 1000, 0.5);
 	if (retVal == false)
 		fputs("Ping program unsuccessful\n", stderr);
-	/*
 	puts("Running Traceroute");
 	retVal = runTraceroute(hostname);
 	if (retVal == false)
@@ -130,7 +129,6 @@ bool runTests(char *hostname)
 	retVal = runIperf(hostname, 500, 1000, 1);
 	if (retVal == false)
 		fputs("iPerf program unsuccessful\n", stderr);
-	*/
 //********************************************************************************************
 	
 	/*
