@@ -505,7 +505,7 @@ int main(int argc, char **argv)
 	}
 	
 	puts("Custom network test completed");
-	puts("************************************************\n");
+	puts("\n************************************************\n");
 	
 	/*
 	// Run ping, traceroute, and iPerf tests on the network
