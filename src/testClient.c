@@ -222,13 +222,43 @@ bool formatOutput()
 		customResults.totalIterations += customTemp;
 		while (fgetc(customFile) != '\n');	// Skip to next row
 	}
+	
+// TESTING
+//**************************************************************************
+	printf("Vars Assigned: %u\n", varsAssigned);
+//**************************************************************************
+	
 	// Extract averages from final row of customFile
 	while (fgetc(customFile) != ',');		// Skip past packet size column
 	while (fgetc(customFile) != ',');		// Skip past packets sent column
 	varsAssigned += fscanf(customFile, "%lf", &customResults.avgRTT);
+
+// TESTING
+//**************************************************************************
+	printf("Vars Assigned: %u\n", varsAssigned);
+//**************************************************************************
+
 	varsAssigned += fscanf(customFile, "%lf", &customResults.avgThroughput);	
+
+// TESTING
+//**************************************************************************
+	printf("Vars Assigned: %u\n", varsAssigned);
+//**************************************************************************
+
 	varsAssigned += fscanf(customFile, "%lf", &customResults.avgErrorsPerPacket);	
+
+// TESTING
+//**************************************************************************
+	printf("Vars Assigned: %u\n", varsAssigned);
+//**************************************************************************
+
 	varsAssigned += fscanf(customFile, "%lf", &customResults.avgErrorsPerKB);
+
+// TESTING
+//**************************************************************************
+	printf("Vars Assigned: %u\n", varsAssigned);
+//**************************************************************************
+
 	// Make sure all variables in customResults structure have been assigned
 	if (varsAssigned != 5) {
 		fputs("Incorrect number of variables assinged for customResults structure\n", stderr);
