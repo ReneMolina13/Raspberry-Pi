@@ -122,21 +122,21 @@ bool runTests(char *hostname)
 	puts("Running Ping");
 	retVal = runPing(hostname, 10, 1000, 0.5);
 	// Fork process
-	pid_t pid = fork();
+	pid_t pidPing = fork();
 	// Indicates fork error
-	if (pid < 0) {
+	if (pidPing < 0) {
 		fputs("Unable to fork process\n", stderr);
 		return false;
 	}
 	// Child process runs traceroute
-	else if (pid == 0)
+	else if (pidPing == 0)
 		if (execlp("cat", "cat", "../data/pingData.txt", NULL) < 0) {
 			// fputs("Error creating iperf server\n", stderr);
 			return false;
 		 }
 	// Parent process waits for child to finish executing
 	else {
-		waitpid(pid, NULL, 0);
+		waitpid(pidPing, NULL, 0);
 		// puts("iPerf Server has been created");
 		return true;
 	}
@@ -145,21 +145,21 @@ bool runTests(char *hostname)
 	puts("Running Traceroute");
 	retVal = runTraceroute(hostname);
 	// Fork process
-	pid_t pid = fork();
+	pid_t pidTraceroute = fork();
 	// Indicates fork error
-	if (pid < 0) {
+	if (pidTraceroute < 0) {
 		fputs("Unable to fork process\n", stderr);
 		return false;
 	}
 	// Child process runs traceroute
-	else if (pid == 0)
+	else if (pidTraceroute == 0)
 		if (execlp("cat", "cat", "../data/tracerouteData.txt", NULL) < 0) {
 			// fputs("Error creating iperf server\n", stderr);
 			return false;
 		 }
 	// Parent process waits for child to finish executing
 	else {
-		waitpid(pid, NULL, 0);
+		waitpid(pidTraceroute, NULL, 0);
 		// puts("iPerf Server has been created");
 		return true;
 	}
@@ -168,21 +168,21 @@ bool runTests(char *hostname)
 	puts("Running iPerf");
 	retVal = runIperf(hostname, MAX_BANDWIDTH, 8, 1);
 	// Fork process
-	pid_t pid = fork();
+	pid_t pidIperf = fork();
 	// Indicates fork error
-	if (pid < 0) {
+	if (pidIperf < 0) {
 		fputs("Unable to fork process\n", stderr);
 		return false;
 	}
 	// Child process runs traceroute
-	else if (pid == 0)
+	else if (pidIperf == 0)
 		if (execlp("cat", "cat", "../data/iperfDataClient.txt", NULL) < 0) {
 			// fputs("Error creating iperf server\n", stderr);
 			return false;
 		 }
 	// Parent process waits for child to finish executing
 	else {
-		waitpid(pid, NULL, 0);
+		waitpid(pidIperf, NULL, 0);
 		// puts("iPerf Server has been created");
 		return true;
 	}
