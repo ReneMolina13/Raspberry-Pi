@@ -259,15 +259,18 @@ bool formatOutput()
 	double pingTemp;
 	numRows = 0;
 	// Determine how many ping tests were executed (5 rows each)
-	for (numRows = 0; numRows < 5; numRows++)
-		while(fgetc(pingFile) != '\n');
+	while (!feof(pingFile)) {
+		c = fgetc(pingFile);
+		if (c == '\n')
+			numRows++;
+	}
 	pingResults.numTests = numRows / 5;
 	varsAssigned++;
 	rewind(pingFile);
 		
 // TESTING
 //*******************************************************************
-	printf("Num Rows: %u", numRows);
+	printf("Number of Tests: %u", pingResults.numTests);
 	puts("\nPing - numTests initialized");
 //*******************************************************************
 
@@ -333,19 +336,27 @@ bool formatOutput()
 	
 	// Extract data from traceroute file into TracerouteResults structure
 	TracerouteResults tracerouteResults;
-	tracerouteResults.numHops = 0;
+	tracerouteResults.numHops = -1;
 	varsAssigned = 0;
+	bool hopLine = true;
 	// Determine number of rows and number of hops
-	while (c = fgetc(tracerouteFile) != '\n');
-	while (c >= 0 && c <= 127) {
-		for (int i = 0; i < 4; i++)
-			c = fgetc(tracerouteFile);
-		if (c != '*')
+	/*while (fgetc(tracerouteFile) != '\n');
+	while (!feof(tracerouteFile)) {
+		for (int i = 0; i < 3; i++)
+			fgetc(tracerouteFile);
+		if (fgetc(tracerouteFile) != '*')
 			tracerouteResults.numHops++;
-		while (c = fgetc(tracerouteFile) != '\n');
+		while (fgetc(tracerouteFile) != '\n');
+	}*/
+	while (!feof(tracerouteFile)) {
+		c = fgetc(tracerouteFile);
+		if (c == '*')
+			hopLine = false;
+		else if (c == '\n' && hopLine == true)
+			tracerouteResults.numHops++;
 	}
 	varsAssigned++;
-	rewind(tracerouteFile);
+	fseek(tracerouteFile, 0, SEEK_SET);
 	// Allocate memory for hop latency member variable
 	tracerouteResults.hopLatency = (double **) malloc(tracerouteResults.numHops * sizeof(double *));
 	for (int i = 0; i < tracerouteResults.numHops; i++)
@@ -356,7 +367,7 @@ bool formatOutput()
 	varsAssigned += fscanf(tracerouteFile, "%u", &tracerouteResults.bytesPerPacket);
 	while (fgetc(tracerouteFile) != '\n');
 	// Extract hop latencies
-	bool hopLine = false;
+	hopLine = false;
 	for (int i = 0; i < tracerouteResults.numHops; i++) {
 		// While '*' is present in this line, skip to next line
 		while (hopLine == false) {
@@ -397,7 +408,7 @@ bool formatOutput()
 	// Determine how many seconds each test is
 	while (fgetc(iperfClientFile) != '-');
 	varsAssigned += fscanf(iperfClientFile, "%lf", &iperfResults.secondsPerTest);
-	rewind(iperfClientFile);
+	fseek(iperfClientFile, 0, SEEK_SET);
 	// Determine how many tests there are (10 rows per test)
 	iperfResults.numTests = 0;
 	numRows = 0;
@@ -405,10 +416,10 @@ bool formatOutput()
 		c = fgetc(iperfClientFile);
 		if (c == '\n')
 			numRows++;
-	} while (c >= 0 && c <= 127);
+	} while (!feof(iperfClientFile));
 	iperfResults.numTests = numRows / 10;
 	varsAssigned++;
-	rewind(iperfClientFile);
+	fseek(iperfClientFile, 0, SEEK_SET);
 	// Allocate memory for each iperfResults member
 	iperfResults.packetsSent = (unsigned int *) malloc(iperfResults.numTests * sizeof(unsigned int));
 	iperfResults.megaBytesSent = (double *) malloc(iperfResults.numTests * sizeof(double));
@@ -472,7 +483,7 @@ bool formatOutput()
 	puts("Iperf test structure filled");
 	printf("Num Tests: %u\n", iperfResults.numTests);
 	for (int i = 0; i < iperfResults.numTests; i++)
-		printf("Seconds Per Test: %u\n", iperfResults.secondsPerTest);
+		printf("Seconds Per Test: %f\n", iperfResults.secondsPerTest);
 	for (int i = 0; i < iperfResults.numTests; i++)
 		printf("Packets Sent: %u\n", iperfResults.packetsSent[i]);
 	for (int i = 0; i < iperfResults.numTests; i++)
