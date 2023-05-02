@@ -268,7 +268,7 @@ bool formatOutput()
 		printf("%i", c);
 //*******************************************************************
 		
-	} while (c != EOF);
+	} while (c >= 0 && c <= 127);
 	pingResults.numTests = numRows / 5;
 	varsAssigned++;
 	rewind(pingFile);
