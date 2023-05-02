@@ -275,7 +275,7 @@ bool formatOutput()
 		
 // TESTING
 //*******************************************************************
-	puts("Ping - numTests initialized");
+	puts("\nPing - numTests initialized");
 //*******************************************************************
 
 	// Allocate memory for each pingResults member
