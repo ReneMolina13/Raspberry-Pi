@@ -211,6 +211,7 @@ bool formatOutput()
 	// Holds how many variables have been assigned for a particular result structure
 	unsigned int varsAssigned;
 	
+	
 	// Extract data from custom test restults file into CustomResults structure
 	CustomResults customResults;
 	unsigned int customTemp;
@@ -239,6 +240,10 @@ bool formatOutput()
 		return false;
 	}
 	
+// TESTING
+//*******************************************************************
+	puts("Custom test structure filled");
+//*******************************************************************
 	
 	// Extract data from ping and flood files into the PingResults structure
 	PingResults pingResults;
@@ -295,6 +300,10 @@ bool formatOutput()
 		return false;
 	}
 	
+// TESTING
+//*******************************************************************
+	puts("Ping test structure filled");
+//*******************************************************************
 	
 	// Extract data from traceroute file into TracerouteResults structure
 	TracerouteResults tracerouteResults;
@@ -345,7 +354,11 @@ bool formatOutput()
 		fputs("Incorrect number of variables assigned for tracerouteResults structure\n", stderr);
 		return false;
 	}
-	
+		
+// TESTING
+//*******************************************************************
+	puts("Traceroute test structure filled");
+//*******************************************************************
 	
 	// Extract data from iperf client file into IperfResults structure
 	IperfResults iperfResults;
@@ -417,7 +430,11 @@ bool formatOutput()
 		fputs("Incorrect number of variables assigned for iperfResults structure\n", stderr);
 		return false;
 	}
-	
+		
+// TESTING
+//*******************************************************************
+	puts("Iperf test structure filled");
+//*******************************************************************
 	
 	// Close all input files
 	fclose(customFile);
@@ -462,8 +479,12 @@ bool formatOutput()
 	fputs("\n", outFile);
 	// Close output file
 	fclose(outFile);
-	
-	
+		
+// TESTING
+//*******************************************************************
+	puts("Data written to output file");
+//*******************************************************************
+
 	// Free dynamic memory
 	free(pingResults.packetSize);
 	free(pingResults.packetsTransmitted);
