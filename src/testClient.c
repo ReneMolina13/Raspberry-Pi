@@ -200,10 +200,11 @@ bool formatOutput()
 	// Open all five data files for reading
 	FILE *customFile = fopen("../data/customTestData.csv", "r");
 	FILE *pingFile = fopen("../data/pingData.txt", "r");
+	FILE *floodFile = fopen("../data/floodData.txt", "r");
 	FILE *tracerouteFile = fopen("../data/tracerouteData.txt", "r");
 	FILE *iperfClientFile = fopen("../data/iperfDataClient.txt", "r");
 	// Check to see if there was an error opening any of the input files
-	if (customFile == NULL || pingFile == NULL || tracerouteFile == NULL || iperfClientFile == NULL) {
+	if (customFile == NULL || pingFile == NULL || floodFile == NULL || tracerouteFile == NULL || iperfClientFile == NULL) {
 		fputs("Could not open one of the input files\n", stderr);
 		return false;
 	}
@@ -241,7 +242,7 @@ bool formatOutput()
 		return false;
 	}
 
-/*
+
 // TESTING
 //*******************************************************************
 	puts("Custom test structure filled");
@@ -252,14 +253,13 @@ bool formatOutput()
 	printf("Average Errors Per KB: %f\n", customResults.avgErrorsPerKB);
 	fputs("\n", stdout);
 //*******************************************************************
-*/
+
 
 	// Extract data from ping and flood files into the PingResults structure
 	PingResults pingResults;
 	varsAssigned = 0;
 	double pingTemp;
 	numRows = 0;
-	rewind(pingFile);
 	// Determine how many ping tests were executed (5 rows each)
 	while (!feof(pingFile)) {
 		c = fgetc(pingFile);
@@ -267,7 +267,6 @@ bool formatOutput()
 			numRows++;
 	}
 	pingResults.numTests = numRows / 5;
-	// pingResults.numTests = 1;
 	varsAssigned++;
 	rewind(pingFile);
 	// Allocate memory for each pingResults member
@@ -309,7 +308,7 @@ bool formatOutput()
 		return false;
 	}
 
-/*
+
 // TESTING
 //*******************************************************************
 	puts("Ping test structure filled");
@@ -330,7 +329,7 @@ bool formatOutput()
 		printf("RTT Standard Deviation: %f\n", pingResults.stdDevRTT[i]);
 	fputs("\n", stdout);
 //*******************************************************************
-*/
+
 
 	// Extract data from traceroute file into TracerouteResults structure
 	TracerouteResults tracerouteResults;
@@ -382,7 +381,7 @@ bool formatOutput()
 		return false;
 	}
 
-/*
+
 // TESTING
 //*******************************************************************
 	puts("Traceroute test structure filled");
@@ -392,7 +391,7 @@ bool formatOutput()
 		printf("Hop Latency (Hop %i): %f %f %f\n", i, tracerouteResults.hopLatency[i][0], tracerouteResults.hopLatency[i][1], tracerouteResults.hopLatency[i][2]);
 	fputs("\n", stdout);
 //*******************************************************************
-*/
+
 
 	// Extract data from iperf client file into IperfResults structure
 	IperfResults iperfResults;
@@ -470,7 +469,7 @@ bool formatOutput()
 		return false;
 	}
 
-/*
+	
 // TESTING
 //*******************************************************************
 	puts("Iperf test structure filled");
@@ -496,11 +495,12 @@ bool formatOutput()
 	for (int i = 0; i < iperfResults.numTests; i++)
 		printf("Packet Loss Received: %f\n", iperfResults.packetLossReceived[i]);
 //*******************************************************************
-*/
+
 	
 	// Close all input files
 	fclose(customFile);
 	fclose(pingFile);
+	fclose(floodFile);
 	fclose(tracerouteFile);
 	fclose(iperfClientFile);
 	
