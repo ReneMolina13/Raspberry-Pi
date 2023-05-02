@@ -145,13 +145,8 @@ bool runTests(char *hostname)
 	runTraceroute(hostname);
 	
 	// Run iPerf tests
-	int iperfBytes;
-	int bandwidth;
-	for (int i = 0; i < NUM_PACKET_SIZES-2; i++) {
-		iperfBytes = (int) pow(2, i);
-		for (bandwidth = 50; bandwidth < MAX_BANDWIDTH; bandwidth+= 50)
-			runIperf(hostname, bandwidth, iperfBytes, 1);
-	}
+		for (int bandwidth = 50; bandwidth < MAX_BANDWIDTH; bandwidth+= 50)
+			runIperf(hostname, bandwidth, 8, 1);
 	// iperfBytes = MAX_PACKET_SIZE_UDP;
 	// for (bandwidth = 100; bandwidth < MAX_BANDWIDTH; bandwidth+= 100)
 		// runIperf(hostname, bandwidth, iperfBytes, 1);
@@ -314,7 +309,7 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int testTime)
 	snprintf(args[5], buffSize, "%im", bandwidth);
 	// Specify packet length (bytes)
 	snprintf(args[6], buffSize, "-l");
-	snprintf(args[7], buffSize, "%i", numBytes);
+	snprintf(args[7], buffSize, "%ik", numBytes);
 	// Specify total time of test
 	snprintf(args[8], buffSize, "-t");
 	snprintf(args[9], buffSize, "%i", testTime);
