@@ -266,8 +266,8 @@ bool formatOutput()
 		if (c == '\n')
 			numRows++;
 	}
-	// pingResults.numTests = numRows / 5;
-	pingResults.numTests = 1;
+	pingResults.numTests = numRows / 5;
+	// pingResults.numTests = 1;
 	varsAssigned++;
 	rewind(pingFile);
 	// Allocate memory for each pingResults member
