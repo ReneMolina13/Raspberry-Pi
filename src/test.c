@@ -140,11 +140,11 @@ bool runTests(char *hostname)
 		runPing(hostname, 10, pingBytes, 0.5);
 	}
 	
-	/*
 	// Run flood test and traceroute tests
 	runFlood(hostname);
 	runTraceroute(hostname);
 	
+	/*
 	// Run iPerf tests
 	int iperfBytes;
 	int bandwidth;
