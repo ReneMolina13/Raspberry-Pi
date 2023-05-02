@@ -262,6 +262,12 @@ bool formatOutput()
 	// Determine how many ping tests were executed (5 rows each)
 	do {
 		c = fgetc(pingFile);
+
+// TESTING
+//******************************************************************
+		printf("%c", c);
+//******************************************************************
+
 		if (c == '\n')
 			numRows++;
 	} while (c >= 0 && c <= 127);
