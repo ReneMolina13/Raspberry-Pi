@@ -140,6 +140,7 @@ bool runTests(char *hostname)
 		runPing(hostname, 10, pingBytes, 0.5);
 	}
 	
+	/*
 	// Run flood test and traceroute tests
 	runFlood(hostname);
 	runTraceroute(hostname);
@@ -147,6 +148,7 @@ bool runTests(char *hostname)
 	// Run iPerf tests
 		for (int bandwidth = 150; bandwidth < MAX_BANDWIDTH; bandwidth+= 150)
 			runIperf(hostname, bandwidth, 8, 1);
+	*/
 	
 	return true;
 }
