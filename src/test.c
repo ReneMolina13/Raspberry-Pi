@@ -149,7 +149,7 @@ bool runTests(char *hostname)
 	int bandwidth;
 	for (int i = 0; i < NUM_PACKET_SIZES-2; i++) {
 		iperfBytes = (int) pow(2, i);
-		for (bandwidth = 100; bandwidth < MAX_BANDWIDTH; bandwidth+= 100)
+		for (bandwidth = 50; bandwidth < MAX_BANDWIDTH; bandwidth+= 50)
 			runIperf(hostname, bandwidth, iperfBytes, 1);
 	}
 	// iperfBytes = MAX_PACKET_SIZE_UDP;

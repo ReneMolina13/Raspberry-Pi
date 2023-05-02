@@ -33,7 +33,7 @@ enum packetConstants
 	// Max number of iterations before calculations begin to overflow
 	MAX_ITERATIONS = 65000000,
 	// Max bandwidth of network
-	MAX_BANDWIDTH = 1000
+	MAX_BANDWIDTH = 500
 };
 
 
