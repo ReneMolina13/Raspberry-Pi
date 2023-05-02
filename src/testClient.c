@@ -569,7 +569,6 @@ int main(int argc, char **argv)
 	puts("Successfully closed socket");
 	puts("\n************************************************\n");
 	
-	/*
 	// Output all test results into a single file
 	if (formatOutput() == false) {
 		fputs("Error outputting test results - ", stderr);
@@ -578,7 +577,6 @@ int main(int argc, char **argv)
 	
 	puts("Network test results successfully outputted");
 	puts("\n************************************************\n");
-	*/
 	
 	// Free memory allocated to server address and thread argument structures
 	freeaddrinfo(sockData.serverAddr);
