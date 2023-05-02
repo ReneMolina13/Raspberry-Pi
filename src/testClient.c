@@ -259,11 +259,10 @@ bool formatOutput()
 	char c;
 	unsigned int numRows = 0;
 	do {
-		do {
-			c = fgetc(pingFile);
-		} while (c != '\n' && c >= 0);
-		numRows++;
-	} while (c > 0);
+		c = fgetc(pingFile);
+		if (c == '\n')
+			numRows++;
+	} while (c >= 0);
 	pingResults.numTests = numRows / 5;
 	varsAssigned++;
 	rewind(pingFile);
