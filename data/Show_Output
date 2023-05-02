@@ -1,7 +1,10 @@
 #! /bin/bash
 clear
+echo +++++++++++++++++++++++++++++
 cat pingData.txt
-cat floodData.txt
+echo +++++++++++++++++++++++++++++
 cat tracerouteData.txt
+echo +++++++++++++++++++++++++++++
 cat iperfDataClient.txt
-cat iperfDataServer.txt
+echo +++++++++++++++++++++++++++++
+
