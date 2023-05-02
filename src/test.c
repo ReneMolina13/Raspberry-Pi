@@ -131,6 +131,7 @@ bool runTests(char *hostname)
 		fputs("iPerf program unsuccessful\n", stderr);
 //********************************************************************************************
 	
+	/*
 	// Run ping tests
 	int pingBytes;
 	for (int i = 10; i < 20; i++) {
@@ -150,6 +151,7 @@ bool runTests(char *hostname)
 		for (bandwidth = 100; bandwidth < MAX_BANDWIDTH; bandwidth+= 100)
 			runIperf(hostname, bandwidth, iperfBytes, 1);
 	}
+	*/
 	
 	return true;
 }
