@@ -1,14 +1,13 @@
 Custom Test,
 Total Iterations,Average Round-Trip-Time,Average Throughput,Average Errors Per Packet,Average Errors Per KB,
-4278388090,0.080000,1034.510000,0.000000,0.000000,
+307130,0.070000,27405.500000,0.000000,0.000000,
 Ping Test,
 Test Number,Packet Size,Packets Transmitted,Packet Loss,Minimum Round-Trip-Time,Average Round-Trip-Time,Maximum Round-Trip-Time,Round-Trip-Time Standard Deviation,
-1,1028,10,0.000000,0.023000,0.133000,0.511000,0.155000,
 
 Traceroute Test,
 Hop Number,Packet Size,Packet 1 Latency,Packet 2 Latency,Packet 3 Latency,
-1,60,0.037000,0.021000,0.022000,
+1,60,0.060000,0.021000,0.022000,
 
 Iperf Test,
 Time (s),Packets Sent,MB Sent,MB Received,Average Throughput Sent,Average Throughput Received,Jitter Sent,Jitter Received,Packet Loss Sent,Packet Loss Received,
-1.000000,19171,18.300000,18.300000,153.000000,148.000000,0.000000,0.002000,0.000000,0.000000,
+1.000000,22888,179.000000,177.000000,1.500000,1.420000,0.000000,0.009000,0.750000,0.000000,
