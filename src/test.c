@@ -114,7 +114,8 @@ bool runTests(char *hostname)
 {
 	// Ensures that each testing program runs successfully
 	bool retVal = true;
-	
+
+/*
 // TESTING
 //********************************************************************************************
 	puts("Running Ping");
@@ -130,8 +131,8 @@ bool runTests(char *hostname)
 	if (retVal == false)
 		fputs("iPerf program unsuccessful\n", stderr);
 //********************************************************************************************
-	
-	/*
+*/
+
 	// Run ping tests
 	int pingBytes;
 	for (int i = 10; i < 20; i++) {
@@ -139,6 +140,7 @@ bool runTests(char *hostname)
 		runPing(hostname, 10, pingBytes, 0.5);
 	}
 	
+	/*
 	// Run flood test and traceroute tests
 	runFlood(hostname);
 	runTraceroute(hostname);

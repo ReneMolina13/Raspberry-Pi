@@ -654,7 +654,7 @@ int main(int argc, char **argv)
 		return -1;
 	}
 	
-	puts("Network test results successfully outputted");
+	puts("Network test results successfully processed");
 	puts("\n************************************************\n");
 	
 	// Free memory allocated to server address and thread argument structures
