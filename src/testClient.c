@@ -400,10 +400,10 @@ bool formatOutput()
 	varsAssigned += fscanf(iperfClientFile, "%lf", &iperfResults.secondsPerTest);
 	rewind(iperfClientFile);
 	// Determine how many tests there are (10 rows per test)
-	iperfResults.numTests = 0
+	iperfResults.numTests = 0;
 	numRows = 0;
 	do { 
-		c = fgetc(iperfClientFile)
+		c = fgetc(iperfClientFile);
 		if (c == '\n')
 			numRows++;
 	} while (c >= 0 && c <= 127);
