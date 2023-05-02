@@ -469,6 +469,7 @@ int main(int argc, char **argv)
 	
 	puts("************************************************\n");
 	
+	/*
 	// Initialize thread argument structures and create network threads
 	pthread_attr_init(&attr);
 	NetStats *packetStats = (NetStats *) calloc(NUM_PACKET_SIZES, sizeof(NetStats));
@@ -507,7 +508,6 @@ int main(int argc, char **argv)
 	puts("Custom network test completed");
 	puts("\n************************************************\n");
 	
-	/*
 	// Run ping, traceroute, and iPerf tests on the network
 	if (runTests(sockData.cmdIP) == false) {
 		fputs("Error running extra network tests - ", stderr);
@@ -527,7 +527,6 @@ int main(int argc, char **argv)
 	puts("Successfully closed socket");
 	puts("\n************************************************\n");
 	
-	/*
 	// Output all test results into a single file
 	if (formatOutput() == false) {
 		fputs("Error outputting test results - ", stderr);
@@ -536,12 +535,11 @@ int main(int argc, char **argv)
 	
 	puts("Network test results successfully outputted");
 	puts("\n************************************************\n");
-	*/
 	
 	// Free memory allocated to server address and thread argument structures
 	freeaddrinfo(sockData.serverAddr);
-	free(packetStats);
-	free(thread_args);
+	// free(packetStats);
+	// free(thread_args);
 	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
 		free(packets.sentPackets[i]);
 		free(packets.receivedPackets[i]);
