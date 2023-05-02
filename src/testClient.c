@@ -499,7 +499,6 @@ bool formatOutput()
 	// Close all input files
 	fclose(customFile);
 	fclose(pingFile);
-	fclose(floodFile);
 	fclose(tracerouteFile);
 	fclose(iperfClientFile);
 	
