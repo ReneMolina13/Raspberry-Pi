@@ -627,30 +627,6 @@ int main(int argc, char **argv)
 	puts("Custom network test completed");
 	puts("\n************************************************\n");
 	
-	/*
-	// Show output data
-	pid_t pid = fork();
-	// Indicates fork error
-	if (pid < 0) {
-		fputs("Unable to fork process\n", stderr);
-		return false;
-	}
-	// Child process runs traceroute
-	else if (pid == 0)
-		if (execl("cat", "cat", "../data/customTestData.csv", NULL) < 0) {
-			// fputs("Error creating iperf server\n", stderr);
-			return false;
-		 }
-	// Parent process waits for child to finish executing
-	else {
-		waitpid(pid, NULL, 0);
-		// puts("iPerf Server has been created");
-		// return true;
-	}
-	
-	puts("\n************************************************\n");
-	*/
-	
 	// Run ping, traceroute, and iPerf tests on the network
 	if (runTests(sockData.cmdIP) == false) {
 		fputs("Error running extra network tests - ", stderr);

@@ -121,84 +121,12 @@ bool runTests(char *hostname)
 	// Run ping
 	puts("Running Ping");
 	retVal = runPing(hostname, 10, 1000, 0.5);
-	
-	/*
-	// Fork process
-	pid_t pidPing = fork();
-	// Indicates fork error
-	if (pidPing < 0) {
-		fputs("Unable to fork process\n", stderr);
-		return false;
-	}
-	// Child process runs traceroute
-	else if (pidPing == 0)
-		if (execlp("cat", "cat", "../data/pingData.txt", NULL) < 0) {
-			// fputs("Error creating iperf server\n", stderr);
-			return false;
-		 }
-	// Parent process waits for child to finish executing
-	else {
-		waitpid(pidPing, NULL, 0);
-		// puts("iPerf Server has been created");
-		sleep(3);
-		// return true;
-	}
-	*/
-	
 	// Run traceroute
 	puts("Running Traceroute");
 	retVal = runTraceroute(hostname);
-	
-	/*
-	// Fork process
-	pid_t pidTraceroute = fork();
-	// Indicates fork error
-	if (pidTraceroute < 0) {
-		fputs("Unable to fork process\n", stderr);
-		return false;
-	}
-	// Child process runs traceroute
-	else if (pidTraceroute == 0)
-		if (execlp("cat", "cat", "../data/tracerouteData.txt", NULL) < 0) {
-			// fputs("Error creating iperf server\n", stderr);
-			return false;
-		 }
-	// Parent process waits for child to finish executing
-	else {
-		waitpid(pidTraceroute, NULL, 0);
-		// puts("iPerf Server has been created");
-		sleep(3);
-		// return true;
-	}
-	*/
-	
 	// Run iPerf
 	puts("Running iPerf");
 	retVal = runIperf(hostname, MAX_BANDWIDTH, 8, 1);
-	
-	/*
-	// Fork process
-	pid_t pidIperf = fork();
-	// Indicates fork error
-	if (pidIperf < 0) {
-		fputs("Unable to fork process\n", stderr);
-		return false;
-	}
-	// Child process runs traceroute
-	else if (pidIperf == 0)
-		if (execlp("cat", "cat", "../data/iperfDataClient.txt", NULL) < 0) {
-			// fputs("Error creating iperf server\n", stderr);
-			return false;
-		 }
-	// Parent process waits for child to finish executing
-	else {
-		waitpid(pidIperf, NULL, 0);
-		// puts("iPerf Server has been created");
-		sleep(3);
-		// return true;
-	}
-	*/
-	
 //********************************************************************************************
 
 /*
