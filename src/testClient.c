@@ -643,7 +643,7 @@ int main(int argc, char **argv)
 	else {
 		waitpid(pid, NULL, 0);
 		// puts("iPerf Server has been created");
-		return true;
+		// return true;
 	}
 	
 	puts("\n************************************************\n");

@@ -138,7 +138,8 @@ bool runTests(char *hostname)
 	else {
 		waitpid(pidPing, NULL, 0);
 		// puts("iPerf Server has been created");
-		return true;
+		sleep(3);
+		// return true;
 	}
 	
 	// Run traceroute and show output
@@ -161,7 +162,8 @@ bool runTests(char *hostname)
 	else {
 		waitpid(pidTraceroute, NULL, 0);
 		// puts("iPerf Server has been created");
-		return true;
+		sleep(3);
+		// return true;
 	}
 	
 	// Run iPerf and show output
@@ -184,7 +186,8 @@ bool runTests(char *hostname)
 	else {
 		waitpid(pidIperf, NULL, 0);
 		// puts("iPerf Server has been created");
-		return true;
+		sleep(3);
+		// return true;
 	}
 //********************************************************************************************
 
