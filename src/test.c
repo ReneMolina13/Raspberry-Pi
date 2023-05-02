@@ -120,15 +120,15 @@ bool runTests(char *hostname)
 	puts("Running Ping");
 	retVal = runPing(hostname, 10, 1000, 0.5);
 	if (retVal == false)
-		fputs("Ping program unsuccessful\n", stderr);
+		// fputs("Ping program unsuccessful\n", stderr);
 	puts("Running Traceroute");
 	retVal = runTraceroute(hostname);
 	if (retVal == false)
-		fputs("Traceroute program unsuccessful\n", stderr);
+		// fputs("Traceroute program unsuccessful\n", stderr);
 	puts("Running iPerf");
 	retVal = runIperf(hostname, 500, 8, 1);
 	if (retVal == false)
-		fputs("iPerf program unsuccessful\n", stderr);
+		// fputs("iPerf program unsuccessful\n", stderr);
 //********************************************************************************************
 
 /*
