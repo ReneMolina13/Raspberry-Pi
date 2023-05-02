@@ -1,6 +1,8 @@
 #! /bin/bash
 clear
 echo +++++++++++++++++++++++++++++
+cat customTestData.csv
+echo +++++++++++++++++++++++++++++
 cat pingData.txt
 echo +++++++++++++++++++++++++++++
 cat tracerouteData.txt
