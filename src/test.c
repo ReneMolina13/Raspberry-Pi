@@ -176,12 +176,13 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval)
 	for (int i = 0; i < numArgs; i++)
 		args[i] = (char *) malloc(buffSize * sizeof(char));
 
-	// Run ping with quiet output
+	// Run ping
 	strncpy(args[0], "../data/Ping_Test", buffSize);
-	strncpy(args[1], "-q", buffSize);
-	// Number of ping requests
-	strncpy(args[2], "-c", buffSize);
-	snprintf(args[3], buffSize, "%i", numPackets);
+	// Specify number of ping requests
+	strncpy(args[1], "-c", buffSize);
+	snprintf(args[2], buffSize, "%i", numPackets);
+	// Specify quiet output
+	strncpy(args[3], "-q", buffSize);
 	// Size of ping packet (bytes)
 	strncpy(args[4], "-s", buffSize);
 	snprintf(args[5], buffSize, "%i", numBytes);
