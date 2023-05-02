@@ -115,7 +115,6 @@ bool runTests(char *hostname)
 	// Ensures that each testing program runs successfully
 	bool retVal = true;
 
-/*
 // TESTING
 //********************************************************************************************
 	puts("Running Ping");
@@ -127,12 +126,12 @@ bool runTests(char *hostname)
 	if (retVal == false)
 		fputs("Traceroute program unsuccessful\n", stderr);
 	puts("Running iPerf");
-	retVal = runIperf(hostname, 500, 1000, 1);
+	retVal = runIperf(hostname, 500, 8, 1);
 	if (retVal == false)
 		fputs("iPerf program unsuccessful\n", stderr);
 //********************************************************************************************
-*/
 
+/*
 	// Run ping tests
 	int pingBytes;
 	for (int i = 10; i < 15; i++) {
