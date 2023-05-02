@@ -214,6 +214,7 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval)
 		for (int i = 0; i < numArgs; i++)
 			free(args[i]);
 		free(args);
+		sleep((int) (numPackets * interval) + 1);
 		puts("Results have been saved to pingData.txt / floodData.txt");
 		return true;
 	}
@@ -274,6 +275,7 @@ bool runTraceroute(char *hostname)
 	// Parent process waits for child to finish executing
 	else {
 		waitpid(pid, NULL, 0);
+		sleep(3);
 		puts("Results have been saved to tracerouteData.txt");
 		return true;
 	}
@@ -333,6 +335,7 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int testTime)
 		for (int i = 0; i < numArgs; i++)
 			free(args[i]);
 		free(args);
+		sleep(testTime + 1);
 		puts("Results have been saved to iperfDataClient.txt");
 		return true;
 	}
