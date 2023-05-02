@@ -262,6 +262,12 @@ bool formatOutput()
 		c = fgetc(pingFile);
 		if (c == '\n')
 			numRows++;
+
+// TESTING
+//*******************************************************************
+		printf("%c", c);
+//*******************************************************************
+
 	} while (c != EOF);
 	pingResults.numTests = numRows / 5;
 	varsAssigned++;
