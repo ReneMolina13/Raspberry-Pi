@@ -258,19 +258,9 @@ bool formatOutput()
 	varsAssigned = 0;
 	double pingTemp;
 	numRows = 0;
-	rewind(pingFile);
 	// Determine how many ping tests were executed (5 rows each)
-	do {
-		c = fgetc(pingFile);
-
-// TESTING
-//******************************************************************
-		printf("%c", c);
-//******************************************************************
-
-		if (c == '\n')
-			numRows++;
-	} while (c != EOF);
+	for (numRows = 0; numRows < 5; numRows++)
+		while(fgetc(pingFile) != '\n');
 	pingResults.numTests = numRows / 5;
 	varsAssigned++;
 	rewind(pingFile);
