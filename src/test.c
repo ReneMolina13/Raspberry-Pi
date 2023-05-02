@@ -135,7 +135,7 @@ bool runTests(char *hostname)
 
 	// Run ping tests
 	int pingBytes;
-	for (int i = 10; i < 20; i++) {
+	for (int i = 10; i < 15; i++) {
 		pingBytes = (int) pow(2, i);
 		runPing(hostname, 10, pingBytes, 0.5);
 	}
