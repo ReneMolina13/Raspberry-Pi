@@ -538,7 +538,7 @@ int main(int argc, char **argv)
 		return -1;
 	}
 	
-	// Custom network test complete, kill all network threads
+	// Custom network test complete, signal to all network threads to terminate
 	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
 		thread_args[i].status = 0;
 		if (thread_args[i].status == -1) {
@@ -549,6 +549,7 @@ int main(int argc, char **argv)
 	
 	puts("Custom network test completed");
 	puts("\n************************************************\n");
+	*/
 	
 	// Run ping, traceroute, and iPerf tests on the network
 	if (runTests(sockData.cmdIP) == false) {
@@ -558,7 +559,6 @@ int main(int argc, char **argv)
 	
 	puts("ping, traceroute, and iPerf tests completed");
 	puts("\n************************************************\n");
-	*/
 	
 	// Close client socket
 	if (close(sockData.clientSocket) < 0) {
@@ -569,6 +569,7 @@ int main(int argc, char **argv)
 	puts("Successfully closed socket");
 	puts("\n************************************************\n");
 	
+	/*
 	// Output all test results into a single file
 	if (formatOutput() == false) {
 		fputs("Error outputting test results - ", stderr);
@@ -577,6 +578,7 @@ int main(int argc, char **argv)
 	
 	puts("Network test results successfully outputted");
 	puts("\n************************************************\n");
+	*/
 	
 	// Free memory allocated to server address and thread argument structures
 	freeaddrinfo(sockData.serverAddr);
