@@ -257,6 +257,7 @@ bool formatOutput()
 	PingResults pingResults;
 	varsAssigned = 0;
 	double pingTemp;
+	numRows = 0;
 	// Determine how many ping tests were executed (5 rows each)
 	do {
 		c = fgetc(pingFile);
@@ -269,6 +270,7 @@ bool formatOutput()
 		
 // TESTING
 //*******************************************************************
+	printf("Num Rows: %u", numRows);
 	puts("\nPing - numTests initialized");
 //*******************************************************************
 
