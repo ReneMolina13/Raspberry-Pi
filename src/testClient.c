@@ -266,7 +266,8 @@ bool formatOutput()
 		if (c == '\n')
 			numRows++;
 	}
-	pingResults.numTests = numRows / 5;
+	// pingResults.numTests = numRows / 5;
+	pingResults.numTests = 1;
 	varsAssigned++;
 	rewind(pingFile);
 	// Allocate memory for each pingResults member
@@ -308,7 +309,7 @@ bool formatOutput()
 		return false;
 	}
 
-
+/*
 // TESTING
 //*******************************************************************
 	puts("Ping test structure filled");
@@ -329,7 +330,7 @@ bool formatOutput()
 		printf("RTT Standard Deviation: %f\n", pingResults.stdDevRTT[i]);
 	fputs("\n", stdout);
 //*******************************************************************
-
+*/
 
 	// Extract data from traceroute file into TracerouteResults structure
 	TracerouteResults tracerouteResults;
