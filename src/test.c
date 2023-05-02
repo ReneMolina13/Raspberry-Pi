@@ -145,11 +145,8 @@ bool runTests(char *hostname)
 	runTraceroute(hostname);
 	
 	// Run iPerf tests
-		for (int bandwidth = 100; bandwidth < MAX_BANDWIDTH; bandwidth+= 100)
+		for (int bandwidth = 150; bandwidth < MAX_BANDWIDTH; bandwidth+= 150)
 			runIperf(hostname, bandwidth, 8, 1);
-	// iperfBytes = MAX_PACKET_SIZE_UDP;
-	// for (bandwidth = 100; bandwidth < MAX_BANDWIDTH; bandwidth+= 100)
-		// runIperf(hostname, bandwidth, iperfBytes, 1);
 	
 	return true;
 }
