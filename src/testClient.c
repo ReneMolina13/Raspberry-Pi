@@ -469,25 +469,25 @@ bool formatOutput()
 	puts("Iperf test structure filled");
 	printf("Num Tests: %u\n", iperfResults.numTests);
 	for (int i = 0; i < iperfResults.numTests; i++)
-		printf("Seconds Per Test: %u\n", secondsPerTest);
+		printf("Seconds Per Test: %u\n", iperfResults.secondsPerTest);
 	for (int i = 0; i < iperfResults.numTests; i++)
-		printf("Packets Sent: %u\n", packetsSent[i]);
+		printf("Packets Sent: %u\n", iperfResults.packetsSent[i]);
 	for (int i = 0; i < iperfResults.numTests; i++)
-		printf("MB Sent: %f\n", megaBytesSent[i]);
+		printf("MB Sent: %f\n", iperfResults.megaBytesSent[i]);
 	for (int i = 0; i < iperfResults.numTests; i++)
-		printf("MB Received: %f\n", megaBytesReceived[i]);
+		printf("MB Received: %f\n", iperfResults.megaBytesReceived[i]);
 	for (int i = 0; i < iperfResults.numTests; i++)
-		printf("Average Throughput Sent: %f\n", avgThroughputSent[i]);
+		printf("Average Throughput Sent: %f\n", iperfResults.avgThroughputSent[i]);
 	for (int i = 0; i < iperfResults.numTests; i++)
-		printf("Average Throughput Received: %f\n", avgThroughputReceived[i]);
+		printf("Average Throughput Received: %f\n", iperfResults.avgThroughputReceived[i]);
 	for (int i = 0; i < iperfResults.numTests; i++)
-		printf("Jitter Sent: %f\n", jitterSent[i]);
+		printf("Jitter Sent: %f\n", iperfResults.jitterSent[i]);
 	for (int i = 0; i < iperfResults.numTests; i++)
-		printf("Jitter Received: %f\n", jitterReceived[i]);
+		printf("Jitter Received: %f\n", iperfResults.jitterReceived[i]);
 	for (int i = 0; i < iperfResults.numTests; i++)
-		printf("Packet Loss Sent: %f\n", packetLossSent[i]);
+		printf("Packet Loss Sent: %f\n", iperfResults.packetLossSent[i]);
 	for (int i = 0; i < iperfResults.numTests; i++)
-		printf("Packet Loss Received: %f\n", packetLossReceived[i]);
+		printf("Packet Loss Received: %f\n", iperfResults.packetLossReceived[i]);
 //*******************************************************************
 	
 	// Close all input files
