@@ -1,0 +1,4 @@
+#! /bin/bash
+clear
+# ./testClient raspberrypi 26207
+./testClient 192.168.1.164 26207

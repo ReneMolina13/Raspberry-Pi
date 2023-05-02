@@ -16,4 +16,4 @@ Packet Size,Packets Sent,Average Round-Trip Time (ms),Average Latency (KB/s),Err
 16384-Byte Packet,1,0.00,inf,0.00,0.00,
 32768-Byte Packet,1,0.00,inf,0.00,0.00,
 65507-Byte Packet,1,0.00,inf,0.00,0.00,
-Averages,1,0.00,-nan,0.00,0.00,
+Averages,1,0.00,nan,0.00,0.00,
