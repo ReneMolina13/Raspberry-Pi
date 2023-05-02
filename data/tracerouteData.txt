@@ -1,2 +1,0 @@
-traceroute to 192.168.1.164 (192.168.1.164), 30 hops max, 60 byte packets
- 1  raspberrypi.attlocal.net (192.168.1.164)  0.032 ms  0.020 ms  0.020 ms

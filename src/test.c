@@ -171,37 +171,29 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval)
 	
 	// Initialize argument array
 	unsigned int numArgs = 10;
-	unsigned int buffSize = 30;	
+	unsigned int buffSize = 30;
 	char **args = (char **) malloc(numArgs * sizeof(char *));
 	for (int i = 0; i < numArgs; i++)
 		args[i] = (char *) malloc(buffSize * sizeof(char));
-
+	
 	// Run ping
-	strncpy(args[0], "../data/Ping_Test", buffSize);
+	snprintf(args[0], buffSize, "../data/Ping_Test");
 	// Specify number of ping requests
-	strncpy(args[1], "-c", buffSize);
+	snprintf(args[1], buffSize, "-c");
 	snprintf(args[2], buffSize, "%i", numPackets);
-	// Specify quiet output
-	strncpy(args[3], "-q", buffSize);
+	// Quiet output
+	snprintf(args[3], buffSize, "-q");
 	// Size of ping packet (bytes)
-	strncpy(args[4], "-s", buffSize);
+	snprintf(args[4], buffSize, "-s");
 	snprintf(args[5], buffSize, "%i", numBytes);
 	// Time interval between packets (seconds)
-	strncpy(args[6], "-i", buffSize);
-	if (interval < 0.2)
-		interval = 0.2;
+	snprintf(args[6], buffSize, "-i");
 	snprintf(args[7], buffSize, "%f", interval);
 	// Hostname / IP Address
-	strncpy(args[8], hostname, buffSize);
+	snprintf(args[8], buffSize, "%s", hostname);
 	// Null-terminate argument array
-	snprintf(args[9], buffSize, "%p", NULL);
-	
-// TESTING
-//**************************************************************************
-	for (int i = 0; i < numArgs; i++)
-		printf("%s ", args[i]);
-//**************************************************************************
-
+	args[9] = NULL;
+		
 	// Fork process
 	pid_t pid = fork();
 	// Indicates Fork error
@@ -212,7 +204,8 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval)
 	// Child process runs ping program
 	else if (pid == 0)
 		 if (execv(args[0], args) < 0) {
-			fputs("Error calling ping\n", stderr);
+			fputs("Child Process: Error calling ping\n", stderr);
+			fprintf(stderr,"%s\n", strerror(errno));
 			exit(0);
 		 }
 	// Parent process frees argument array & waits for program to finish
@@ -234,7 +227,7 @@ bool runFlood(char *hostname)
 	args[0] = "../data/Flood_Test";
 	args[1] = hostname;
 	args[2] = NULL;
-	
+		
 	// Fork process
 	pid_t pid = fork();
 	// Indicates Fork error
@@ -245,7 +238,8 @@ bool runFlood(char *hostname)
 	// Child process runs ping program
 	else if (pid == 0)
 		 if (execv(args[0], args) < 0) {
-			fputs("Error calling ping\n", stderr);
+			fputs("Child Process: Error calling ping\n", stderr);
+			fprintf(stderr,"%s\n", strerror(errno));
 			exit(0);
 		 }
 
@@ -276,7 +270,8 @@ bool runTraceroute(char *hostname)
 	// Child process runs traceroute
 	else if (pid == 0)
 		if (execv(args[0], args) < 0) {
-			fputs("Error calling traceroute\n", stderr);
+			fputs("Child Process: Error calling traceroute\n", stderr);
+			fprintf(stderr,"%s\n", strerror(errno));
 			exit(0);
 		 }
 	// Parent process waits for child to finish executing
@@ -299,32 +294,33 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int testTime)
 	
 	// Initialize arguments array
 	unsigned int buffSize = 30;
-	unsigned int numArgs = 12;
+	unsigned int numArgs = 11;
 	char **args = (char **) malloc(numArgs * sizeof(char *));
 	for (int i = 0; i < numArgs; i++)
 		args[i] = (char *) malloc(buffSize * sizeof(char));
 	
-	strncpy(args[0], "../data/Iperf_Test_Client", buffSize);
+	// Run iPerf
+	snprintf(args[0], buffSize, "../data/Iperf_Test_Client");
 	// Client mode at specified IP address
-	strncpy(args[1], "-c", buffSize);
-	strncpy(args[2], hostname, buffSize);
-	// UDP connection formatted in KBytes/sec
-	strncpy(args[3], "-u", buffSize);
-	// Target bandwidth (bits/sec)
-	strncpy(args[4], "-b", buffSize);
+	snprintf(args[1], buffSize, "-c");
+	snprintf(args[2], buffSize, "%s", hostname);
+	// UDP Protocol
+	snprintf(args[3], buffSize, "-u");
+	// Specify bandwidth
+	snprintf(args[4], buffSize, "-b");
 	snprintf(args[5], buffSize, "%im", bandwidth);
-	// Buffer length (bytes)
-	strncpy(args[6], "-l", buffSize);
+	// Specify packet length (bytes)
+	snprintf(args[6], buffSize, "-l");
 	snprintf(args[7], buffSize, "%i", numBytes);
-	// Interval for bandwidth, jitter, & loss reports (seconds)
-	strncpy(args[8], "-t", buffSize);
+	// Specify total time of test
+	snprintf(args[8], buffSize, "-t");
 	snprintf(args[9], buffSize, "%i", testTime);
 	// Null-terminate argument array
-	snprintf(args[10], buffSize, "%p", NULL);
-	snprintf(args[11], buffSize, "%p", NULL);
+	args[10] = NULL;
 	
+	// Fork process
 	pid_t pid = fork();
-	// Fork error
+	// Indicates fork error
 	if (pid < 0) {
 		fputs("Unable to fork process\n", stderr);
 		return false;
@@ -332,7 +328,8 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int testTime)
 	// Child process
 	else if (pid == 0) {		
 		if (execv(args[0], args) < 0) {
-			fputs("Error calling iPerf\n", stderr);
+			fputs("Child Process: Error calling iPerf\n", stderr);
+			fprintf(stderr,"%s\n", strerror(errno));
 			exit(0);
 		}
 	}

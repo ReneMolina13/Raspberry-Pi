@@ -1,5 +1,5 @@
-PING 192.168.1.164 (192.168.1.164) 1000(1028) bytes of data.
+PING 192.168.1.102 (192.168.1.102) 1000(1028) bytes of data.
 
---- 192.168.1.164 ping statistics ---
-10 packets transmitted, 10 received, 0% packet loss, time 4585ms
-rtt min/avg/max/mdev = 0.022/0.025/0.030/0.002 ms
+--- 192.168.1.102 ping statistics ---
+10 packets transmitted, 0 received, +2 errors, 100% packet loss, time 4519ms
+
