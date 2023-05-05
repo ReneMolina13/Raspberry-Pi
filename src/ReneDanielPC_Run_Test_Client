@@ -1,4 +1,0 @@
-#! /bin/bash
-clear
-# ./testClient ReneDanielPC 26207
-./testClient 192.168.1.104 26207
