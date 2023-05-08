@@ -611,7 +611,6 @@ bool extractIperfStats(IperfResults **iperfResults, int numIperfTests)
 	
 	// Extract units for average throughput sent/received
 	fgetc(iperfFile);
-	int index;
 	c = fgetc(iperfFile);
 	if (c == ' ')
 		index = 0;
