@@ -211,7 +211,7 @@ bool runTests(char *hostname, TestResults *testResults)
 		printf("Ping Iteration number: %i, ", i-10);
 		pingBytes = (unsigned int) pow(2, i);
 		runPing(hostname, 10, pingBytes, 0.5);
-		sleep(10);
+		sleep(5);
 		retVal = extractPingStats(&testResults->pingResults, ++(testResults->numPingTests));
 		printf("Ping executed with packet size of %i\n", pingBytes);
 	}
@@ -219,7 +219,7 @@ bool runTests(char *hostname, TestResults *testResults)
 	
 	// Run traceroute test
 	runTraceroute(hostname);
-	sleep (10);
+	sleep (5);
 	retVal = extractTracerouteStats(&testResults->tracerouteResults);
 	puts("Traceroute executed\n");
 	
@@ -227,7 +227,7 @@ bool runTests(char *hostname, TestResults *testResults)
 		for (int bandwidth = 150; bandwidth < MAX_BANDWIDTH; bandwidth+= 150) {
 			printf("iPerf iteration number: %i, ", bandwidth/150);
 			runIperf(hostname, bandwidth, 8, 1);
-			sleep(10);
+			sleep(5);
 			retVal = extractIperfStats(&testResults->iperfResults, ++(testResults->numIperfTests));
 			printf("iPerf executed with bandwidth of %i\n", bandwidth);
 		}
