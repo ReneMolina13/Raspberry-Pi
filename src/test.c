@@ -224,7 +224,7 @@ bool runTests(char *hostname, TestResults *testResults)
 	puts("Traceroute executed\n");
 	
 	// Run iPerf tests
-		for (int bandwidth = 150; bandwidth < 900; bandwidth+= 150) {
+		for (int bandwidth = 150; bandwidth < 1000; bandwidth+= 150) {
 			printf("iPerf iteration number: %i, ", bandwidth/150);
 			runIperf(hostname, bandwidth, 8, 1);
 			sleep(5);
