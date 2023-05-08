@@ -590,9 +590,10 @@ bool extractIperfStats(IperfResults **iperfResults, int numIperfTests)
 	
 	// Extract units for data sent/received
 	fgetc(iperfFile);
-	varsAssigned += fscanf(iperfFile, "%s", (*iperfResults)[currentIperfTest].dataUnits);
-	// varsAssigned += fscanf(iperfFile, "%s", tempDataUnits);
-	// snprintf(args[0], buffSize, "../data/Iperf_Test");
+	// varsAssigned += fscanf(iperfFile, "%s", (*iperfResults)[currentIperfTest].dataUnits);
+	varsAssigned += fscanf(iperfFile, "%s", tempDataUnits);
+	snprintf((*iperfResults)[currentIperfTest].dataUnits, 20, "%s", tempDataUnits);
+	
 	// Extract average throughput of packets received
 	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].avgThroughputReceived);
 	
