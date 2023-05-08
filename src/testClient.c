@@ -85,8 +85,8 @@ bool clientSetup(int argc, char **argv ,NetInfo *sockData, Packets *packets, Tes
 	testResults->numIperfTests = 0;
 	testResults->pingResults = (PingResults *) calloc(1, sizeof(PingResults));
 	testResults->iperfResults = (IperfResults *) calloc(1, sizeof(IperfResults));
-	testResults->iperfResults->dataUnits = (char *) malloc(20, sizeof(char));
-	testResults->iperfResults->throughputUnits = (char *) malloc(20, sizeof(char));
+	testResults->iperfResults->dataUnits = (char *) malloc(20 * sizeof(char));
+	testResults->iperfResults->throughputUnits = (char *) malloc(20 * sizeof(char));
 	
 	// Initialize data packet sizes
 	for (int i = 0; i < INDEX_MAX_SIZE_UDP; i++) {
