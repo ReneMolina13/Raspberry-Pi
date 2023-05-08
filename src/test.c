@@ -185,7 +185,7 @@ bool runTests(char *hostname, TestResults *testResults)
 	// Run ping tests
 	unsigned int pingBytes;
 	for (int i = 10; i < 15; i++) {
-		printf("Ping Iteration number: %i, ", i-10);
+		printf("Ping Iteration number: %i, ", i-9);
 		pingBytes = (unsigned int) pow(2, i);
 		runPing(hostname, 10, pingBytes, 0.5);
 		sleep(5);
@@ -587,13 +587,13 @@ bool extractIperfStats(IperfResults **iperfResults, int numIperfTests)
 	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].dataReceived);
 	
 	// Extract units for data sent/received
-	varsAssigned += fscanf(iperfFile, "% s", (*iperfResults)[currentIperfTest].dataUnits);
+	varsAssigned += fscanf(iperfFile, "% s", &(*iperfResults)[currentIperfTest].dataUnits);
 	
 	// Extract average throughput of packets received
 	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].avgThroughputReceived);
 	
 	// Extract units for average throughput sent/received
-	varsAssigned += fscanf(iperfFile, "% s", (*iperfResults)[currentIperfTest].throughputUnits);
+	varsAssigned += fscanf(iperfFile, "% s", &(*iperfResults)[currentIperfTest].throughputUnits);
 	
 	// Extract jitter of packets received
 	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].jitterReceived);
