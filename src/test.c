@@ -563,7 +563,7 @@ bool extractIperfStats(IperfResults **iperfResults, int numIperfTests)
 		while (fgetc(iperfFile) == ' ');
 	}
 	while (fgetc(iperfFile) != ' ');
-	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].dataSent);
+	varsAssigned += fscanf(iperfFile, "%u", &(*iperfResults)[currentIperfTest].dataSent);
 	
 	// Extract average throughput of packets sent
 	while (fgetc(iperfFile) == ' ');
@@ -586,15 +586,13 @@ bool extractIperfStats(IperfResults **iperfResults, int numIperfTests)
 		while (fgetc(iperfFile) == ' ');
 	}
 	while (fgetc(iperfFile) != ' ');
-	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].dataReceived);
+	varsAssigned += fscanf(iperfFile, "%u", &(*iperfResults)[currentIperfTest].dataReceived);
 	
 	// Extract units for data sent/received
 	fgetc(iperfFile);
 	varsAssigned += fscanf(iperfFile, "%s", (*iperfResults)[currentIperfTest].dataUnits);
 	// varsAssigned += fscanf(iperfFile, "%s", tempDataUnits);
-	// for (int j = 0; tempDataUnits[j] != '\0'; j++)
-		// (*iperfResults)[currentIperfTest].dataUnits[j] = tempDataUnits[j];
-	
+	// snprintf(args[0], buffSize, "../data/Iperf_Test");
 	// Extract average throughput of packets received
 	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].avgThroughputReceived);
 	
@@ -602,8 +600,7 @@ bool extractIperfStats(IperfResults **iperfResults, int numIperfTests)
 	fgetc(iperfFile);
 	varsAssigned += fscanf(iperfFile, "%s", (*iperfResults)[currentIperfTest].throughputUnits);
 	// varsAssigned += fscanf(iperfFile, "%s", tempThroughputUnits);
-	// for (int j = 0; tempThroughputUnits[j] != '\0'; j++)
-		// (*iperfResults)[currentIperfTest].throughputUnits[j] = tempThroughputUnits[j];
+	
 	
 	// Extract jitter of packets received
 	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].jitterReceived);
