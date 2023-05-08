@@ -539,6 +539,7 @@ bool extractIperfStats(IperfResults **iperfResults, int numIperfTests)
 	unsigned int varsAssigned = 0;
 	char tempDataUnits[20];
 	char tempThroughputUnits[20];
+	char c;
 
 	// Determine how many seconds this test is
 	while (fgetc(iperfFile) != '-');
@@ -589,19 +590,42 @@ bool extractIperfStats(IperfResults **iperfResults, int numIperfTests)
 	varsAssigned += fscanf(iperfFile, "%u", &(*iperfResults)[currentIperfTest].dataReceived);
 	
 	// Extract units for data sent/received
-	fgetc(iperfFile);
+	int index;
+	c = fgetc(iperfFile);
+	if (c == ' ')
+		index = 0;
+	else {
+		(*iperfResults)[currentIperfTest].dataUnits[0] = c;
+		index = 1;
+	}
+	do {
+		c = fgetc(iperfFile);
+		(*iperfResults)[currentIperfTest].dataUnits[index++] = c;
+	} while (c != ' ');
 	// varsAssigned += fscanf(iperfFile, "%s", (*iperfResults)[currentIperfTest].dataUnits);
-	varsAssigned += fscanf(iperfFile, "%s", tempDataUnits);
-	snprintf((*iperfResults)[currentIperfTest].dataUnits, 20, "%s", tempDataUnits);
+	// varsAssigned += fscanf(iperfFile, "%s", tempDataUnits);
+	// snprintf((*iperfResults)[currentIperfTest].dataUnits, 20, "%s", tempDataUnits);
 	
 	// Extract average throughput of packets received
 	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].avgThroughputReceived);
 	
 	// Extract units for average throughput sent/received
 	fgetc(iperfFile);
-	varsAssigned += fscanf(iperfFile, "%s", (*iperfResults)[currentIperfTest].throughputUnits);
+	int index;
+	c = fgetc(iperfFile);
+	if (c == ' ')
+		index = 0;
+	else {
+		(*iperfResults)[currentIperfTest].throughputUnits[0] = c;
+		index = 1;
+	}
+	do {
+		c = fgetc(iperfFile);
+		(*iperfResults)[currentIperfTest].throughputUnits[index++] = c;
+	} while (c != ' ');
+	// varsAssigned += fscanf(iperfFile, "%s", (*iperfResults)[currentIperfTest].throughputUnits);
 	// varsAssigned += fscanf(iperfFile, "%s", tempThroughputUnits);
-	
+	// snprintf((*iperfResults)[currentIperfTest].throughputUnits, 20, "%s", tempThroughputUnits);
 	
 	// Extract jitter of packets received
 	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].jitterReceived);
