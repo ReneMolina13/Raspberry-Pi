@@ -1,7 +1,2 @@
-<<<<<<< HEAD
 #! /bin/bash
 traceroute $1 > ../data/tracerouteData.txt
-=======
-#! /bin/bash
-traceroute $1 > ../data/tracerouteData.txt
->>>>>>> 5ed6a807599f51352f2696c9207bcb2199542fb1

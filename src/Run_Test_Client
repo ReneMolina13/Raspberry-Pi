@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 #! /bin/bash
 clear
 ./testClient 192.168.0.14 26207
-=======
-#! /bin/bash
-clear
-./testClient 192.168.0.14 26207
->>>>>>> 5ed6a807599f51352f2696c9207bcb2199542fb1
+
