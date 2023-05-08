@@ -71,7 +71,7 @@ bool iPerfServer()
 	}
 	// Child process runs traceroute
 	else if (pid == 0)
-		if (execl("../data/Iperf_Test_Server", "Iperf_Test_Server", "-s", NULL) < 0) {
+		if (execlp("iperf3", "iperf3", "-s", NULL) < 0) {
 			fputs("Error creating iperf server\n", stderr);
 			return false;
 		 }
