@@ -1,2 +1,2 @@
 #! /bin/bash
-traceroute $1 >> ../data/tracerouteData.txt
+traceroute $1 > ../data/tracerouteData.txt

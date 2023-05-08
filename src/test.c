@@ -37,7 +37,7 @@ void *dataProcessingThread(void *param)
 		bytesPerPacket[i] = packetStats[i].bytesPerPacket;
 	}
 	
-	for (int i = 0; i < 60; i+= sleepSeconds) {
+	for (int i = 0; i < 60; i += sleepSeconds) {
 		// Sleep for an arbitrary amount of time (to let statistics get updated)
 		sleep(sleepSeconds);
 		
@@ -50,7 +50,7 @@ void *dataProcessingThread(void *param)
 		}
 		
 		// Write 1st line of file (contains labels for spreadsheet)
-		fprintf(outFile, "Packet Size,Packets Sent,Average Round-Trip Time (ms),Average Latency (KB/s),Errors/Packet,Errors/KB,\n");
+		fprintf(outFile, "Packet Size,Packets Sent,Average Round-Trip Time (ms),Average Throughput (KB/s),Errors/Packet,Errors/KB,\n");
 		
 		// Iterate through one packet size at a time
 		for (int i = 0; i < NUM_PACKET_SIZES; i++) {
@@ -102,7 +102,7 @@ void *dataProcessingThread(void *param)
 		
 		// Close file and let user know file has been written
 		fclose(outFile);
-		printf("File is written, will be updated in %i seconds\n\n", sleepSeconds);
+		printf("File is written, will be updated in %i seconds\n", sleepSeconds);
 	}
 	
 	parameter->status = retVal;
@@ -110,29 +110,98 @@ void *dataProcessingThread(void *param)
 }
 
 
-bool runTests(char *hostname)
+bool extractCustomStats(CustomResults *customResults)
+{
+	// Open custom file
+	FILE *customFile = fopen("../data/customTestData.csv", "r");
+	
+	// Check to see if there was an error opening custom file
+	if (customFile == NULL) {
+		fputs("Could not open one of the input files\n", stderr);
+		return false;
+	}
+	
+	// Extract data from custom test restults file into CustomResults structure
+	unsigned int varsAssigned = 0;
+	unsigned int temp;
+	customResults->totalIterations = 0;
+	
+	// Extract total packets sent over the course of the network test
+	while (fgetc(customFile) != '\n');		// Skip past first row
+	for (int i = 0; i < NUM_PACKET_SIZES; i++) {
+		while (fgetc(customFile) != ',');	// Skip past packet size column
+		varsAssigned += fscanf(customFile, "%u", &temp);
+		customResults->totalIterations += temp;
+		while (fgetc(customFile) != '\n');	// Skip to next row
+	}
+	varsAssigned /= NUM_PACKET_SIZES;
+	
+	// Extract averages from final row of customFile
+	while (fgetc(customFile) != ',');		// Skip past packet size column
+	while (fgetc(customFile) != ',');		// Skip past packets sent column
+	varsAssigned += fscanf(customFile, "%lf", &customResults->avgRTT);
+	fgetc(customFile);	// Skip past comma
+	varsAssigned += fscanf(customFile, "%lf", &customResults->avgThroughput);	
+	fgetc(customFile);	// Skip past comma
+	varsAssigned += fscanf(customFile, "%lf", &customResults->avgErrorsPerPacket);
+	fgetc(customFile);	// Skip past comma
+	varsAssigned += fscanf(customFile, "%lf", &customResults->avgErrorsPerKB);
+	
+	// Make sure all variables in customResults structure have been assigned
+	if (varsAssigned != 5) {
+		fputs("Incorrect number of variables assinged for customResults structure\n", stderr);
+		return false;
+	}
+
+/*
+// TESTING
+//*******************************************************************
+	puts("Custom test structure filled");
+	printf("Total Iterations: %u\n", customResults->totalIterations);
+	printf("Average RTT: %f\n", customResults->avgRTT);
+	printf("Average Throughput: %f\n", customResults->avgThroughput);
+	printf("Average Errors Per Packet: %f\n", customResults->avgErrorsPerPacket);
+	printf("Average Errors Per KB: %f\n", customResults->avgErrorsPerKB);
+	fputs("\n", stdout);
+//*******************************************************************
+*/
+	
+	// Close custom file
+	fclose(customFile);
+	
+	return true;
+}
+
+
+bool runTests(char *hostname, TestResults *testResults)
 {
 	// Ensures that each testing program runs successfully
 	bool retVal = true;
 
-/*
 // TESTING
 //********************************************************************************************
 	puts("Running Ping");
-	retVal = runPing(hostname, 10, 1000, 0.5);
-	if (retVal == false)
-		fputs("Ping program unsuccessful\n", stderr);
+	testResults->numPingTests++;
+	// retVal = runPing(hostname, 10, 1000, 0.5);
+	// if (retVal == false)
+		// fputs("Ping program unsuccessful\n", stderr);
+	retVal = extractPingStats(&testResults->pingResults, testResults->numPingTests);
+	
 	puts("Running Traceroute");
-	retVal = runTraceroute(hostname);
-	if (retVal == false)
-		fputs("Traceroute program unsuccessful\n", stderr);
+	// retVal = runTraceroute(hostname);
+	// if (retVal == false)
+		// fputs("Traceroute program unsuccessful\n", stderr);
+	retVal = extractTracerouteStats(&testResults->tracerouteResults);
+	
 	puts("Running iPerf");
-	retVal = runIperf(hostname, 500, 1000, 1);
-	if (retVal == false)
-		fputs("iPerf program unsuccessful\n", stderr);
+	testResults->numIperfTests++;
+	// retVal = runIperf(hostname, 500, 8, 1);
+	// if (retVal == false)
+		// fputs("iPerf program unsuccessful\n", stderr);
+	retVal = extractIperfStats(&testResults->iperfResults, testResults->numIperfTests);
 //********************************************************************************************
-*/
 
+/*
 	// Run ping tests
 	int pingBytes;
 	for (int i = 10; i < 15; i++) {
@@ -218,34 +287,72 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval)
 }
 
 
-bool runFlood(char *hostname)
+bool extractPingStats(PingResults **pingResults, int numPingTests)
 {
-	char *args[3];
-	args[0] = "../data/Flood_Test";
-	args[1] = hostname;
-	args[2] = NULL;
-		
-	// Fork process
-	pid_t pid = fork();
-	// Indicates Fork error
-	if (pid < 0) {
-		fputs("Unable to fork process\n", stderr);
+	// Open ping file
+	FILE *pingFile = fopen("../data/pingData.txt", "r");
+	
+	// Check to see if there was an error opening ping file
+	if (pingFile == NULL) {
+		fputs("Could not open one of the input files\n", stderr);
 		return false;
 	}
-	// Child process runs ping program
-	else if (pid == 0)
-		 if (execv(args[0], args) < 0) {
-			fputs("Child Process: Error calling ping\n", stderr);
-			fprintf(stderr,"%s\n", strerror(errno));
-			exit(0);
-		 }
+	
+	// Allocate memory for pingResults structure for this test
+	*pingResults = (PingResults *) realloc(*pingResults, numPingTests * sizeof(PingResults));
+	
+	// Extract data from ping file into the PingResults structure
+	unsigned int currentPingTest = numPingTests - 1;
+	unsigned int varsAssigned = 0;
 
-	// Parent process frees argument array & waits for program to finish
-	else {
-		waitpid(pid, NULL, 0);
-		// puts("Results have been saved to pingData.txt / floodData.txt");
-		return true;
+	// Extract packet size for this iteration
+	while (fgetc(pingFile) != '(');
+	while (fgetc(pingFile) != '(');
+	varsAssigned += fscanf(pingFile, "%u", &(*pingResults)[currentPingTest].packetSize);
+	// Extract packets transmitted
+	for (int j = 0; j < 3; j++)
+		while (fgetc(pingFile) != '\n');
+	varsAssigned += fscanf(pingFile, "%u", &(*pingResults)[currentPingTest].packetsTransmitted);
+	// Extract packet loss percentage
+	for (int j = 0; j < 5; j++)
+		while (fgetc(pingFile) != ' ');
+	varsAssigned += fscanf(pingFile, "%lf", &(*pingResults)[currentPingTest].packetLoss);
+	// Extract min, max, avg, and std deviation for round-trip-times
+	for (int j = 0; j < 7; j++)
+		while (fgetc(pingFile) != ' ');		
+	varsAssigned += fscanf(pingFile, "%lf", &(*pingResults)[currentPingTest].minRTT);
+	fgetc(pingFile);
+	varsAssigned += fscanf(pingFile, "%lf", &(*pingResults)[currentPingTest].avgRTT);
+	fgetc(pingFile);
+	varsAssigned += fscanf(pingFile, "%lf", &(*pingResults)[currentPingTest].maxRTT);
+	fgetc(pingFile);
+	varsAssigned += fscanf(pingFile, "%lf", &(*pingResults)[currentPingTest].stdDevRTT);
+	
+	// Make sure all variables from pingResults structure have been assigned
+	if (varsAssigned != 7) {
+		fputs("Incorrect number of variables assigned for pingResults structure\n", stderr);
+		return false;
 	}
+
+/*
+// TESTING
+//*******************************************************************
+	puts("Ping test structure filled");
+	printf("Packet Size: %u\n", *pingResults[currentPingTest].packetSize);
+	printf("Packets Transmitted: %u\n", *pingResults[currentPingTest].packetsTransmitted);
+	printf("Packet Loss: %f\n", *pingResults[currentPingTest].packetLoss);
+	printf("Min RTT: %f\n", *pingResults[currentPingTest].minRTT);
+	printf("Average RTT: %f\n", *pingResults[currentPingTest].avgRTT);
+	printf("Max RTT: %f\n", *pingResults[currentPingTest].maxRTT);
+	printf("RTT Standard Deviation: %f\n", *pingResults[currentPingTest].stdDevRTT);
+	fputs("\n", stdout);
+//*******************************************************************
+*/
+	
+	// Close ping file
+	fclose(pingFile);
+	
+	return true;
 }
 
 
@@ -281,6 +388,91 @@ bool runTraceroute(char *hostname)
 }
 
 
+bool extractTracerouteStats(TracerouteResults *tracerouteResults)
+{
+	// Open traceroute file
+	FILE *tracerouteFile = fopen("../data/tracerouteData.txt", "r");
+	
+	// Check to see if there was an error opening traceroute file
+	if (tracerouteFile == NULL) {
+		fputs("Could not open one of the input files\n", stderr);
+		return false;
+	}
+	
+	// Extract data from traceroute file into TracerouteResults structure
+	tracerouteResults->numHops = -1;
+	unsigned int varsAssigned = 0;
+	bool hopLine = true;
+	char c;
+	
+	// Determine number of rows and number of hops
+	while (!feof(tracerouteFile)) {
+		c = fgetc(tracerouteFile);
+		if (c == '*')
+			hopLine = false;
+		else if (c == '\n' && hopLine == true)
+			tracerouteResults->numHops++;
+	}
+	varsAssigned++;
+	fseek(tracerouteFile, 0, SEEK_SET);
+	
+	// Allocate memory for hop latency member variable
+	tracerouteResults->hopLatency = (double **) malloc(tracerouteResults->numHops * sizeof(double *));
+	for (int i = 0; i < tracerouteResults->numHops; i++)
+		tracerouteResults->hopLatency[i] = (double *) malloc(3 * sizeof(double));
+	
+	// Extract bytes per packet
+	for (int i = 0; i < 7; i++)
+		while (fgetc(tracerouteFile) != ' ');
+	varsAssigned += fscanf(tracerouteFile, "%u", &tracerouteResults->bytesPerPacket);
+	while (fgetc(tracerouteFile) != '\n');
+	
+	// Extract hop latencies
+	hopLine = false;
+	for (int i = 0; i < tracerouteResults->numHops; i++) {
+		// While '*' is present in this line, skip to next line
+		while (hopLine == false) {
+			for (int j = 0; j < 4; j++)
+				fgetc(tracerouteFile);
+			if (fgetc(tracerouteFile) == '*')
+				while (fgetc(tracerouteFile) != '\n');
+			else
+				hopLine = true;
+		}
+		// Extract latencies for this hop
+		for (int k = 0; k < 3; k++) {
+			for (int l = 0; l < 3; l++)
+				while (fgetc(tracerouteFile) != ' ');			
+			varsAssigned += fscanf(tracerouteFile, "%lf", &tracerouteResults->hopLatency[i][k]);
+		}
+		while (fgetc(tracerouteFile) != '\n');
+	}
+	
+	// Make sure all variables from tracerouteResults structure have been assigned
+	if (varsAssigned != (tracerouteResults->numHops * 3) + 2) {
+		fputs("Incorrect number of variables assigned for tracerouteResults structure\n", stderr);
+		return false;
+	}
+
+/*
+// TESTING
+//*******************************************************************
+	puts("Traceroute test structure filled");
+	printf("Num Hops: %u\n", tracerouteResults->numHops);
+	printf("Bytes Per Packet: %u\n", tracerouteResults->bytesPerPacket);
+	for (int i = 0; i < tracerouteResults->numHops; i++)
+		printf("Hop Latency (Hop %i): %f %f %f\n", i, tracerouteResults->hopLatency[i][0], tracerouteResults->hopLatency[i][1], tracerouteResults->hopLatency[i][2]);
+	fputs("\n", stdout);
+//*******************************************************************
+*/
+
+	// Close traceroute file
+	fclose(tracerouteFile);
+	
+	return true;
+}
+
+
 bool runIperf(char *hostname, int bandwidth, int numBytes, int testTime)
 {	
 	// Check for valid arguments
@@ -297,7 +489,7 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int testTime)
 		args[i] = (char *) malloc(buffSize * sizeof(char));
 	
 	// Run iPerf
-	snprintf(args[0], buffSize, "../data/Iperf_Test_Client");
+	snprintf(args[0], buffSize, "../data/Iperf_Test");
 	// Client mode at specified IP address
 	snprintf(args[1], buffSize, "-c");
 	snprintf(args[2], buffSize, "%s", hostname);
@@ -337,9 +529,101 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int testTime)
 			free(args[i]);
 		free(args);
 		sleep(testTime + 1);
-		// puts("Results have been saved to iperfDataClient.txt");
+		// puts("Results have been saved to iperfData.txt");
 		return true;
 	}
+}
+
+
+bool extractIperfStats(IperfResults **iperfResults, int numIperfTests)
+{
+	// Open iPerf file
+	FILE *iperfFile = fopen("../data/iperfData.txt", "r");
+	
+	// Check to see if there was an error opening iPerf file
+	if (iperfFile == NULL) {
+		fputs("Could not open one of the input files\n", stderr);
+		return false;
+	}
+	
+	// Allocate memory for IperfResults structure for this test
+	*iperfResults = (IperfResults *) realloc(*iperfResults, numIperfTests * sizeof(IperfResults));
+	
+	// Extract data from iperf client file into IperfResults structure
+	unsigned int currentIperfTest = numIperfTests - 1;
+	unsigned int varsAssigned = 0;
+	
+	// Determine how many seconds this test is
+	while (fgetc(iperfFile) != '-');
+	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].secondsPerTest);
+	fseek(iperfFile, 0, SEEK_SET);
+	// Extract packets sent
+	for (int j = 0; j < 3; j++)
+		while (fgetc(iperfFile) != '\n');
+	for (int j = 0; j < 16; j++)
+		while (fgetc(iperfFile) != ' ');
+	varsAssigned += fscanf(iperfFile, "%u", &(*iperfResults)[currentIperfTest].packetsSent);
+	// Extract MBytes sent
+	for (int j = 0; j < 3; j++)
+		while (fgetc(iperfFile) != '\n');
+	for (int j = 0; j < 9; j++)
+		while (fgetc(iperfFile) != ' ');
+	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].megaBytesSent);
+	// Extract average throughput of packets sent
+	for (int j = 0; j < 3; j++)
+		while (fgetc(iperfFile) != ' ');
+	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].avgThroughputSent);
+	// Extract jitter of packets sent
+	for (int j = 0; j < 3; j++)
+		while (fgetc(iperfFile) != ' ');
+	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].jitterSent);
+	// Extract packet loss percent of sent packets
+	while (fgetc(iperfFile) != '(');
+	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].packetLossSent);
+	// Extract MBytes received
+	while (fgetc(iperfFile) != '\n');
+	for (int j = 0; j < 10; j++)
+		while (fgetc(iperfFile) != ' ');
+	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].megaBytesReceived);
+	// Extract average throughput of packets received
+	for (int j = 0; j < 3; j++)
+		while (fgetc(iperfFile) != ' ');
+	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].avgThroughputReceived);
+	// Extract jitter of packets received
+	for (int j = 0; j < 3; j++)
+		while (fgetc(iperfFile) != ' ');
+	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].jitterReceived);
+	// Extract packet loss percent of received packets
+	while (fgetc(iperfFile) != '(');
+	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].packetLossReceived);
+	
+	// Make sure all variables from iperfResults structure have been assigned
+	if (varsAssigned != 10) {
+		fputs("Incorrect number of variables assigned for iperfResults structure\n", stderr);
+		return false;
+	}
+
+/*
+// TESTING
+//*******************************************************************
+	puts("Iperf test structure filled");
+	printf("Seconds Per Test: %f\n", *iperfResults[currentIperfTest].secondsPerTest);
+	printf("Packets Sent: %u\n", *iperfResults[currentIperfTest].packetsSent);
+	printf("MB Sent: %f\n", *iperfResults[currentIperfTest].megaBytesSent);
+	printf("MB Received: %f\n", *iperfResults[currentIperfTest].megaBytesReceived);
+	printf("Average Throughput Sent: %f\n", *iperfResults[currentIperfTest].avgThroughputSent);
+	printf("Average Throughput Received: %f\n", *iperfResults[currentIperfTest].avgThroughputReceived);
+	printf("Jitter Sent: %f\n", *iperfResults[currentIperfTest].jitterSent);
+	printf("Jitter Received: %f\n", *iperfResults[currentIperfTest].jitterReceived);
+	printf("Packet Loss Sent: %f\n", *iperfResults[currentIperfTest].packetLossSent);
+	printf("Packet Loss Received: %f\n", *iperfResults[currentIperfTest].packetLossReceived);
+//*******************************************************************
+*/
+	
+	// Close iPerf file
+	fclose(iperfFile);
+	
+	return true;
 }
 
 
