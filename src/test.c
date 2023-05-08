@@ -39,8 +39,8 @@ void *dataProcessingThread(void *param)
 	
 // TESTING
 //********************************************************************************
-	// for (int i = 0; i < 60; i += sleepSeconds) {
-	for (int i = 0; i < 15; i += sleepSeconds) {
+	for (int i = 0; i < 60; i += sleepSeconds) {
+	// for (int i = 0; i < 15; i += sleepSeconds) {
 //********************************************************************************
 		// Sleep for an arbitrary amount of time (to let statistics get updated)
 		sleep(sleepSeconds);
@@ -208,12 +208,7 @@ bool runTests(char *hostname, TestResults *testResults)
 	// Run ping tests
 	unsigned int pingBytes;
 	for (int i = 10; i < 15; i++) {
-		
-// TESTING
-//********************************************************************************
 		printf("Ping Iteration number: %i, ", i-10);
-//********************************************************************************
-		
 		pingBytes = (unsigned int) pow(2, i);
 		runPing(hostname, 10, pingBytes, 0.5);
 		sleep(10);
@@ -223,16 +218,16 @@ bool runTests(char *hostname, TestResults *testResults)
 	fputs("\n", stdout);
 	
 	// Run traceroute test
-	// runTraceroute(hostname);
-	// sleep (10);
+	runTraceroute(hostname);
+	sleep (10);
 	retVal = extractTracerouteStats(&testResults->tracerouteResults);
 	puts("Traceroute executed\n");
 	
 	// Run iPerf tests
 		for (int bandwidth = 150; bandwidth < MAX_BANDWIDTH; bandwidth+= 150) {
 			printf("iPerf iteration number: %i, ", bandwidth/150);
-			// runIperf(hostname, bandwidth, 8, 1);
-			// sleep(10);
+			runIperf(hostname, bandwidth, 8, 1);
+			sleep(10);
 			retVal = extractIperfStats(&testResults->iperfResults, ++(testResults->numIperfTests));
 			printf("iPerf executed with bandwidth of %i\n", bandwidth);
 		}
