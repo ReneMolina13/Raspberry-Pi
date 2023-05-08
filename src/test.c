@@ -37,7 +37,11 @@ void *dataProcessingThread(void *param)
 		bytesPerPacket[i] = packetStats[i].bytesPerPacket;
 	}
 	
-	for (int i = 0; i < 60; i += sleepSeconds) {
+// TESTING
+//********************************************************************************
+	// for (int i = 0; i < 60; i += sleepSeconds) {
+	for (int i = 0; i < 15; i += sleepSeconds) {
+//********************************************************************************
 		// Sleep for an arbitrary amount of time (to let statistics get updated)
 		sleep(sleepSeconds);
 		
@@ -178,46 +182,61 @@ bool runTests(char *hostname, TestResults *testResults)
 	// Ensures that each testing program runs successfully
 	bool retVal = true;
 
+/*
 // TESTING
 //********************************************************************************************
 	puts("Running Ping");
-	testResults->numPingTests++;
-	// retVal = runPing(hostname, 10, 1000, 0.5);
-	// if (retVal == false)
-		// fputs("Ping program unsuccessful\n", stderr);
-	retVal = extractPingStats(&testResults->pingResults, testResults->numPingTests);
+	retVal = runPing(hostname, 10, 1000, 0.5);
+	if (retVal == false)
+		fputs("Ping program unsuccessful\n", stderr);
+	retVal = extractPingStats(&testResults->pingResults, ++(testResults->numPingTests));
 	
 	puts("Running Traceroute");
-	// retVal = runTraceroute(hostname);
-	// if (retVal == false)
-		// fputs("Traceroute program unsuccessful\n", stderr);
+	retVal = runTraceroute(hostname);
+	if (retVal == false)
+		fputs("Traceroute program unsuccessful\n", stderr);
 	retVal = extractTracerouteStats(&testResults->tracerouteResults);
 	
 	puts("Running iPerf");
-	testResults->numIperfTests++;
-	// retVal = runIperf(hostname, 500, 8, 1);
-	// if (retVal == false)
-		// fputs("iPerf program unsuccessful\n", stderr);
-	retVal = extractIperfStats(&testResults->iperfResults, testResults->numIperfTests);
+	retVal = runIperf(hostname, 500, 8, 1);
+	if (retVal == false)
+		fputs("iPerf program unsuccessful\n", stderr);
+	retVal = extractIperfStats(&testResults->iperfResults, ++(testResults->numIperfTests));
 //********************************************************************************************
+*/
 
-/*
 	// Run ping tests
-	int pingBytes;
+	unsigned int pingBytes;
 	for (int i = 10; i < 15; i++) {
-		pingBytes = (int) pow(2, i);
+		
+// TESTING
+//********************************************************************************
+		printf("Ping Iteration number: %i, ", i-10);
+//********************************************************************************
+		
+		pingBytes = (unsigned int) pow(2, i);
 		runPing(hostname, 10, pingBytes, 0.5);
+		sleep(10);
+		retVal = extractPingStats(&testResults->pingResults, ++(testResults->numPingTests));
+		printf("Ping executed with packet size of %i\n", pingBytes);
 	}
+	fputs("\n", stdout);
 	
-	/*
-	// Run flood test and traceroute tests
-	runFlood(hostname);
-	runTraceroute(hostname);
+	// Run traceroute test
+	// runTraceroute(hostname);
+	// sleep (10);
+	retVal = extractTracerouteStats(&testResults->tracerouteResults);
+	puts("Traceroute executed\n");
 	
 	// Run iPerf tests
-		for (int bandwidth = 150; bandwidth < MAX_BANDWIDTH; bandwidth+= 150)
-			runIperf(hostname, bandwidth, 8, 1);
-	*/
+		for (int bandwidth = 150; bandwidth < MAX_BANDWIDTH; bandwidth+= 150) {
+			printf("iPerf iteration number: %i, ", bandwidth/150);
+			// runIperf(hostname, bandwidth, 8, 1);
+			// sleep(10);
+			retVal = extractIperfStats(&testResults->iperfResults, ++(testResults->numIperfTests));
+			printf("iPerf executed with bandwidth of %i\n", bandwidth);
+		}
+	fputs("\n", stdout);
 	
 	return true;
 }
@@ -280,8 +299,6 @@ bool runPing(char *hostname, int numPackets, int numBytes, double interval)
 		for (int i = 0; i < numArgs; i++)
 			free(args[i]);
 		free(args);
-		sleep((int) (numPackets * interval) + 1);
-		// puts("Results have been saved to pingData.txt / floodData.txt");
 		return true;
 	}
 }
@@ -381,8 +398,6 @@ bool runTraceroute(char *hostname)
 	// Parent process waits for child to finish executing
 	else {
 		waitpid(pid, NULL, 0);
-		sleep(3);
-		// puts("Results have been saved to tracerouteData.txt");
 		return true;
 	}
 }
@@ -528,8 +543,6 @@ bool runIperf(char *hostname, int bandwidth, int numBytes, int testTime)
 		for (int i = 0; i < numArgs; i++)
 			free(args[i]);
 		free(args);
-		sleep(testTime + 1);
-		// puts("Results have been saved to iperfData.txt");
 		return true;
 	}
 }

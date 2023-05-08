@@ -83,7 +83,8 @@ bool clientSetup(int argc, char **argv ,NetInfo *sockData, Packets *packets, Tes
 	pthread_mutex_init(&mutex, NULL);
 	testResults->pingResults = (PingResults *) calloc(1, sizeof(PingResults));
 	testResults->iperfResults = (IperfResults *) calloc(1, sizeof(IperfResults));
-	
+	testResults->numPingTests = 0;
+	testResults->numIperfTests = 0;
 	
 	// Initialize data packet sizes
 	for (int i = 0; i < INDEX_MAX_SIZE_UDP; i++) {
@@ -209,7 +210,7 @@ bool formatOutput(TestResults *testResults)
 	fprintf(outFile, "Total Iterations,Average Round-Trip-Time (ms),Average Throughput (kB/s),Average Errors Per Packet,Average Errors Per KB,\n");
 	fprintf(outFile, "%u,%.3f,%.3f,%.3f,%.3f,\n", testResults->customResults.totalIterations, testResults->customResults.avgRTT, testResults->customResults.avgThroughput, testResults->customResults.avgErrorsPerPacket,testResults->customResults.avgErrorsPerKB);
 	fputs("\n", outFile);
-	
+		
 	// Print out ping test results
 	fprintf(outFile, "Ping Test,\n");
 	fprintf(outFile, "Test Number,Packet Size (bytes),Packets Transmitted,Packet Loss %%,Minimum Round-Trip-Time (ms),Average Round-Trip-Time (ms),Maximum Round-Trip-Time (ms),Round-Trip-Time Standard Deviation (ms),\n");
@@ -230,7 +231,7 @@ bool formatOutput(TestResults *testResults)
 	fprintf(outFile, "Time (s),Packets Sent,MB Sent,MB Received,Average Throughput Sent (Gbits/s),Average Throughput Received (Gbits/s),Jitter Sent (ms),Jitter Received (ms),Packet Loss %% Sent,Packet Loss %% Received,\n");
 	for (int i = 0; i < testResults->numIperfTests; i++) {
 		timeline += testResults->iperfResults[i].secondsPerTest;
-		fprintf(outFile, "%.3f,%u,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,", timeline, testResults->iperfResults[i].packetsSent, testResults->iperfResults[i].megaBytesSent, testResults->iperfResults[i].megaBytesReceived, testResults->iperfResults[i].avgThroughputSent, testResults->iperfResults[i].avgThroughputReceived, testResults->iperfResults[i].jitterSent, testResults->iperfResults[i].jitterReceived, testResults->iperfResults[i].packetLossSent, testResults->iperfResults[i].packetLossReceived);
+		fprintf(outFile, "%.3f,%u,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,\n", timeline, testResults->iperfResults[i].packetsSent, testResults->iperfResults[i].megaBytesSent, testResults->iperfResults[i].megaBytesReceived, testResults->iperfResults[i].avgThroughputSent, testResults->iperfResults[i].avgThroughputReceived, testResults->iperfResults[i].jitterSent, testResults->iperfResults[i].jitterReceived, testResults->iperfResults[i].packetLossSent, testResults->iperfResults[i].packetLossReceived);
 	}
 	fputs("\n", outFile);
 	
@@ -310,7 +311,7 @@ int main(int argc, char **argv)
 		return -1;
 	}
 	
-	puts("Custom network test completed");
+	puts("\nCustom network test completed");
 	puts("\n************************************************\n");
 	
 	// Run ping, traceroute, and iPerf tests on the network
@@ -319,7 +320,7 @@ int main(int argc, char **argv)
 		return -1;
 	}
 	
-	puts("ping, traceroute, and iPerf tests completed");
+	puts("External network tests completed");
 	puts("\n************************************************\n");
 	
 	// Close client socket
