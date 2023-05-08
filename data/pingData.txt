@@ -1,5 +1,5 @@
-PING 172.19.29.228 (172.19.29.228) 16384(16412) bytes of data.
+PING 192.168.225.21 (192.168.225.21) 16384(16412) bytes of data.
 
---- 172.19.29.228 ping statistics ---
+--- 192.168.225.21 ping statistics ---
 10 packets transmitted, 10 received, 0% packet loss, time 4583ms
-rtt min/avg/max/mdev = 0.043/0.055/0.085/0.011 ms
+rtt min/avg/max/mdev = 0.096/0.112/0.162/0.018 ms

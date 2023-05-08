@@ -1,0 +1,4 @@
+#! /bin/bash
+clear
+./testClient 172.19.156.56 26207
+libreoffice ../networkTestResults.csv
