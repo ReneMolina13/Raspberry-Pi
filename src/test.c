@@ -201,7 +201,7 @@ bool runTests(char *hostname, TestResults *testResults)
 	puts("Traceroute executed\n");
 	
 	// Run iPerf tests
-		for (int bandwidth = 150; bandwidth < 1000; bandwidth+= 150) {
+		for (int bandwidth = 150; bandwidth < MAX_BANDWIDTH; bandwidth+= 150) {
 			printf("iPerf iteration number: %i, ", bandwidth/150);
 			runIperf(hostname, bandwidth, 8, 1);
 			sleep(5);
@@ -557,7 +557,7 @@ bool extractIperfStats(IperfResults **iperfResults, int numIperfTests)
 		while (fgetc(iperfFile) != '\n');
 	for (int j = 0; j < 9; j++)
 		while (fgetc(iperfFile) != ' ');
-	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].megaBytesSent);
+	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].dataSent);
 	// Extract average throughput of packets sent
 	for (int j = 0; j < 3; j++)
 		while (fgetc(iperfFile) != ' ');
@@ -573,7 +573,7 @@ bool extractIperfStats(IperfResults **iperfResults, int numIperfTests)
 	while (fgetc(iperfFile) != '\n');
 	for (int j = 0; j < 10; j++)
 		while (fgetc(iperfFile) != ' ');
-	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].megaBytesReceived);
+	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].dataReceived);
 	// Extract average throughput of packets received
 	for (int j = 0; j < 3; j++)
 		while (fgetc(iperfFile) != ' ');
@@ -598,10 +598,12 @@ bool extractIperfStats(IperfResults **iperfResults, int numIperfTests)
 	puts("Iperf test structure filled");
 	printf("Seconds Per Test: %f\n", *iperfResults[currentIperfTest].secondsPerTest);
 	printf("Packets Sent: %u\n", *iperfResults[currentIperfTest].packetsSent);
-	printf("MB Sent: %f\n", *iperfResults[currentIperfTest].megaBytesSent);
-	printf("MB Received: %f\n", *iperfResults[currentIperfTest].megaBytesReceived);
+	printf("Data Sent: %f\n", *iperfResults[currentIperfTest].dataSent);
+	printf("Data Received: %f\n", *iperfResults[currentIperfTest].dataReceived);
+	printf("Data Units: %s\n", *iperfResults[currentIperfTest].dataUnits);
 	printf("Average Throughput Sent: %f\n", *iperfResults[currentIperfTest].avgThroughputSent);
 	printf("Average Throughput Received: %f\n", *iperfResults[currentIperfTest].avgThroughputReceived);
+	printf("Throughput Units: %s\n", *iperfResults[currentIperfTest].throughputUnits);
 	printf("Jitter Sent: %f\n", *iperfResults[currentIperfTest].jitterSent);
 	printf("Jitter Received: %f\n", *iperfResults[currentIperfTest].jitterReceived);
 	printf("Packet Loss Sent: %f\n", *iperfResults[currentIperfTest].packetLossSent);
