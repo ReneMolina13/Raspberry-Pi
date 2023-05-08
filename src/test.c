@@ -537,8 +537,6 @@ bool extractIperfStats(IperfResults **iperfResults, int numIperfTests)
 	// Extract data from iperf client file into IperfResults structure
 	unsigned int currentIperfTest = numIperfTests - 1;
 	unsigned int varsAssigned = 0;
-	char tempDataUnits[20];
-	char tempThroughputUnits[20];
 
 	// Determine how many seconds this test is
 	while (fgetc(iperfFile) != '-');
@@ -589,25 +587,13 @@ bool extractIperfStats(IperfResults **iperfResults, int numIperfTests)
 	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].dataReceived);
 	
 	// Extract units for data sent/received
-	varsAssigned += fscanf(iperfFile, "%s", tempDataUnits);
-	(*iperfResults)[currentIperfTest].dataUnits = tempDataUnits;
-
-// TESTING
-//********************************************************************************
-	printf("Temp Throughput Units: %s, Saved Throughput Units: %s\n", tempDataUnits, (*iperfResults)[currentIperfTest].dataUnits);
-//********************************************************************************
+	varsAssigned += fscanf(iperfFile, "%s", &(*iperfResults)[currentIperfTest].dataUnits);
 	
 	// Extract average throughput of packets received
 	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].avgThroughputReceived);
 	
 	// Extract units for average throughput sent/received
-	varsAssigned += fscanf(iperfFile, "%s", tempThroughputUnits);
-	(*iperfResults)[currentIperfTest].throughputUnits = tempThroughputUnits;
-	
-// TESTING
-//********************************************************************************
-	printf("Temp Throughput Units: %s, Saved Throughput Units: %s\n", tempThroughputUnits, (*iperfResults)[currentIperfTest].throughputUnits);
-//********************************************************************************
+	varsAssigned += fscanf(iperfFile, "%s", &(*iperfResults)[currentIperfTest].throughputUnits);
 	
 	// Extract jitter of packets received
 	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].jitterReceived);

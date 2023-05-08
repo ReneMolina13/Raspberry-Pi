@@ -81,10 +81,12 @@ bool clientSetup(int argc, char **argv ,NetInfo *sockData, Packets *packets, Tes
 	
 	// Initialize semaphore and test statistics structures
 	pthread_mutex_init(&mutex, NULL);
-	testResults->pingResults = (PingResults *) calloc(1, sizeof(PingResults));
-	testResults->iperfResults = (IperfResults *) calloc(1, sizeof(IperfResults));
 	testResults->numPingTests = 0;
 	testResults->numIperfTests = 0;
+	testResults->pingResults = (PingResults *) calloc(1, sizeof(PingResults));
+	testResults->iperfResults = (IperfResults *) calloc(1, sizeof(IperfResults));
+	testResults->iperfResults->dataUnits = (char *) malloc(20, sizeof(char));
+	testResults->iperfResults->throughputUnits = (char *) malloc(20, sizeof(char));
 	
 	// Initialize data packet sizes
 	for (int i = 0; i < INDEX_MAX_SIZE_UDP; i++) {
@@ -358,6 +360,8 @@ int main(int argc, char **argv)
 		free(testResults.tracerouteResults.hopLatency[i]);
 	free(testResults.tracerouteResults.hopLatency);
 	// Free memory allocated to iPerf statistics
+	free(testResults.iperfResults->dataUnits);
+	free(testResults.iperfResults->throughputUnits);
 	free(testResults.iperfResults);
 	
 	return 0;
