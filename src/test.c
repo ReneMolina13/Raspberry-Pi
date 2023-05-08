@@ -182,29 +182,6 @@ bool runTests(char *hostname, TestResults *testResults)
 	// Ensures that each testing program runs successfully
 	bool retVal = true;
 
-/*
-// TESTING
-//********************************************************************************************
-	puts("Running Ping");
-	retVal = runPing(hostname, 10, 1000, 0.5);
-	if (retVal == false)
-		fputs("Ping program unsuccessful\n", stderr);
-	retVal = extractPingStats(&testResults->pingResults, ++(testResults->numPingTests));
-	
-	puts("Running Traceroute");
-	retVal = runTraceroute(hostname);
-	if (retVal == false)
-		fputs("Traceroute program unsuccessful\n", stderr);
-	retVal = extractTracerouteStats(&testResults->tracerouteResults);
-	
-	puts("Running iPerf");
-	retVal = runIperf(hostname, 500, 8, 1);
-	if (retVal == false)
-		fputs("iPerf program unsuccessful\n", stderr);
-	retVal = extractIperfStats(&testResults->iperfResults, ++(testResults->numIperfTests));
-//********************************************************************************************
-*/
-
 	// Run ping tests
 	unsigned int pingBytes;
 	for (int i = 10; i < 15; i++) {
@@ -560,115 +537,54 @@ bool extractIperfStats(IperfResults **iperfResults, int numIperfTests)
 	// Extract data from iperf client file into IperfResults structure
 	unsigned int currentIperfTest = numIperfTests - 1;
 	unsigned int varsAssigned = 0;
-	
-// TESTING
-//*************************************************************************************************
-	fputs("Vars assigned: ", stdout);
-//*************************************************************************************************
-	
+
 	// Determine how many seconds this test is
 	while (fgetc(iperfFile) != '-');
 	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].secondsPerTest);
 	fseek(iperfFile, 0, SEEK_SET);
-
-// TESTING
-//*************************************************************************************************
-	printf("%u" , varsAssigned);
-//*************************************************************************************************
-
+	
 	// Extract packets sent
 	for (int j = 0; j < 3; j++)
 		while (fgetc(iperfFile) != '\n');
-	for (int j = 0; j < 16; j++)
+	for (int j = 0; j < 8; j++) {
 		while (fgetc(iperfFile) != ' ');
+		while (fgetc(iperfFile) == ' ');
+	}
 	varsAssigned += fscanf(iperfFile, "%u", &(*iperfResults)[currentIperfTest].packetsSent);
-
-// TESTING
-//*************************************************************************************************
-	printf("%u" , varsAssigned);
-//*************************************************************************************************
-
+	
 	// Extract MBytes sent
 	for (int j = 0; j < 3; j++)
 		while (fgetc(iperfFile) != '\n');
 	for (int j = 0; j < 9; j++)
 		while (fgetc(iperfFile) != ' ');
 	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].megaBytesSent);
-
-// TESTING
-//*************************************************************************************************
-	printf("%u" , varsAssigned);
-//*************************************************************************************************
-
 	// Extract average throughput of packets sent
 	for (int j = 0; j < 3; j++)
 		while (fgetc(iperfFile) != ' ');
 	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].avgThroughputSent);
-
-// TESTING
-//*************************************************************************************************
-	printf("%u" , varsAssigned);
-//*************************************************************************************************
-
 	// Extract jitter of packets sent
 	for (int j = 0; j < 3; j++)
 		while (fgetc(iperfFile) != ' ');
 	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].jitterSent);
-
-// TESTING
-//*************************************************************************************************
-	printf("%u" , varsAssigned);
-//*************************************************************************************************
-
 	// Extract packet loss percent of sent packets
 	while (fgetc(iperfFile) != '(');
 	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].packetLossSent);
-
-// TESTING
-//*************************************************************************************************
-	printf("%u" , varsAssigned);
-//*************************************************************************************************
-
 	// Extract MBytes received
 	while (fgetc(iperfFile) != '\n');
 	for (int j = 0; j < 10; j++)
 		while (fgetc(iperfFile) != ' ');
 	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].megaBytesReceived);
-
-// TESTING
-//*************************************************************************************************
-	printf("%u" , varsAssigned);
-//*************************************************************************************************
-
 	// Extract average throughput of packets received
 	for (int j = 0; j < 3; j++)
 		while (fgetc(iperfFile) != ' ');
 	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].avgThroughputReceived);
-
-// TESTING
-//*************************************************************************************************
-	printf("%u" , varsAssigned);
-//*************************************************************************************************
-
 	// Extract jitter of packets received
 	for (int j = 0; j < 3; j++)
 		while (fgetc(iperfFile) != ' ');
 	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].jitterReceived);
-
-// TESTING
-//*************************************************************************************************
-	printf("%u" , varsAssigned);
-//*************************************************************************************************
-
 	// Extract packet loss percent of received packets
 	while (fgetc(iperfFile) != '(');
 	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].packetLossReceived);
-	
-// TESTING
-//*************************************************************************************************
-	printf("%u" , varsAssigned);
-//*************************************************************************************************
-
 
 	// Make sure all variables from iperfResults structure have been assigned
 	if (varsAssigned != 10) {
