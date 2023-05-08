@@ -39,8 +39,8 @@ void *dataProcessingThread(void *param)
 	
 // TESTING
 //********************************************************************************
-	for (int i = 0; i < 60; i += sleepSeconds) {
-	// for (int i = 0; i < 15; i += sleepSeconds) {
+	// for (int i = 0; i < 60; i += sleepSeconds) {
+	for (int i = 0; i < 15; i += sleepSeconds) {
 //********************************************************************************
 		// Sleep for an arbitrary amount of time (to let statistics get updated)
 		sleep(sleepSeconds);
