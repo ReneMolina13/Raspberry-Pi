@@ -254,7 +254,7 @@ bool formatOutput(TestResults *testResults)
 		}
 		printf("Iteration %i - Data Units: %c, Throughput Units: %c\n", i, testResults->iperfResults[i].dataUnits, testResults->iperfResults[i].throughputUnits);
 		timeline += testResults->iperfResults[i].secondsPerTest;
-		fprintf(outFile, "%.3f,%u,%u,%u,%s,%.3f,%.3f,%s,%.3f,%.3f,%.3f,%.3f,\n", timeline, testResults->iperfResults[i].packetsSent, testResults->iperfResults[i].dataSent, testResults->iperfResults[i].dataReceived, dataUnits, testResults->iperfResults[i].avgThroughputSent, testResults->iperfResults[i].avgThroughputReceived, throughputUnits, testResults->iperfResults[i].jitterSent, testResults->iperfResults[i].jitterReceived, testResults->iperfResults[i].packetLossSent, testResults->iperfResults[i].packetLossReceived);
+		fprintf(outFile, "%.3f,%u,%.3f,%.3f,%s,%.3f,%.3f,%s,%.3f,%.3f,%.3f,%.3f,\n", timeline, testResults->iperfResults[i].packetsSent, testResults->iperfResults[i].dataSent, testResults->iperfResults[i].dataReceived, dataUnits, testResults->iperfResults[i].avgThroughputSent, testResults->iperfResults[i].avgThroughputReceived, throughputUnits, testResults->iperfResults[i].jitterSent, testResults->iperfResults[i].jitterReceived, testResults->iperfResults[i].packetLossSent, testResults->iperfResults[i].packetLossReceived);
 	}
 	fputs("\n", outFile);
 	
