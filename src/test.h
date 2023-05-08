@@ -205,7 +205,7 @@ typedef struct
 	- throughputSentUnits: Units of avgThroughputSent (M = Mbits/sec, G = Gbits/sec) 
 	- avgThroughputReceived: Average throughput of data received from iPerf server
 	- throughputReceivedUnits: Units of avgThroughputReceived (M = Mbits/sec, 
-			G = Gbits
+			G = Gbits/sec)
 	- jitterSent: The difference in latency between the highest latency packet
 			and lowest latency packet sent
 	- jitterReceived: The difference in latency between the highest latency packet
