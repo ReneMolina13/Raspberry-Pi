@@ -587,13 +587,13 @@ bool extractIperfStats(IperfResults **iperfResults, int numIperfTests)
 	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].dataReceived);
 	
 	// Extract units for data sent/received
-	varsAssigned += fscanf(iperfFile, "%s", (*iperfResults)[currentIperfTest].dataUnits);
+	varsAssigned += fscanf(iperfFile, "% s", (*iperfResults)[currentIperfTest].dataUnits);
 	
 	// Extract average throughput of packets received
 	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].avgThroughputReceived);
 	
 	// Extract units for average throughput sent/received
-	varsAssigned += fscanf(iperfFile, "%s", (*iperfResults)[currentIperfTest].throughputUnits);
+	varsAssigned += fscanf(iperfFile, "% s", (*iperfResults)[currentIperfTest].throughputUnits);
 	
 	// Extract jitter of packets received
 	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].jitterReceived);
