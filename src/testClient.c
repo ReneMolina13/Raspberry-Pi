@@ -227,34 +227,56 @@ bool formatOutput(TestResults *testResults)
 	
 	// Print out iPerf test results
 	double timeline = 0;
-	char *dataUnits;
-	char *throughputUnits;
+	char *dataSentUnits;
+	char *dataReceivedUnits;
+	char *throughputSentUnits;
+	char *throughputReceivedUnits;
 	fprintf(outFile, "Iperf Test,\n");
-	fprintf(outFile, "Time (s),Packets Sent,Total Data Sent,Total Data Received,Total Data Units,Average Throughput Sent,Average Throughput Received,Average Throughput Units,Jitter Sent (ms),Jitter Received (ms),Packet Loss %% Sent,Packet Loss %% Received,\n");
+	fprintf(outFile, "Time (s),Packets Sent,Total Data Sent,Data Sent Units,Total Data Received,Total Data Received Units,Average Throughput Sent,Throughput Sent Units,Average Throughput Received,Throughput Received Units,Jitter Sent (ms),Jitter Received (ms),Packet Loss %% Sent,Packet Loss %% Received,\n");
 	for (int i = 0; i < testResults->numIperfTests; i++) {
-		switch (testResults->iperfResults[i].dataUnits) {
+		switch (testResults->iperfResults[i].dataSentUnits) {
 		case 'M':
-			dataUnits = "MBytes";
+			dataSentUnits = "MBytes";
 			break;
 		case 'G':
-			dataUnits = "GBytes";
+			dataSentUnits = "GBytes";
 			break;
 		default:
-			dataUnits = "";
+			dataSentUnits = "";
 		}
-		switch (testResults->iperfResults[i].throughputUnits) {
+		switch (testResults->iperfResults[i].dataReceivedUnits) {
 		case 'M':
-			throughputUnits = "Mbits/sec";
+			dataReceivedUnits = "MBytes";
 			break;
 		case 'G':
-			throughputUnits = "Gbits/sec";
+			dataReceivedUnits = "GBytes";
 			break;
 		default:
-			throughputUnits = "";
+			dataReceivedUnits = "";
 		}
-		printf("Iteration %i - Data Units: %c, Throughput Units: %c\n", i, testResults->iperfResults[i].dataUnits, testResults->iperfResults[i].throughputUnits);
+		switch (testResults->iperfResults[i].throughputSentUnits) {
+		case 'M':
+			throughputSentUnits = "Mbits/sec";
+			break;
+		case 'G':
+			throughputSentUnits = "Gbits/sec";
+			break;
+		default:
+			throughputSentUnits = "";
+		}
+		switch (testResults->iperfResults[i].throughputReceivedUnits) {
+		case 'M':
+			throughputReceivedUnits = "Mbits/sec";
+			break;
+		case 'G':
+			throughputReceivedUnits = "Gbits/sec";
+			break;
+		default:
+			throughputReceivedUnits = "";
+		}
+		printf("Iteration %i - Data Sent Units: %c, Data Received Units: %c, Throughput Sent Units: %c, Throughput Received Units\n", i, testResults->iperfResults[i].dataSentUnits, testResults->iperfResults[i].dataReceivedUnits, testResults->iperfResults[i].throughputSentUnits, testResults->iperfResults[i].throughputSentUnits);
 		timeline += testResults->iperfResults[i].secondsPerTest;
-		fprintf(outFile, "%.3f,%u,%.3f,%.3f,%s,%.3f,%.3f,%s,%.3f,%.3f,%.3f,%.3f,\n", timeline, testResults->iperfResults[i].packetsSent, testResults->iperfResults[i].dataSent, testResults->iperfResults[i].dataReceived, dataUnits, testResults->iperfResults[i].avgThroughputSent, testResults->iperfResults[i].avgThroughputReceived, throughputUnits, testResults->iperfResults[i].jitterSent, testResults->iperfResults[i].jitterReceived, testResults->iperfResults[i].packetLossSent, testResults->iperfResults[i].packetLossReceived);
+		fprintf(outFile, "%.3f,%u,%.3f,%s,%.3f,%s,%.3f,%s,%.3f,%s,%.3f,%.3f,%.3f,%.3f,\n", timeline, testResults->iperfResults[i].packetsSent, testResults->iperfResults[i].dataSent, dataSentUnits, testResults->iperfResults[i].dataReceived, dataReceivedUnits, testResults->iperfResults[i].avgThroughputSent, throughputSentUnits, testResults->iperfResults[i].avgThroughputReceived, throughputReceivedUnits, testResults->iperfResults[i].jitterSent, testResults->iperfResults[i].jitterReceived, testResults->iperfResults[i].packetLossSent, testResults->iperfResults[i].packetLossReceived);
 	}
 	fputs("\n", outFile);
 	
