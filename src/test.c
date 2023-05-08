@@ -597,7 +597,7 @@ bool extractIperfStats(IperfResults **iperfResults, int numIperfTests)
 			(*iperfResults)[currentIperfTest].dataUnits = 'M';
 			break;
 		case 'G':
-			(*iperfResults)[currentIperfTest].dataUnits = 'G'
+			(*iperfResults)[currentIperfTest].dataUnits = 'G';
 		}
 	} while (c == ' ');
 	
@@ -612,7 +612,7 @@ bool extractIperfStats(IperfResults **iperfResults, int numIperfTests)
 			(*iperfResults)[currentIperfTest].throughputUnits = 'M';
 			break;
 		case 'G':
-			(*iperfResults)[currentIperfTest].throughputUnits = 'G'
+			(*iperfResults)[currentIperfTest].throughputUnits = 'G';
 		}
 	} while (c == ' ');
 	
