@@ -1,5 +1,13 @@
+<<<<<<< HEAD
 PING 172.19.237.243 (172.19.237.243) 1000(1028) bytes of data.
 
 --- 172.19.237.243 ping statistics ---
 10 packets transmitted, 10 received, 0% packet loss, time 4584ms
 rtt min/avg/max/mdev = 0.041/0.061/0.079/0.012 ms
+=======
+PING 172.19.237.243 (172.19.237.243) 1000(1028) bytes of data.
+
+--- 172.19.237.243 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 4584ms
+rtt min/avg/max/mdev = 0.041/0.061/0.079/0.012 ms
+>>>>>>> 5ed6a807599f51352f2696c9207bcb2199542fb1
