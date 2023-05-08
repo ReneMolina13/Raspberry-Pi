@@ -85,8 +85,6 @@ bool clientSetup(int argc, char **argv ,NetInfo *sockData, Packets *packets, Tes
 	testResults->numIperfTests = 0;
 	testResults->pingResults = (PingResults *) calloc(1, sizeof(PingResults));
 	testResults->iperfResults = (IperfResults *) calloc(1, sizeof(IperfResults));
-	testResults->iperfResults->dataUnits = (char *) malloc(20 * sizeof(char));
-	testResults->iperfResults->throughputUnits = (char *) malloc(20 * sizeof(char));
 	
 	// Initialize data packet sizes
 	for (int i = 0; i < INDEX_MAX_SIZE_UDP; i++) {
@@ -229,12 +227,34 @@ bool formatOutput(TestResults *testResults)
 	
 	// Print out iPerf test results
 	double timeline = 0;
+	char *dataUnits;
+	char *throughputUnits;
 	fprintf(outFile, "Iperf Test,\n");
 	fprintf(outFile, "Time (s),Packets Sent,Total Data Sent,Total Data Received,Total Data Units,Average Throughput Sent,Average Throughput Received,Average Throughput Units,Jitter Sent (ms),Jitter Received (ms),Packet Loss %% Sent,Packet Loss %% Received,\n");
 	for (int i = 0; i < testResults->numIperfTests; i++) {
-		printf("Iteration %i - Data Units: %s, Throughput Units: %s\n", i, testResults->iperfResults[i].dataUnits, testResults->iperfResults[i].throughputUnits);
+		switch (testResults->iperfResults[i].dataUnits) {
+		case 'M':
+			dataUnits = "MBytes";
+			break;
+		case 'G':
+			dataUnits = "GBytes";
+			break;
+		default:
+			dataUnits = "";
+		}
+		switch (testResults->iperfResults[i].throughputUnits) {
+		case 'M':
+			throughputUnits = "Mbits/sec";
+			break;
+		case 'G':
+			throughputUnits = "Gbits/sec";
+			break;
+		default:
+			throughputUnits = "";
+		}
+		printf("Iteration %i - Data Units: %c, Throughput Units: %c\n", i, testResults->iperfResults[i].dataUnits, testResults->iperfResults[i].throughputUnits);
 		timeline += testResults->iperfResults[i].secondsPerTest;
-		fprintf(outFile, "%.3f,%u,%u,%u,%s,%.3f,%.3f,%s,%.3f,%.3f,%.3f,%.3f,\n", timeline, testResults->iperfResults[i].packetsSent, testResults->iperfResults[i].dataSent, testResults->iperfResults[i].dataReceived, testResults->iperfResults[i].dataUnits, testResults->iperfResults[i].avgThroughputSent, testResults->iperfResults[i].avgThroughputReceived, testResults->iperfResults[i].throughputUnits, testResults->iperfResults[i].jitterSent, testResults->iperfResults[i].jitterReceived, testResults->iperfResults[i].packetLossSent, testResults->iperfResults[i].packetLossReceived);
+		fprintf(outFile, "%.3f,%u,%u,%u,%s,%.3f,%.3f,%s,%.3f,%.3f,%.3f,%.3f,\n", timeline, testResults->iperfResults[i].packetsSent, testResults->iperfResults[i].dataSent, testResults->iperfResults[i].dataReceived, dataUnits, testResults->iperfResults[i].avgThroughputSent, testResults->iperfResults[i].avgThroughputReceived, throughputUnits, testResults->iperfResults[i].jitterSent, testResults->iperfResults[i].jitterReceived, testResults->iperfResults[i].packetLossSent, testResults->iperfResults[i].packetLossReceived);
 	}
 	fputs("\n", outFile);
 	
@@ -360,8 +380,6 @@ int main(int argc, char **argv)
 		free(testResults.tracerouteResults.hopLatency[i]);
 	free(testResults.tracerouteResults.hopLatency);
 	// Free memory allocated to iPerf statistics
-	free(testResults.iperfResults->dataUnits);
-	free(testResults.iperfResults->throughputUnits);
 	free(testResults.iperfResults);
 	
 	return 0;

@@ -212,12 +212,12 @@ typedef struct
 {
 	double secondsPerTest;
 	unsigned int packetsSent;
-	double dataSent;
-	double dataReceived;
-	char *dataUnits;
+	unsigned int dataSent;
+	unsigned int dataReceived;
+	char dataUnits;
 	double avgThroughputSent;
 	double avgThroughputReceived;
-	char *throughputUnits;
+	char throughputUnits;
 	double jitterSent;
 	double jitterReceived;
 	double packetLossSent;
