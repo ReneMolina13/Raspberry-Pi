@@ -1,6 +1,19 @@
 /*
 	Rene Molina
 	EE 4230 - Senior Design 2
+	
+	This is a header file used by both the test client and test server. It contains 
+	constants used by the programs, a structure containing packets of different sizes 
+	to be sent between the test client and test server, a structure containing statistics 
+	to be written to by each network thread during the custom network test, a structure 
+	containing input/output parameters for the thread which processes data from custom 
+	network test, and separate structures containing important statistics extracted from 
+	the output files from all four network tests (custom test, ping, traceroute, and iPerf). 
+	Finally, it contains prototypes of the function for the data processing thread, the 
+	functions that call run external network testing programs, functions to extract important 
+	statistics from the output files of all four networking tests, the function which 
+	determines in what order and with which parameters the external network tests are run, and 
+	a function to print the hostname and service name of both the client and server sockets
 */
 
 
@@ -94,13 +107,13 @@ typedef struct
 
 /*
 	Description:
-	Used in custom netowrk test by data processing thread to take real-time
+	Used in custom network test by data processing thread to take real-time
 	statistics and output them to customTestData.csv. Specifically, this structure
 	is the parameter passed to dataProcessingThread function
 	
 	Member Variables:
 	- tid: Thread ID of the data processing thread
-	- packetStats: Pointer to NetStats strucures written to by each network thread
+	- packetStats: Pointer to NetStats structures written to by each network thread
 	- status: Value indicating whether the thread executed correctly
 */
 typedef struct
@@ -113,7 +126,7 @@ typedef struct
 
 /*
 	Description:
-	Contains important statistics generated from the custom netowrk test
+	Contains important statistics generated from the custom network test
 	
 	Member Variables:
 	- totalIterations: Total number of packets sent to/from server
@@ -144,7 +157,7 @@ typedef struct
 	- packetLoss: Number of packets dropped by the network
 	- minRTT: Smallest round-trip time over all packets sent across the network
 	- avgRTT: Average round-trip time over all packets sent across the network
-	- maxRTT: Largest round-trip time over all packets sent across the netowrk
+	- maxRTT: Largest round-trip time over all packets sent across the network
 	- stdDevRTT: Standard deviation of round-trip times
 */
 typedef struct
@@ -188,7 +201,7 @@ typedef struct
 	- megaBytesReceived: Total number of MB received from iPerf server
 	- avgThroughputSent: Average throughput of data sent to iPerf server
 	- avgThroughputReceived: Average throughput of data received from iPerf server
-	- jitterSent: The difference in latency between the hightest latency packet
+	- jitterSent: The difference in latency between the highest latency packet
 			and lowest latency packet sent
 	- jitterReceived: The difference in latency between the highest latency packet
 			and lowest latency packet received

@@ -1,6 +1,10 @@
 /*
 	Rene Molina
 	EE 4230 - Senior Design 2
+	
+	This is the header file for the test server. It contains prototypes for functions 
+	to initialize the test server, initialize the iPerf server, and handle client 
+	requests
 */
 
 
@@ -38,7 +42,7 @@ bool iPerfServer();
 
 /*
 	Description:
-	Waits for a packt to be received from a client, at which point it sends the 
+	Waits for a packet to be received from a client, at which point it sends the 
 	packet back to the client. Note that the buffer used to receive the incoming
 	packet and to echo it back is of the largest size that a UDP packet can be. 
 	When the client receives the packet from the server, any extra bytes beyond 

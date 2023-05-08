@@ -1,6 +1,15 @@
 /*
 	Rene Molina
 	EE 4230 - Senior Design 2
+	
+	This is the header file for the test client. It contains a structure to hold 
+	network info and a structure to hold input/output parameters for the network threads. 
+	It also contains global variables specifying the attributes of all threads and a 
+	semaphore to be used by network threads to communicate with the test server. Finally, 
+	it contains prototypes for functions for the network threads, to initialize relevant 
+	structures used by test client, to create client socket, send and receive packets 
+	to/from the test server, and to format the output of all four network tests into a 
+	single easy to read spreadsheet
 */
 
 
@@ -20,7 +29,7 @@
 	- cmdPort: Port number or service name given to the program as a command-line
 			argument
 	- clientSocket: Socket handle of the client socket used for custom network test
-	- serverAddr: Pointer to an addrinfo structure containing possible IP addresss / 
+	- serverAddr: Pointer to an addrinfo structure containing possible IP address / 
 			port number combinations for the client socket (one of which is used)
 */
 typedef struct
@@ -36,7 +45,7 @@ typedef struct
 	Description:
 	Used in custom network test by each network testing thread to send data to/from 
 	test server and record statistics related to network performance. Specifically, 
-	this strucutre is the parameter passed to networkThreads function
+	this structure is the parameter passed to networkThreads function
 	
 	Member Variables:
 	- tid: Thread ID of a particular network testing thread
@@ -78,13 +87,15 @@ void *networkThreads(void *param);
 
 /*
 	Description:
+	Parses command-line arguments and initializes NetInfo, Packets, and 
+	TestResults structures
 	
 	Inputs:
-	- int argc:
-	- char **argv:
-	- NetInfo *sockData:
-	- Packets *packets:
-	- TestResults *testResults:
+	- int argc: Number of command-line arguments
+	- char **argv: Command-line argument array
+	- NetInfo *sockData: Pointer to a NetInfo structure to be initialized
+	- Packets *packets: Pointer to a Packets structure to be initialized
+	- TestResults *testResults: Pointer to a TestResults structure to be initialized
 	
 	Outputs:
 	- bool retVal: Flag determining if the function executed correctly
@@ -93,9 +104,14 @@ bool clientSetup(int, char **, NetInfo *, Packets *, TestResults *);
 
 /*
 	Description:
+	Creates client socket based on IP address/hostname and port number/service name 
+	given as command-line arguments
 	
 	Inputs:
-	- NetInfo *sockData:
+	- NetInfo *sockData: Pointer to a NetInfo structure which contains information to 
+			to create client socket, as well as the resulting client socket handle 
+			and a pointer to an addrinfo structure which get initialized to contain 
+			the address info of the server socket
 	
 	Outputs:
 	- bool retVal: Flag determining if the function executed correctly
@@ -104,11 +120,13 @@ bool createSocket(NetInfo *);
 
 /*
 	Description:
+	Sends the given packet to the server specified by the NetInfo structure
 	
 	Inputs:
-	- const NetInfo *sockData:
-	- const char *packet:
-	- unsigned int packetSize:
+	- const NetInfo *sockData: Pointer to a NetInfo structure containing the client 
+			socket and the address info of the server socket
+	- const char *packet: The packet to send to the server
+	- unsigned int packetSize: The size of the packet in bytes
 	
 	Outputs:
 	- bool retVal: Flag determining if the function executed correctly
@@ -117,11 +135,13 @@ bool sendPacket(const NetInfo *, const char *, unsigned int);
 
 /*
 	Description:
+	Receives a packet of a given size back from the server specified by the NetInfo structure 
 	
 	Inputs:
-	- const NetInfo *sockData:
-	- char *packet:
-	- unsigned int packetSize:
+	- const NetInfo *sockData: Pointer to a NetInfo structure containing the client socket 
+			and the address info of the server socket
+	- char *packet: The buffer to store the packet received from the server
+	- unsigned int packetSize: The size of the buffer in bytes
 	
 	Outputs:
 	- bool retVal: Flag determining if the function executed correctly
@@ -130,9 +150,13 @@ bool receivePacket(const NetInfo *, char *, unsigned int);
 
 /*
 	Description:
+	Takes the important network statistics previously extracted from the output files of all 
+	four network tests (custom test, ping, traceroute, and iPerf) and outputs them all into 
+	a single file (networkTestResults.csv)
 	
 	Inputs:
-	- TestResults *testResults:
+	- TestResults *testResults: Pointer to a TestResults structure containing relevant network 
+			statistics to be outputted from all four tests
 	
 	Outputs:
 	- bool retVal: Flag determining if the function executed correctly
@@ -149,4 +173,3 @@ pthread_mutex_t mutex;
 
 
 #endif
-

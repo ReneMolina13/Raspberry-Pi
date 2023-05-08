@@ -155,9 +155,7 @@ bool createSocket(NetInfo *sockData)
 bool sendPacket(const NetInfo *sockData, const char *packet, unsigned int packetSize)
 {
 	// Send the requested transaction to the server
-	// pthread_mutex_lock(&mutex);
 	ssize_t bytesSent = sendto(sockData->clientSocket, packet, packetSize, 0, sockData->serverAddr->ai_addr, sockData->serverAddr->ai_addrlen);
-	// pthread_mutex_unlock(&mutex);
 	// Indicates transmission error
 	if (bytesSent < 0) {
 		fputs("Unable to send data\n", stderr);
