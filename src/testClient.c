@@ -225,7 +225,7 @@ bool formatOutput(TestResults *testResults)
 		fprintf(outFile, "%i,%u,%.3f,%.3f,%.3f,\n", i+1, testResults->tracerouteResults.bytesPerPacket, testResults->tracerouteResults.hopLatency[i][0], testResults->tracerouteResults.hopLatency[i][1], testResults->tracerouteResults.hopLatency[i][2]);
 	fputs("\n", outFile);
 	
-	// Print out iPerf test results
+	// Print out iPerf test results (check flags for units)
 	double timeline = 0;
 	char *dataSentUnits;
 	char *dataReceivedUnits;
@@ -274,7 +274,6 @@ bool formatOutput(TestResults *testResults)
 		default:
 			throughputReceivedUnits = "";
 		}
-		printf("Iteration %i - Data Sent Units: %c, Data Received Units: %c, Throughput Sent Units: %c, Throughput Received Units: %c\n", i, testResults->iperfResults[i].dataSentUnits, testResults->iperfResults[i].dataReceivedUnits, testResults->iperfResults[i].throughputSentUnits, testResults->iperfResults[i].throughputSentUnits);
 		timeline += testResults->iperfResults[i].secondsPerTest;
 		fprintf(outFile, "%.3f,%u,%.3f,%s,%.3f,%s,%.3f,%s,%.3f,%s,%.3f,%.3f,%.3f,%.3f,\n", timeline, testResults->iperfResults[i].packetsSent, testResults->iperfResults[i].dataSent, dataSentUnits, testResults->iperfResults[i].dataReceived, dataReceivedUnits, testResults->iperfResults[i].avgThroughputSent, throughputSentUnits, testResults->iperfResults[i].avgThroughputReceived, throughputReceivedUnits, testResults->iperfResults[i].jitterSent, testResults->iperfResults[i].jitterReceived, testResults->iperfResults[i].packetLossSent, testResults->iperfResults[i].packetLossReceived);
 	}

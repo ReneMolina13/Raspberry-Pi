@@ -197,10 +197,15 @@ typedef struct
 	Member Variables:
 	- secondsPerTest: Length of iPerf test in seconds
 	- packetsSent: Number of packets sent to iPerf server
-	- megaBytesSent: Total number of MB sent to iPerf server
-	- megaBytesReceived: Total number of MB received from iPerf server
+	- dataSent: Total amount of data sent to iPerf server
+	- dataSentUnits: Units of dataSent (M = MBytes, G = GBytes)
+	- dataReceived: Total amount of data received from iPerf server
+	- dataReceivedUnits: Units of dataReceived (M = MBytes, G = GBytes)
 	- avgThroughputSent: Average throughput of data sent to iPerf server
+	- throughputSentUnits: Units of avgThroughputSent (M = Mbits/sec, G = Gbits/sec) 
 	- avgThroughputReceived: Average throughput of data received from iPerf server
+	- throughputReceivedUnits: Units of avgThroughputReceived (M = Mbits/sec, 
+			G = Gbits
 	- jitterSent: The difference in latency between the highest latency packet
 			and lowest latency packet sent
 	- jitterReceived: The difference in latency between the highest latency packet
