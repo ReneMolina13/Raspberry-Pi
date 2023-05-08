@@ -228,7 +228,7 @@ bool formatOutput(TestResults *testResults)
 	// Print out iPerf test results
 	double timeline = 0;
 	fprintf(outFile, "Iperf Test,\n");
-	fprintf(outFile, "Time (s),Packets Sent,MB Sent,MB Received,Average Throughput Sent (Gbits/s),Average Throughput Received (Gbits/s),Jitter Sent (ms),Jitter Received (ms),Packet Loss %% Sent,Packet Loss %% Received,\n");
+	fprintf(outFile, "Time (s),Packets Sent,Total Data Sent (%s),Total Data Received (%s),Average Throughput Sent (%s),Average Throughput Received (%s),Jitter Sent (ms),Jitter Received (ms),Packet Loss %% Sent,Packet Loss %% Received,\n", testResults->iperfResults[i].dataUnits, testResults->iperfResults[i].dataUnits, testResults->iperfResults[i].throughputUnits, testResults->iperfResults[i].throughputUnits);
 	for (int i = 0; i < testResults->numIperfTests; i++) {
 		timeline += testResults->iperfResults[i].secondsPerTest;
 		fprintf(outFile, "%.3f,%u,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,\n", timeline, testResults->iperfResults[i].packetsSent, testResults->iperfResults[i].dataSent, testResults->iperfResults[i].dataReceived, testResults->iperfResults[i].avgThroughputSent, testResults->iperfResults[i].avgThroughputReceived, testResults->iperfResults[i].jitterSent, testResults->iperfResults[i].jitterReceived, testResults->iperfResults[i].packetLossSent, testResults->iperfResults[i].packetLossReceived);
