@@ -600,8 +600,10 @@ bool extractIperfStats(IperfResults **iperfResults, int numIperfTests)
 			(*iperfResults)[currentIperfTest].dataUnits = 'G';
 		}
 	} while (c == ' ');
+	varsAssigned++;
 	
 	// Extract average throughput of packets received
+	while (fgetc(iperfFile) != ' ');
 	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].avgThroughputReceived);
 	
 	// Extract units for average throughput sent/received
@@ -615,8 +617,10 @@ bool extractIperfStats(IperfResults **iperfResults, int numIperfTests)
 			(*iperfResults)[currentIperfTest].throughputUnits = 'G';
 		}
 	} while (c == ' ');
+	varsAssigned++;
 	
 	// Extract jitter of packets received
+	while (fgetc(iperfFile) != ' ');
 	varsAssigned += fscanf(iperfFile, "%lf", &(*iperfResults)[currentIperfTest].jitterReceived);
 	
 	// Extract packet loss percent of received packets
